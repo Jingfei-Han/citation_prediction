@@ -28,3 +28,22 @@ linkinfo = soup.find("div", {"class":"gs_a"}).get_text()
 
 问题：作者名字存在法语或其他特殊字符
 解决：目前不需要该作者信息
+
+-----------------------------------2017.4.11---------------------------------
+写一个小demo测试爬虫是否正确
+镜像网站不稳定，因此使用vpn访问https://scholar.google.com
+记录headers:
+
+cookie = 'NID=101=SZYmK1bDCNI9YVEM-lBxM975ArpgyelHkwNMiiCJVjoY4sbhBGUWJ-zzrlo2_r1-8LeeeavR1hn8UxP2MuAM92L-uWOzdhExx-OIZZhuVlAGDS6P7XpR15PzPlcPSErq; GSP=IN=7e6cc990821af63:LD=en:NR=20:LM=1491915063:S=OmZJEGX4GZgsoDj5'
+headers = {
+	'Host': 'scholar.google.com',
+	'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+	'Accept-Encoding':'gzip, deflate, sdch, br',
+	'Accept-Language':'zh-CN,en-US;q=0.8,zh;q=0.5,en;q=0.3',
+	'Cookie': cookie,
+	'Referer':'https://www.google.com',
+	'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
+	'Cache-Control':'max-age=0',
+}
+
+
