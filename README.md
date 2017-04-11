@@ -47,3 +47,6 @@ headers = {
 }
 
 
+问题：google学术使用requests.utils.dict_from_cookiejar(response.cookies)没有cookie返回。
+待解决。
+

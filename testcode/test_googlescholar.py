@@ -40,9 +40,13 @@ while True:
 			
 			#更换Cookie，重置headers
 			cookie_dic = requests.utils.dict_from_cookiejar(response.cookies) #为cookie属性与值的字典
-			cookie = "NID=" + cookie_dic['NID'] + "; GSP=" + cookie_dic['GSP']
-			headers['Cookie'] = cookie
-			print "CURRENT COOKIE: " + cookie 
+			#*********************问题：当前没有cookie返回*****************************************
+			try:
+				cookie = "NID=" + cookie_dic['NID'] + "; GSP=" + cookie_dic['GSP']
+				headers['Cookie'] = cookie
+				print "CURRENT COOKIE: " + cookie 
+			except:
+				print "Change cookie FAILED!"
 			break
 		except:
 			print "Connection Failed! 5 seconds break."
@@ -56,10 +60,10 @@ while True:
 			fail_cnt += 1
 			print "Current statistic: SUCESSED: %5d, FAILED: %5d" %(succ_cnt, fail_cnt)
 			continue
-		
-		soup = BeautifulSoup(response.text)
-		succ_cnt += 1
-		print "This url SUCCESSED!"
-		print "Current statistic: SUCESSED: %5d, FAILED: %5d" %(succ_cnt, fail_cnt)
+	
+	soup = BeautifulSoup(response.text)
+	succ_cnt += 1
+	print "This url SUCCESSED!"
+	print "Current statistic: SUCESSED: %5d, FAILED: %5d" %(succ_cnt, fail_cnt)
 
-		cur_index += 1
+	cur_index += 1
