@@ -40,7 +40,7 @@ while True:
 			
 			#更换Cookie，重置headers
 			cookie_dic = requests.utils.dict_from_cookiejar(response.cookies) #为cookie属性与值的字典
-			#*********************问题：当前没有cookie返回*****************************************
+			#当前没有cookie返回？？？？？？？？？？？？？？？？？？？
 			try:
 				cookie = "NID=" + cookie_dic['NID'] + "; GSP=" + cookie_dic['GSP']
 				headers['Cookie'] = cookie
