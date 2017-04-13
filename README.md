@@ -50,3 +50,16 @@ headers = {
 问题：google学术使用requests.utils.dict_from_cookiejar(response.cookies)没有cookie返回。
 待解决。
 
+---------------------------------2017.04.13------------------------------------
+首先测试两次无headers爬取google的cookie分别是什么？
+第一次访问：
+https://scholar.google.com/scholar?hl=en&q=Yoshua+Bengio&as_sdt=1%2C5&as_sdtp=&oq=
+最终cookie为：
+'GSP': 'LM=1492085690:S=MT2DJ2tBDnQA2lmr'
+'NID': '101=fSdLNDYt8Adg6J2jqn2zV1FLD1VtFzPPA1tZM52d7DWDhMxo8M43HgTBZ6Uw-54Hn5el6rJmHrJPjHbCdzBo1B2PpDGHoB2zLaZ3uOrz7TvoCt8EY_rQGxgK6t9xNtsH'
+
+第二次访问：
+https://scholar.google.com/scholar?q=computer+network+security&hl=en&as_sdt=0%2C5&oq=
+最终cookie为：
+'GSP': 'LM=1492085859:S=R3n1bWo54jcZMaNf',
+'NID': '101=GascO37p3VoBYkwSB43S9c-Vuoo2Q4MoMCGFeW5E8OdG3Fmxh1BYhvyGeF2a37om1B-DMhhRmVSrWq_AyF6vmcVSGjz9Av0SACHAVsIU4b1DQucOUXaxTPzl8aDpzyUw'
