@@ -65,3 +65,11 @@ https://scholar.google.com/scholar?q=computer+network+security&hl=en&as_sdt=0%2C
 'NID': '101=GascO37p3VoBYkwSB43S9c-Vuoo2Q4MoMCGFeW5E8OdG3Fmxh1BYhvyGeF2a37om1B-DMhhRmVSrWq_AyF6vmcVSGjz9Av0SACHAVsIU4b1DQucOUXaxTPzl8aDpzyUw'
 
 决定继续写test爬虫，这次采用手工获取cookie和user-agent的方式，明天写代码。
+
+---------------------------------2017.04.14------------------------------------
+发现一个python库，user_agent, 可以生成user_agent,安装如下：
+pip install -U user_agent
+使用方法：
+from user_agent import generate_user_agent
+Agent = generate_user_agent()
+

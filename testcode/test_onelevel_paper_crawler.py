@@ -7,7 +7,7 @@ from time import sleep
 import re
 from user_agent import generate_user_agent
 
-db = MySQLdb.connect(host='localhost', user='jingfei', passwd='hanjingfei007', db='test_citation', charset='utf8')
+db = MySQLdb.connect(host='localhost', user='root', passwd='hanjingfei007', db='test_citation', charset='utf8')
 cursor = db.cursor()
 
 my_user_agent = generate_user_agent()
@@ -27,18 +27,18 @@ cursor.execute(sql_select)
 res_set = cursor.fetchall()
 
 #url = https://a.ggkai.men/extdomains/scholar.google.com/scholar?hl=en&q=PAPER+NAME&btnG=&as_sdt=1%2C5&as_sdtp=
-
+index = 1
 for row_tuple in res_set:
-	paper_id = res_set[0]
-	paper_title = res_set[1]
+	paper_id = int(row_tuple[0])
+	paper_title = row_tuple[1]
 		
-    urlTitle = "https://a.ggkai.men/extdomains/scholar.google.com/scholar?hl=en&q="  +  str(row1Title.replace("+","%2B").replace("Fast track article: ","").replace("Research Article: ","").replace("Guest editorial: ","").replace("Letters: ","").replace("Editorial: ","").replace("Chaos and Graphics: ","").replace("Review: ","").replace("Education: ","").replace("Computer Graphics in Spain: ","").replace("Graphics for Serious Games: ","").replace("Short Survey: ","").replace("Brief paper: ","").replace("Original Research Paper: ","").replace("Review: ","").replace("Poster abstract: ","").replace("Erratum to: ","").replace("Review: ","").replace("Guest Editorial: ","").replace("Review article: ","").replace("Editorial: ","").replace("Short Communication: ","").replace("Invited paper: ","").replace("Book review: ","").replace("Technical Section: ","").replace("Fast communication: ","").replace("Note: ","").replace("Introduction: ","").replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdt=1%2C5&as_sdtp='
+	urlTitle = "https://scholar.google.com/scholar?hl=en&q="  +  str(paper_title.replace("+","%2B").replace("Fast track article: ","").replace("Research Article: ","").replace("Guest editorial: ","").replace("Letters: ","").replace("Editorial: ","").replace("Chaos and Graphics: ","").replace("Review: ","").replace("Education: ","").replace("Computer Graphics in Spain: ","").replace("Graphics for Serious Games: ","").replace("Short Survey: ","").replace("Brief paper: ","").replace("Original Research Paper: ","").replace("Review: ","").replace("Poster abstract: ","").replace("Erratum to: ","").replace("Review: ","").replace("Guest Editorial: ","").replace("Review article: ","").replace("Editorial: ","").replace("Short Communication: ","").replace("Invited paper: ","").replace("Book review: ","").replace("Technical Section: ","").replace("Fast communication: ","").replace("Note: ","").replace("Introduction: ","").replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdt=1%2C5&as_sdtp='
 	flag_jump = 0
 	flag_scholar = 1 #Record if we can get paper in google scholar
 	flag_connection = 1 #Record if we can request html successfully
 	while True:
 		try:
-			response = requests.get(url, headers = headers)
+			response = requests.get(urlTitle, headers = headers)
 			#Success, change the headers
 			my_user_agent = generate_user_agent()
 			headers['User-Agent'] = my_user_agent
@@ -74,22 +74,25 @@ for row_tuple in res_set:
 		continue
 	try:
 		link = soup.find("a", text=re.compile("Cited")).get_text()
-		paper_bCitation = int(link.strip('Cited by'))
+		paper_nbCitation = int(link.strip('Cited by'))
 	except:
 		paper_nbCitation = 0
 	try:
-		temp = soup.find("a", text=re.compile("pdf")).get_text()
+		temp = soup.find("span", attrs={"class":"gs_ctg2"}).get_text()
 		paper_isseen = 1
 	except:
 		paper_isseen = 0
 	
 	sql_update = "UPDATE test_citation.test_paper SET paper_nbCitation = '%d'\
-				AND paper_isseen= '%d' WHERE paper_id='%d'"\
+				, paper_isseen= '%d' WHERE paper_id='%d'"\
 				%(paper_nbCitation, paper_isseen, paper_id)
 	try:
 		cursor.execute(sql_update)
 		db.commit()
 	except:
 		print "Update FAILED!"
+
+	print "----------------------%d SUSCESSED!  ----------------------" %index
+	index += 1
 
 
