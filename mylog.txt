@@ -77,3 +77,6 @@ Agent = generate_user_agent()
 cookie不易获取， 准备尝试先爬代理， 然后用代理爬国内google学术的镜像。
 发现一个requests的关键属性,比如：res = requests.get(url)
 res.status_code为状态码，200为正常（requests.codes.ok）
+
+从西刺代理网站爬取500个代理IP和端口号
+问题：很多代理无法ping通。
