@@ -39,6 +39,7 @@ for row_tuple in res_set:
 	while True:
 		try:
 			response = requests.get(urlTitle, headers = headers)
+			sleep(2) #break 2 seconds
 			#Success, change the headers
 			my_user_agent = generate_user_agent()
 			headers['User-Agent'] = my_user_agent
