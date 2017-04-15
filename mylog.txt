@@ -73,3 +73,7 @@ pip install -U user_agent
 from user_agent import generate_user_agent
 Agent = generate_user_agent()
 
+---------------------------------2017.04.15------------------------------------
+cookie不易获取， 准备尝试先爬代理， 然后用代理爬国内google学术的镜像。
+发现一个requests的关键属性,比如：res = requests.get(url)
+res.status_code为状态码，200为正常（requests.codes.ok）
