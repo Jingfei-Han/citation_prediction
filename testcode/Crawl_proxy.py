@@ -19,25 +19,33 @@ url = "http://www.xicidaili.com/wn/"
 #先爬1页的代理
 output = open('proxies.txt', 'w')
 
-response = requests.get(url, headers = headers)
-assert(response.status_code == requests.codes.ok) #判断是否获取网页成功 
+def crawlproxies(url, output, headers):
 
-soup = BeautifulSoup(response.text)
+	response = requests.get(url, headers = headers)
+	assert(response.status_code == requests.codes.ok) #判断是否获取网页成功 
 
-tag_div = soup.find(name="div", attrs={"id":"body", "class":"clearfix proxies"})
-tag_table = tag_div.find(name="table", attrs={"id":"ip_list"})
-tag_tr = tag_table.find_all("tr", attrs={"class":"odd"})
+	soup = BeautifulSoup(response.text)
 
-regex_ip = "((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))"
-for td in tag_tr:
-	tag_ip = td.find("td", text=re.compile(regex_ip))
-	tag_port = td.find("td", text = re.compile("^\d+$"))
+	tag_div = soup.find(name="div", attrs={"id":"body", "class":"clearfix proxies"})
+	tag_table = tag_div.find(name="table", attrs={"id":"ip_list"})
+	tag_tr = tag_table.find_all("tr", attrs={"class":"odd"})
 
-	ip = tag_ip.text.strip()
-	port = tag_port.text.strip()
-	string = ip + ":" + port + "\n"
-	output.write(string)
+	regex_ip = "((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))"
+	for td in tag_tr:
+		tag_ip = td.find("td", text=re.compile(regex_ip))
+		tag_port = td.find("td", text = re.compile("^\d+$"))
 
+		ip = tag_ip.text.strip()
+		port = tag_port.text.strip()
+		string = ip + ":" + port + "\n"
+		output.write(string)
+#爬n页的代理
+def crawl(page=1):
+	for index in range(1,page+1):
+		cur_url = url + str(index)
+		crawlproxies(cur_url, output, headers)
+
+crawl(10)
 output.close()
 
 
