@@ -108,7 +108,8 @@ for row_tuple in res_set:
 		cursor.execute(sql_update)
 		db.commit()
 	except:
-		fp.write("Update FAILED!\n") 
+		fp.write("Update FAILED!\n")
+	print "----------------------%d SUSCESSED!  ----------------------" %index 
 	fp.write("----------------------%d SUSCESSED!  ----------------------\n" %index) 
 	index += 1
 
