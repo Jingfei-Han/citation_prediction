@@ -110,3 +110,10 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 demo跑了1056次，我主动停了demo，准备更新数据库。
+先在demo中运行，首先在test_paper表中加入两列属性，一个是引用链接，另一个是pdf链接
+
+Mysql语句为：
+ALTER TABLE test_citation.test_paper ADD COLUMN paper_citationURL VARCHAR(2550);
+ALTER TABLE test_citation.test_paper ADD COLUMN paper_pdfURL VARCHAR(2550);
+
+添加Crawl_paper，用于真实数据库爬虫
