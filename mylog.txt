@@ -101,3 +101,10 @@ res.status_code为状态码，200为正常（requests.codes.ok）
 3. 数据库表内容的优化（直接去掉不必要内容）
 4. dblp名字变更问题
 5. 二级爬虫程序未写
+
+在爬镜像网站时在headers中加入cookie，可以连续爬取，目前到第262个遇到问题，原因是ascii编码的问题
+问题： 对于论文Designing urban media façades: cases and challenges，其中包括非ascii编码的字符
+解决：编码问题，可以设置默认编码， 方式如下：
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
