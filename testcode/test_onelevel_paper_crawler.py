@@ -91,6 +91,8 @@ def Parser_google(urlTitle, paper_title, headers, proxies=None):
 	flag_jump = 0
 	paper_nbCitation = -1
 	paper_isseen = -1
+	paper_citationURL = ""
+	paper_pdfURL = ""
 	while True:
 		try:
 			response = requests.get(urlTitle, headers = headers)#, proxies = proxies
@@ -103,7 +105,7 @@ def Parser_google(urlTitle, paper_title, headers, proxies=None):
 			flag_jump += 1
 			if flag_jump > 5:
 				print "This paper can't be connected!"
-				return paper_nbCitation, paper_isseen 
+				return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
 			sleep(5)
 
 	print "The status code: %d" %response.status_code
@@ -111,25 +113,29 @@ def Parser_google(urlTitle, paper_title, headers, proxies=None):
 	try:
 		soup.find("a", text = re.compile("Try your query on the entire web")).get_text()
 		print "Not found in goole scholar."
-		return paper_nbCitation, paper_isseen 
+		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
 	except:
 		try:
 			soup.find("div", {"class":"gs_a"}).get_text()
 			print "Found in google scholar."
 		except:
 			print "The paper " + paper_title +" need be checked by hand!"
-			return paper_nbCitation, paper_isseen 
+			return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
 	try:
-		link = soup.find("a", text=re.compile("Cited")).get_text()
+		link_raw = soup.find("a", text=re.compile("Cited"))
+		link = link_raw.get_text()
+		paper_citationURL = link_raw.get('href') #获得引用链接
 		paper_nbCitation = int(link.strip('Cited by'))
 	except:
 		paper_nbCitation = 0
 	try:
+		link_pdf = soup.find("div", attrs={"class":"gs_ggsd"})
+		paper_pdfURL = link_pdf.a['href']
 		soup.find("span", attrs={"class":"gs_ctg2"}).get_text()
 		paper_isseen = 1
 	except:
 		paper_isseen = 0
-	return paper_nbCitation, paper_isseen
+	return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -144,14 +150,15 @@ for row_tuple in res_set:
 	#proxies = {"https": "https://110.73.201.111:8123"}
 	#my_user_agent = generate_user_agent()
 	#headers['User-Agent'] = my_user_agent
-	paper_nbCitation, paper_isseen = Parser_google(urlTitle, paper_title, headers)
+	paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL = Parser_google(urlTitle, paper_title, headers)
 	if paper_nbCitation == -1:
 		#当前论文未找到
 		continue
 	try:
 		sql_update = "UPDATE test_citation.test_paper SET paper_nbCitation = '%d'\
-				, paper_isseen= '%d' WHERE paper_id='%d'"\
-				%(paper_nbCitation, paper_isseen, paper_id)
+				, paper_isseen= '%d', paper_citationURL = '%s', paper_pdfURL = '%s'\
+				WHERE paper_id='%d'"\
+				%(paper_nbCitation, paper_isseen, paper_citationURL.replace('\'', '\\\'').strip(), paper_pdfURL.replace('\'', '\\\'').strip(), paper_id)
 		cursor.execute(sql_update)
 		db.commit()
 	except:
