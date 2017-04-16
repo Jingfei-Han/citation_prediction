@@ -108,3 +108,5 @@ res.status_code为状态码，200为正常（requests.codes.ok）
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
+
+demo跑了1056次，我主动停了demo，准备更新数据库。
