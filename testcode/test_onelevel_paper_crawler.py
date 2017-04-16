@@ -9,11 +9,14 @@ from user_agent import generate_user_agent
 import random
 import subprocess
 import shlex
+import sys
 
 db = MySQLdb.connect(host='localhost', user='root', passwd='hanjingfei007', db='test_citation', charset='utf8')
 cursor = db.cursor()
 
 my_user_agent = generate_user_agent()
+"""
+#goolge scholar headers
 headers = {
 	'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 	'Accept-Encoding':'gzip, deflate, sdch, br',
@@ -24,10 +27,27 @@ headers = {
 	'User-Agent': my_user_agent,
 	'Cache-Control':'max-age=0',
 }
+"""
+#镜像headers
+headers = {
+	'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+	'Accept-Encoding':'gzip, deflate, sdch, br',
+	'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4',
+	'Connection':'keep-alive',
+	'Host':'b.ggkai.men',
+	'Referer':'https://b.ggkai.men/extdomains/scholar.google.com/schhp?hl=en&num=20&as_sdt=0',
+	'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+	'Cache-Control':'max-age=0',
+	'Cookie':'NID=101=ZPX_tebnsmlbtsniyMAFKDXfTNmNmI9p9jF6HVl5luswkM7qLeWnkHFpPmdL0beGn0lCaJjGgevBsBOj2qnLDPHi2NCujP3CRk-8rUIfsHXc0ycB_ToZS5gAO5buBDzJ; GSP=LM=1492323405:S=6WH6FgIC17h7zhM5; Hm_lvt_df11358c4b6a37507eca01dfe919e040=1492323406,1492341461; Hm_lpvt_df11358c4b6a37507eca01dfe919e040=1492341461',
+}
 
+index = 0
+sql_cnt = "SELECT COUNT(*) FROM test_citation.test_paper WHERE paper_nbCitation !=-1"
+cursor.execute(sql_cnt)
+index = cursor.fetchone()[0]
+index += 1 #当前条数
 
-
-sql_select = "SELECT paper_id, paper_title FROM test_citation.test_paper"
+sql_select = "SELECT paper_id, paper_title FROM test_citation.test_paper WHERE paper_nbCitation =-1"
 cursor.execute(sql_select)
 res_set = cursor.fetchall()
 
@@ -111,7 +131,9 @@ def Parser_google(urlTitle, paper_title, headers, proxies=None):
 		paper_isseen = 0
 	return paper_nbCitation, paper_isseen
 
-index = 1
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 for row_tuple in res_set:
 	paper_id = int(row_tuple[0])
 	paper_title = row_tuple[1]
