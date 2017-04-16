@@ -80,3 +80,24 @@ res.status_code为状态码，200为正常（requests.codes.ok）
 
 从西刺代理网站爬取500个代理IP和端口号
 问题：很多代理无法ping通。
+
+---------------------------------2017.04.16------------------------------------
+对Crawl_proxy:
+写一个函数用于判断是否ip可以ping通，只有能够ping通的才会被写入proxies.txt中
+
+问题：cmd下运行python出现SyntaxError错误
+解决：因为有中文注释，第一行加上#encoding:utf-8
+
+问题：代理用不了，报错：
+ ProxyError: HTTPSConnectionPool(host='b.ggkai.men', port=443): Max retries exceeded with url: /extdomains/scholar.google.com/scholar?hl=en&q=Usable+gestures+for+mobile+interfaces%3A+evaluating+social+acceptability+&btnG=&as_sdt=1%2C5&as_sdtp= (Caused by ProxyError('Cannot connect to proxy.', error(10054, '')))
+
+
+代理发现镜像网站好像没有反爬虫，先测试8000个左右例子，看是否有问题
+发现大概爬100个左右会出现重定向次数过多的情况，需要清除cookie
+
+梳理下现在的有待解决的问题：
+1. 数据库表结构优化
+2. paper加上一些属性，比如引用的url等
+3. 数据库表内容的优化（直接去掉不必要内容）
+4. dblp名字变更问题
+5. 二级爬虫程序未写
