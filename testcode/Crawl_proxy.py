@@ -1,6 +1,9 @@
+#encoding:utf-8
 import requests
 from bs4 import BeautifulSoup
 import re
+import subprocess
+import shlex
 
 headers = {
 	
@@ -19,6 +22,17 @@ url = "http://www.xicidaili.com/wn/"
 #先爬1页的代理
 output = open('proxies.txt', 'w')
 
+def PING(ip):
+	#cmd = "ping -c 1 "+ ip #linux
+	cmd = "ping -n 1 " + ip #windows
+	args = shlex.split(cmd)
+	try:
+		subprocess.check_call(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		return True
+	except:
+		return False
+
+output_index = 1
 def crawlproxies(url, output, headers):
 
 	response = requests.get(url, headers = headers)
@@ -38,7 +52,15 @@ def crawlproxies(url, output, headers):
 		ip = tag_ip.text.strip()
 		port = tag_port.text.strip()
 		string = ip + ":" + port + "\n"
-		output.write(string)
+		if PING(ip):
+			output.write(string)
+			print "%3dth SUCESS!" %output_index
+		else:
+			print "%3dth FALSE!" %output_index
+		
+		global output_index
+		output_index += 1
+
 #爬n页的代理
 def crawl(page=1):
 	for index in range(1,page+1):
