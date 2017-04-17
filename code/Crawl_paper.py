@@ -10,11 +10,14 @@ import sys
 
 db = MySQLdb.connect(host='localhost', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
+fp = open("LOG_paper.txt", "a")
 
 #这里记录参数，命令行访问格式为:
 #python Crawl_paper.py A Conference
 CCF_classification = sys.argv[1]
 CCF_type = sys.argv[2]
+
+print "Now we prepare to crawl %s CCF classification and %s Venue' paper" %(CCF_classification, CCF_type)
 
 #镜像headers
 headers = {
@@ -35,14 +38,28 @@ cursor.execute(sql_cnt)
 index = cursor.fetchone()[0]
 index += 1 #当前条数
 
+#sql_select = "SELECT paper_id, paper_title\
+#			FROM citation.paper WHERE paper_nbCitation =-1"
+
 sql_select = "SELECT paper_id, paper_title\
-			FROM citation.paper WHERE paper_nbCitation =-1"
-			
+			FROM citation.paper\
+			WHERE venue_venue_id IN(\
+				SELECT venue_id\
+				FROM citation.venue\
+				WHERE dblp_dblp_id IN (\
+					SELECT dblp_id\
+					FROM citation.ccf, citation.dblp\
+					WHERE CCF_dblpname = dblp_name\
+					AND CCF_type = '%s'\
+					AND CCF_classification = '%s'\
+				)\
+			)\
+			AND paper_nbCitation = -1" %(CCF_type, CCF_classification)			
 
 cursor.execute(sql_select)
 res_set = cursor.fetchall()
 
-fp = open("LOG_paper.txt", "a")
+
 
 url = "https://b.ggkai.men/extdomains/scholar.google.com/"
 
