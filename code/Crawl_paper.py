@@ -11,6 +11,11 @@ import sys
 db = MySQLdb.connect(host='localhost', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
+#这里记录参数，命令行访问格式为:
+#python Crawl_paper.py A Conference
+CCF_classification = sys.argv[1]
+CCF_type = sys.argv[2]
+
 #镜像headers
 headers = {
 	'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -30,7 +35,10 @@ cursor.execute(sql_cnt)
 index = cursor.fetchone()[0]
 index += 1 #当前条数
 
-sql_select = "SELECT paper_id, paper_title FROM citation.paper WHERE paper_nbCitation =-1"
+sql_select = "SELECT paper_id, paper_title\
+			FROM citation.paper WHERE paper_nbCitation =-1"
+			
+
 cursor.execute(sql_select)
 res_set = cursor.fetchall()
 
