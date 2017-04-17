@@ -34,7 +34,7 @@ sql_select = "SELECT paper_id, paper_title FROM citation.paper WHERE paper_nbCit
 cursor.execute(sql_select)
 res_set = cursor.fetchall()
 
-fp = open("LOG_paper.txt", "w")
+fp = open("LOG_paper.txt", "a")
 
 url = "https://b.ggkai.men/extdomains/scholar.google.com/"
 
