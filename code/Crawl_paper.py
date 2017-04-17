@@ -10,14 +10,13 @@ import sys
 
 db = MySQLdb.connect(host='localhost', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
-fp = open("LOG_paper.txt", "a")
 
 #这里记录参数，命令行访问格式为:
 #python Crawl_paper.py A Conference
 CCF_classification = sys.argv[1]
 CCF_type = sys.argv[2]
-
-print "Now we prepare to crawl %s CCF classification and %s Venue' paper" %(CCF_classification, CCF_type)
+#写入log文件需要改下名字
+fp = open("./log/LOG_paper_"+CCF_classification + "_"+CCF_type+".txt", "a")
 
 #镜像headers
 headers = {
@@ -33,10 +32,46 @@ headers = {
 }
 
 index = 0
-sql_cnt = "SELECT COUNT(*) FROM citation.paper WHERE paper_nbCitation !=-1"
+
+#sql_cnt = "SELECT COUNT(*) FROM citation.paper WHERE paper_nbCitation !=-1"
+sql_cnt = "SELECT COUNT(*) FROM citation.paper\
+			WHERE venue_venue_id IN(\
+				SELECT venue_id FROM citation.venue\
+				WHERE dblp_dblp_id IN(\
+					SELECT dblp_id\
+					FROM citation.ccf, citation.dblp\
+					WHERE CCF_dblpname = dblp_name\
+					AND CCF_type = '%s'\
+					AND CCF_classification = '%s'\
+				)\
+			)" %(CCF_type, CCF_classification)
+
+sql_cnt_index = "SELECT COUNT(*) FROM citation.paper\
+			WHERE venue_venue_id IN(\
+				SELECT venue_id FROM citation.venue\
+				WHERE dblp_dblp_id IN(\
+					SELECT dblp_id\
+					FROM citation.ccf, citation.dblp\
+					WHERE CCF_dblpname = dblp_name\
+					AND CCF_type = '%s'\
+					AND CCF_classification = '%s'\
+				)\
+			)\
+			AND paper_nbCitation != -1" %(CCF_type, CCF_classification)
+
 cursor.execute(sql_cnt)
+total = cursor.fetchone()[0] #总共的论文数量
+
+cursor.execute(sql_cnt_index)
 index = cursor.fetchone()[0]
 index += 1 #当前条数
+
+info_print = "Now we prepare to crawl %s CCF classification and %s Venue paper" %(CCF_classification, CCF_type)
+info_cnt = "Total: %5d    Current: %5d" %(total, index)
+print info_print
+print info_cnt
+fp.write(info_print + "\n")
+fp.write(info_cnt + "\n")
 
 #sql_select = "SELECT paper_id, paper_title\
 #			FROM citation.paper WHERE paper_nbCitation =-1"
@@ -76,6 +111,7 @@ def Parser_google(urlTitle, paper_title, headers, proxies=None):
 			sleep(time_sleep) #break 2 seconds
 			break
 		except:
+			print "Connection FAILED! We need have 3 seconds break."
 			fp.write("Connection FAILED! We need have a 5 seconds break.\n") 
 			flag_jump += 1
 			if flag_jump > 5:

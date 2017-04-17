@@ -1,0 +1,54 @@
+Now we prepare to crawl B CCF classification and Conference Venue paper
+Total: 19019    Current:     1
+----------------------1 SUSCESSED!  ----------------------
+----------------------2 SUSCESSED!  ----------------------
+----------------------3 SUSCESSED!  ----------------------
+----------------------4 SUSCESSED!  ----------------------
+----------------------5 SUSCESSED!  ----------------------
+----------------------6 SUSCESSED!  ----------------------
+----------------------7 SUSCESSED!  ----------------------
+----------------------8 SUSCESSED!  ----------------------
+----------------------9 SUSCESSED!  ----------------------
+----------------------10 SUSCESSED!  ----------------------
+----------------------11 SUSCESSED!  ----------------------
+----------------------12 SUSCESSED!  ----------------------
+----------------------13 SUSCESSED!  ----------------------
+----------------------14 SUSCESSED!  ----------------------
+----------------------15 SUSCESSED!  ----------------------
+----------------------16 SUSCESSED!  ----------------------
+----------------------17 SUSCESSED!  ----------------------
+----------------------18 SUSCESSED!  ----------------------
+----------------------19 SUSCESSED!  ----------------------
+----------------------20 SUSCESSED!  ----------------------
+----------------------21 SUSCESSED!  ----------------------
+----------------------22 SUSCESSED!  ----------------------
+----------------------23 SUSCESSED!  ----------------------
+----------------------24 SUSCESSED!  ----------------------
+----------------------25 SUSCESSED!  ----------------------
+----------------------26 SUSCESSED!  ----------------------
+----------------------27 SUSCESSED!  ----------------------
+----------------------28 SUSCESSED!  ----------------------
+----------------------29 SUSCESSED!  ----------------------
+----------------------30 SUSCESSED!  ----------------------
+----------------------31 SUSCESSED!  ----------------------
+----------------------32 SUSCESSED!  ----------------------
+----------------------33 SUSCESSED!  ----------------------
+----------------------34 SUSCESSED!  ----------------------
+----------------------35 SUSCESSED!  ----------------------
+The paper Inspired by the audience: a topic suggestion system for blog writers and readers need be checked by hand!
+The paper Chatter on the red: what hazards threat reveals about the social life of microblogged information need be checked by hand!
+The paper Telling the whole story: anticipation, inspiration and reputation in a field deployment of TellTable need be checked by hand!
+The paper Opening up the family archive need be checked by hand!
+The paper Three's company: understanding communication channels in three-way distributed collaboration need be checked by hand!
+The paper Sources of errors in distributed development projects: implications for collaborative tools need be checked by hand!
+The paper Communication, collaboration, and bugs: the social nature of issue tracking in small, collocated teams need be checked by hand!
+The paper Information needs in bug reports: improving cooperation between developers and users need be checked by hand!
+The paper Invisible emotion: information and interaction in an emergency room need be checked by hand!
+The paper Understanding together: sensemaking in collaborative information seeking need be checked by hand!
+The paper Why the plan doesn't hold: a study of situated planning, articulation and coordination work in a surgical ward need be checked by hand!
+The paper What's it worth to you?: the costs and affordances of CMC tools to asian and american users need be checked by hand!
+The paper Groups in groups: conversational similarity in online multicultural multiparty brainstorming need be checked by hand!
+The paper Street fighter IV: braggadocio off and on-line need be checked by hand!
+The paper The individual and the group in console gaming need be checked by hand!
+The paper The roles that make the domestic work need be checked by hand!
+The paper Sonic souvenirs: exploring the paradoxes of recorded sound for family rememberin
