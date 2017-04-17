@@ -117,3 +117,24 @@ ALTER TABLE test_citation.test_paper ADD COLUMN paper_citationURL VARCHAR(2550);
 ALTER TABLE test_citation.test_paper ADD COLUMN paper_pdfURL VARCHAR(2550);
 
 添加Crawl_paper，用于真实数据库爬虫
+
+-------------------------------------------2017.04.17------------------------------------------------
+本来准备将所有论文的引用全部爬下来， 现在来看可以分开来爬， 按类来爬。 SQL程序如下：
+#找出所有A类会议、未被爬过的的论文名
+SELECT paper_id, paper_title, paper_nbCitation, paper_isseen
+FROM citation.paper
+WHERE venue_venue_id IN(
+			SELECT venue_id#, venue_name, venue_dblpname
+				FROM citation.venue
+					WHERE dblp_dblp_id IN (
+								SELECT dblp_id
+										FROM citation.ccf, citation.dblp
+												WHERE CCF_dblpname = dblp_name
+														AND CCF_type = 'conference'
+																AND CCF_classification = 'A'
+																		)
+		)
+AND paper_nbCitation != -1
+
+这里参数就是CCF_type 和CCF_classification
+
