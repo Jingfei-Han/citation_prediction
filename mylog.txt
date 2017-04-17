@@ -124,16 +124,16 @@ ALTER TABLE test_citation.test_paper ADD COLUMN paper_pdfURL VARCHAR(2550);
 SELECT paper_id, paper_title, paper_nbCitation, paper_isseen
 FROM citation.paper
 WHERE venue_venue_id IN(
-			SELECT venue_id#, venue_name, venue_dblpname
-				FROM citation.venue
-					WHERE dblp_dblp_id IN (
-								SELECT dblp_id
-										FROM citation.ccf, citation.dblp
-												WHERE CCF_dblpname = dblp_name
-														AND CCF_type = 'conference'
-																AND CCF_classification = 'A'
-																		)
-		)
+	SELECT venue_id#, venue_name, venue_dblpname
+	FROM citation.venue
+	WHERE dblp_dblp_id IN (
+		SELECT dblp_id
+		FROM citation.ccf, citation.dblp
+		WHERE CCF_dblpname = dblp_name
+		AND CCF_type = 'conference'
+		AND CCF_classification = 'A'
+	)
+)
 AND paper_nbCitation != -1
 
 这里参数就是CCF_type 和CCF_classification
