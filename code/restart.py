@@ -18,9 +18,9 @@ def recycle_eval(c1, c2, inc):
 	os.system(c1)
 	
 	#print time.ctime(),'test killed'
-	p = multiprocessing.Process(target=start_test, args=(c2+'C Conference',))
+	p = multiprocessing.Process(target=start_test, args=(c2+'A Conference',))
 	p.start()
-	p1 = multiprocessing.Process(target=start_test, args=(c2+'C Journal',))
+	p1 = multiprocessing.Process(target=start_test, args=(c2+'A Journal',))
 	p1.start()
 	
 	
@@ -29,10 +29,10 @@ def recycle_eval(c1, c2, inc):
 
 
 if __name__ == '__main__':
-	inc = 20   #多久重启一次
-	p = multiprocessing.Process(target=start_test, args=(cmd2+'C Conference',))
+	inc = 600   #多久重启一次
+	p = multiprocessing.Process(target=start_test, args=(cmd2+'A Conference',))
 	p.start()
-	p1 = multiprocessing.Process(target=start_test, args=(cmd2+'C Journal',))
+	p1 = multiprocessing.Process(target=start_test, args=(cmd2+'A Journal',))
 	p1.start()
 	
 	schedule.enter(inc, 0, recycle_eval, (cmd, cmd2, inc))
