@@ -138,3 +138,75 @@ AND paper_nbCitation != -1
 
 这里参数就是CCF_type 和CCF_classification
 
+--------------------------------------------2017.04.17-----------------------------------------------
+问题：爬虫程序阻塞，但是不会停止运行，这导致无法连续爬虫
+解决：编写定时重启程序的脚本，主要是两步：杀死进程、启动进程
+代码见code/restart.py
+
+
+---------------------------------------------2017.04.19----------------------------------------------
+问题：发现爬虫解析网页内容有逻辑问题。目前发现很多pdf链接爬取错误。主要原因是如果显示超过一个结果，则会找到第一个有pdf的pdf链接（即不一定是第一个）因此导致错误。虽然没有看引用数是否有问题，但是感觉逻辑上也可能有问题。
+解决：暂时未解决。
+
+现在工作大概有三部分：数据库、DBLP、Google Scholar
+数据库：可能数据从Aminer移植过程中，由于去噪等逻辑漏洞，导致移植出错
+DBLP：一文多投、一刊多名等问题
+Scholar： 逻辑问题，try except块应该保证逻辑正确，可以多输出中间信息
+
+同时现在脚本运行的日志记录有问题，比如第几条成功的情况下是不用记录的
+
+准备将这三部分的数据错误问题解决一下再继续后面的工作。
+首先是数据库
+将钱学长给的全部数据的数据库citation_raw与我们数据库citation做比较，SQL代码如下：
+SELECT citation.paper.paper_id, citation.paper.paper_title, citation.venue.venue_name, citation_raw.paper.paper_venue_name
+FROM citation.paper, citation.venue, citation_raw.paper
+WHERE citation.paper.paper_id = citation_raw.paper.paper_id
+AND citation.paper.venue_venue_id = citation.venue.venue_id
+AND citation.venue.venue_name != citation_raw.paper.paper_venue_name
+
+最终得到结果，有486篇论文的venue_name不一样，使用Aminer数据库进行比较，最终得到：
+####################例子1###################
+'1401710', 'Panlingual lexical translation via probabilistic inference', 'Artificial Intelligence', 'Proceedings of the Twenty-Fourth AAAI Conference on Artificial Intelligence, AAAI 2010'
+
+citation_raw：Proceedings of the Twenty-Fourth AAAI Conference on Artificial Intelligence, AAAI 2010
+citation: Artificial Intelligence
+AMiner : Artificial Intelligence
+证明我们的数据库没有问题。
+究其原因，我将该论文：Panlingual lexical translation via probabilistic inference放到DBLP数据库中搜索，得到结果如下：
+found 2 matches
+2010
+	Mausam, Stephen Soderland, Oren Etzioni, Daniel S. Weld, Kobi Reiter, Michael Skinner, Marcus Sammer, Jeff A. Bilmes:
+Panlingual lexical translation via probabilistic inference. Artif. Intell. 174(9-10): 619-637 (2010)
+	Mausam, Stephen Soderland, Oren Etzioni:
+Panlingual Lexical Translation via Probabilistic Inference. AAAI 2010
+maintained by Schloss Dagstuhl LZI at University of Trier	homebrowsesearchabout
+open data data released under the ODC-BY 1.0 license; see also our legal information page
+
+可以发现该论文在2010年被放到了AI期刊和AIII会议。
+##################例子2######################
+'2078528', 'Proceedings of the 15th Eurographics Conference on Visualization', 'EuroVis \'13 Proceedings of the 15th Eurographics Conference on Visualization', 'Computer Graphics Forum'
+
+citation_raw : Computer Graphics Forum
+citation : EuroVis '13 Proceedings of the 15th Eurographics Conference on Visualization
+AMiner : Proceedings of the 15th Eurographics Conference on Visualization
+citation是正确的，并且citation在插入数据过程中进行了一定的正则处理
+
+#################例子3#########################
+'1381004', 'Decoupled Linear Estimation of Affine Geometric Deformations and Nonlinear Intensity Transformations of Images', '', 'IEEE Transactions on Pattern Analysis and Machine Intelligence'
+
+citation_raw : IEEE Transactions on Pattern Analysis and Machine Intelligence
+citation : 空
+AMiner : 空
+citation是正确的
+
+#############################################
+总结：
+我们发现citation在venue栏应该是没有问题的， 学长的citation_raw应该是采用了别的方法得到的venue。
+下面构建一个AMiner数据库，其中就包括两个表，一个是paper表，一个是author表。
+从citation中把表结构复制过来（空表）, SQL代码如下
+CREATE TABLE aminer.paper LIKE citation.paper;
+CREATE TABLE aminer.author LIKE citation.author;
+
+结合程序Insert_Paper.py 和 Insert_Author2.py来编写程序，将所有aminer信息原封不动写入aminer数据库
+
+
