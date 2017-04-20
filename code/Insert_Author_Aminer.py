@@ -26,7 +26,7 @@ while True:
 	if line:
 		if line == '\n': #Insert data into the table
 
-			sql2 = "INSERT INTO citation1.author(author_id, author_name, author_NbTotPubPaper, author_H_Index, author_tag, author_affiliation_name) \
+			sql2 = "INSERT INTO author(author_id, author_name, author_NbTotPubPaper, author_H_Index, author_tag, author_affiliation_name) \
 					VALUES('%d', '%s', '%d', '%d', '%s', '%s')" %(dic['author_id'], dic['author_name'], dic['author_NbTotPubPaper'], dic['author_H_Index'], dic['author_tag'], dic['author_affiliation_name'])
 			try:
 				cursor.execute(sql2)

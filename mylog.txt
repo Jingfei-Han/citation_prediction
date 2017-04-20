@@ -208,5 +208,15 @@ CREATE TABLE aminer.paper LIKE citation.paper;
 CREATE TABLE aminer.author LIKE citation.author;
 
 结合程序Insert_Paper.py 和 Insert_Author2.py来编写程序，将所有aminer信息原封不动写入aminer数据库
+需要添加venue_name列，移出一些列，SQL代码如下：
 
+#删除列
+ALTER TABLE aminer.paper DROP COLUMN venue_venue_id;
+ALTER TABLE aminer.paper DROP COLUMN paper_isseen;
+ALTER TABLE aminer.paper DROP COLUMN paper_citationURL;
+ALTER TABLE aminer.paper DROP COLUMN paper_pdfURL;
+ALTER TABLE aminer.paper DROP COLUMN paper_nbCitation;
+#添加列
+ALTER TABLE aminer.paper ADD COLUMN paper_venuename VARCHAR(2550);
 
+下面准备把citation数据库中author 和 a2p加入数据库

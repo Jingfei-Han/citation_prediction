@@ -5,10 +5,10 @@ import MySQLdb.cursors
 import sys
 
 
-db = MySQLdb.connect(host='localhost', user='root', passwd='hanjingfei007', db='citation1', charset='utf8')
+db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
-f = open(r'../AMiner/AMiner-Author.txt', 'r')
+f = open(r'D:/Citation_prediction/AMiner/AMiner-Author.txt', 'r')
 #i = 0
 
 dic = {
@@ -26,7 +26,7 @@ while True:
 	if line:
 		if line == '\n': #Insert data into the table
 
-			sql2 = "INSERT INTO citation1.author(author_id, author_name, author_NbTotPubPaper, author_H_Index, author_tag, author_affiliation_name) \
+			sql2 = "INSERT INTO author(author_id, author_name, author_NbTotPubPaper, author_H_Index, author_tag, author_affiliation_name) \
 					VALUES('%d', '%s', '%d', '%d', '%s', '%s')" %(dic['author_id'], dic['author_name'], dic['author_NbTotPubPaper'], dic['author_H_Index'], dic['author_tag'], dic['author_affiliation_name'])
 			try:
 				cursor.execute(sql2)
@@ -42,7 +42,7 @@ while True:
 				'author_tag' : '',
 				'author_affiliation_name' : ''
 			}
-			if cur_index%1000 == 0:
+			if cur_index%10000 == 0:
 				print "The %dth author is INSERTED successfuly!" %cur_index
 			cur_index += 1
 			continue
