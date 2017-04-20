@@ -220,3 +220,10 @@ ALTER TABLE aminer.paper DROP COLUMN paper_nbCitation;
 ALTER TABLE aminer.paper ADD COLUMN paper_venuename VARCHAR(2550);
 
 下面准备把citation数据库中author 和 a2p加入数据库
+
+------------------------------------2017.04.20---------------------------------
+讨论目前存在的问题：
+CCF的DBLP名的爬虫问题：
+1. Likely matches, 有些情况是venue换名字，有些匹配的是错的，需要判断。但是Exact match是一定对的。
+2. Likely matches情况，如果venue换名字，应在mysql中加上两列，记录曾用名。
+3. 期刊的dblp名不是简称，但会议的dblp名应该是简称，需要再验证下。但是有些会议没有简称。
