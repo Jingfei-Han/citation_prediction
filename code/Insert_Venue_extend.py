@@ -7,6 +7,33 @@ import requests
 from bs4 import BeautifulSoup
 from time import sleep
 
+def warnInfo(string):
+	print string
+
+
+class extractPaper(object):
+	def __init__(self,url, headers):
+		self.url = url
+		self.headers = headers
+	
+	def _requestWeb(self):
+		cnt_res = 1
+		while(cnt_res <= 5):
+			try:
+				response = requests.get(url, headers = self.headers)
+				return response
+			except:
+				cnt_res += 1
+				continue
+		warnInfo("Connection FAILED! The url is: " + self.url)
+		return False
+	
+	def crawlWeb(self):
+		response = _requestWeb()
+		if response:
+			#获取网页成功
+			
+
 db = MySQLdb.connect(host='localhost', user='root', passwd='hanjingfei007', db='citation1', charset='utf8')
 cursor = db.cursor()
 
