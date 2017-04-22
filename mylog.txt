@@ -227,3 +227,9 @@ CCF的DBLP名的爬虫问题：
 1. Likely matches, 有些情况是venue换名字，有些匹配的是错的，需要判断。但是Exact match是一定对的。
 2. Likely matches情况，如果venue换名字，应在mysql中加上两列，记录曾用名。
 3. 期刊的dblp名不是简称，但会议的dblp名应该是简称，需要再验证下。但是有些会议没有简称。
+
+------------------------------------2017.04.21---------------------------------
+首先将citation数据库dump出来一份用于备份，放到本地~/dump目录下。
+下面清空mysql数据库的paper表、paper表、a2p表。然后将aminer中数据经过一定处理后放入数据库。
+目前venue和dblpname不匹配的：
+2925	DALT'10 Proceedings of the 8th international conference on Declarative agent languages and technologies VIII	AAMAS	625
