@@ -233,3 +233,27 @@ CCF的DBLP名的爬虫问题：
 下面清空mysql数据库的paper表、paper表、a2p表。然后将aminer中数据经过一定处理后放入数据库。
 目前venue和dblpname不匹配的：
 2925	DALT'10 Proceedings of the 8th international conference on Declarative agent languages and technologies VIII	AAMAS	625
+
+------------------------------------2017.04.22----------------------------------
+决定将citation数据库的paper表、veunue表的dblpname,dblp_dblp_id、 清空，然后加入经过预处理的aminer数据。
+aminer中paper需要预处理：
+1. 去除paper_title==venue_name的；
+2. 去除没有发表年份的；
+3. 处理paper_title,去掉无关部分；
+编写程序：Insert_Paper_extend.py
+
+问题：mysql读写安全模式
+解决：SET SQL_SAFE_UPDATES=0
+
+重新插入paper，venue后，发现以下情况：
+总共1343235篇2010-2014年的符合条件的论文，其中：
+1. 98823篇论文没有摘要
+2. 47篇论文的venue name为空
+3. 23篇论文的paper title为空
+因此我们需经过数据库处理，去除2,3两部分的数据。同时删除venue中的venue_name为空的（其venue_id='461'）。
+其SQL语句如下：
+USE citation;
+DELETE FROM paper WHERE paper_title = '';
+DELETE FROM paper WHERE venue_venue_id = '461';
+DELETE FROM venue WHERE venue_id = '461';
+
