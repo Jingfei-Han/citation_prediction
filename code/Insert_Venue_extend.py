@@ -75,16 +75,27 @@ class extractPaper(object):
 			ul = soup.find('ul', attrs={'class':'publ-list'})
 			try:
 				li = ul.find('li', attrs={'class':'entry article'})			
-				if type(li) == 'NoneType':
+				if li is None:
 					#说明不是期刊论文
 					li = ul.find('li', attrs={'class':'entry inproceedings'})			
-					if type(li) == 'NoneType':
+					if li is None:
 						#说明不是会议论文
-						raise Exception
+						li = ul.find('li', attrs={'class':'entry informal'})
+						if li is None:
+							li = ul.find('li', attrs={'class':'entry book'})
+							if li is None:
+								raise Exception
+							else:
+								#是书或者毕业论文
+								dblpname = self._getDblp(li)
+						else:
+							#非正式
+							dblpname = self._getDblp(li)
 					else:
 						#是会议论文
 						dblpname = self._getDblp(li)
 				else:
+					#期刊论文
 					dblpname = self._getDblp(li)
 			except:
 				warnInfo("Get dblpname FAILED!")
