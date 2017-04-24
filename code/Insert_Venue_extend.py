@@ -6,35 +6,109 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+import sys
 
 def warnInfo(string):
 	print string
 
 
 class extractPaper(object):
-	def __init__(self,url, headers):
+	def __init__(self,url, headers, paper_title):
 		self.url = url
 		self.headers = headers
+		self.paper_title = paper_title
 	
 	def _requestWeb(self):
 		cnt_res = 1
 		while(cnt_res <= 5):
 			try:
-				response = requests.get(url, headers = self.headers)
+				response = requests.get(self.url, headers = self.headers)
 				return response
 			except:
 				cnt_res += 1
 				continue
-		warnInfo("Connection FAILED! The url is: " + self.url)
-		return False
+		raise Exception #如果链接失败，则抛出异常，被调用函数捕获
 	
-	def crawlWeb(self):
-		response = _requestWeb()
-		if response:
-			#获取网页成功
-			
+	def _getDblp(self, li):
+		try:
+			cur_title = li.find('span', attrs={'class':'title', 'itemprop':'name'}).text
+		except:
+			print "NO NAME???"
+			raise Exception
+		#末尾都加上.
+		if cur_title[-1] != '.':
+			cur_title += '.'
+		paper_title = self.paper_title
+		if paper_title[-1] != '.':
+			paper_title += '.'
+		#去掉所有空格并转为小写字母，比较两个题目是否完全相同
+		cur_title_temp = cur_title.replace(" ","").lower()
+		paper_title_temp = paper_title.replace(" ", "").lower()
+		if cur_title_temp != paper_title_temp:
+			warnInfo("The two papers are different!\nCurrent: '%s'\nOrigin: '%s'\n"%(cur_title, paper_title))
+			raise Exception
+		else:
+			#匹配成功
+			try:
+				dblpname = li.find('span', attrs={'itemprop':'isPartOf'}).text
+			except:
+				print "NO isPartOf???"
+				raise Exception
+		return dblpname
 
-db = MySQLdb.connect(host='localhost', user='root', passwd='hanjingfei007', db='citation1', charset='utf8')
+
+	def _parse(self, response):
+		assert type(response) == requests.models.Response #判断response类型
+		soup = BeautifulSoup(response.text)
+		try:
+			#判断是否可以匹配到
+			match = soup.find(id='completesearch-info-matches').text
+		except:
+			warnInfo("Matches FAILED!")
+			raise Exception
+
+		if ((match != "found one match") && (match != "found 1 match")):
+			warnInfo(match)
+			raise Exception
+		else:
+			#只有一个匹配
+			ul = soup.find('ul', attrs={'class':'publ-list'})
+			try:
+				li = ul.find('li', attrs={'class':'entry article'})			
+				if type(li) == 'NoneType':
+					#说明不是期刊论文
+					li = ul.find('li', attrs={'class':'entry inproceedings'})			
+					if type(li) == 'NoneType':
+						#说明不是会议论文
+						raise Exception
+					else:
+						#是会议论文
+						dblpname = _getDblp(li)
+				else:
+					dblpname = _getDblp(li)
+			except:
+				warnInfo("Get dblpname FAILED!")
+				raise Exception
+					
+
+	def crawlWeb(self):
+		try:
+			response = _requestWeb()
+		except:
+			warnInfo("Connection FAILED! The url is: " + self.url)
+			raise Exception
+		try:
+			#获取网页成功
+			dblpname = _parse(self, response)	
+		except:
+			#获取网页失败
+			warnInfo("Parser is FAILED! The url is: " + self.url)
+			raise Exception #
+		return dblpname #返回dblpname值
+
+sql_ip = "192.168.1.198"
+#sql_ip = "127.0.0.1"
+db = MySQLdb.connect(host=sql_ip, user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
 # Make a headers
@@ -50,13 +124,7 @@ headers = {
             'Connection':'keep-alive',
             'Cache-Control':'max-age=0',}
 
-ipHttps = "http://182.88.88.109:8123"
-
-proxies = { 
-"http": ipHttps,
-}
-
-sql_select_venue = "SELECT COUNT(*) FROM citation1.venue" #The number of Venues
+sql_select_venue = "SELECT COUNT(*) FROM venue" #The number of Venues
 nb_venue = 0
 
 
@@ -66,7 +134,7 @@ try:
 except:
 	sys.exit("ERROR: SELECT the TABLE venue failed!")
 
-sql_select_dblp_notnull = "SELECT * FROM citation1.venue WHERE venue_dblpname IS NOT NULL ORDER BY venue_id DESC"
+sql_select_dblp_notnull = "SELECT * FROM venue WHERE venue_dblpname IS NOT NULL ORDER BY venue_id DESC"
 try:
 	cursor.execute(sql_select_dblp_notnull)
 	cur_venue_id = cursor.fetchone()[0]
@@ -77,16 +145,7 @@ except:
 #cur_venue_id = 32
 sleep_interval = 0; # When greater than 10, we need sleep.
 while(cur_venue_id <= nb_venue):
-	# sql_select_dblpname = "SELECT venue_dblpname FROM citation1.venue WHERE venue_id='%d' " %cur_venue_id
-	# try:
-	# 	cursor.execute(sql_select_dblpname)
-	# 	cur_dblpname = cursor.fetchone()[0]
-	# 	if cur_dblpname != "NULL": #Current dblpname was inserted!
-	# 		cur_venue_id += 1
-	# 		continue
-	# except:
-	# 	sys.exit("ERROR: SELECT the TABLE venue failed!")
-	sql_select_paper = "SELECT paper_title FROM citation1.paper WHERE venue_venue_id='%d' ORDER BY paper_publicationYear DESC" %cur_venue_id
+	sql_select_paper = "SELECT paper_title FROM paper WHERE venue_venue_id='%d' ORDER BY paper_publicationYear DESC" %cur_venue_id
 	try:
 		cursor.execute(sql_select_paper)
 		paper_titles = cursor.fetchall() #Find all papers from citation1.paper, where venue_venue_id is a particular value.
@@ -101,94 +160,26 @@ while(cur_venue_id <= nb_venue):
 		paper_title = paper_title_tuple[0]
 		if paper_title[-1] != '.':
 			paper_title += '.'
-		line = paper_title.replace("Fast track article: ","").replace("Research Article: ","").replace("Guest editorial: ","").replace("Letters: ","").replace("Editorial: ","").replace("Chaos and Graphics: ","").replace("Review: ","").replace("Education: ","").replace("Computer Graphics in Spain: ","").replace("Graphics for Serious Games: ","").replace("Short Survey: ","").replace("Brief paper: ","").replace("Original Research Paper: ","").replace("Review: ","").replace("Poster abstract: ","").replace("Erratum to: ","").replace("Review: ","").replace("Guest Editorial: ","").replace("Review article: ","").replace("Editorial: ","").replace("Short Communication: ","").replace("Invited paper: ","").replace("Book review: ","").replace("Technical Section: ","").replace("Fast communication: ","").replace("Note: ","").replace("Introduction: ","")
-		line = line.replace("%","%25").replace(" ", "%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'","%27")
+		line = paper_title.replace("%","%25").replace(" ", "%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'","%27")
 		url = "http://dblp.uni-trier.de/search?q=" + line
-		flag_jump = 0
-		while(True):
-			try:
-				response = requests.get(url, headers = headers, timeout=15)#, proxies=proxies)
-				break
-			except:
-				print "Connection FAILED! We need have a 5 seconds break."
-				flag_jump += 1
-				if flag_jump > 5:
-					print "This paper can't be connected! We must change the next paper."
-					break
-				sleep(5)
-		if (flag_jump > 5):
-			continue
-		#print "The %d Connection successfully!" %cur_venue_id
-		#http://dblp.uni-trier.de/search?q=Formal%20validation%20of%20fault%20management%20design%20solutions
-		# if sleep_interval > 10:
-		# 	sleep_interval = 0
-		# 	print "Have a 10 seconds break."
-		# 	sleep(10)
-		# else :
-		# 	sleep_interval += 1
 
-		soup = BeautifulSoup(response.text)
+		cur_extract = extractPaper(url, headers)
 		try:
-			match =  soup.find(id='completesearch-info-matches').text #Information about whether matches a dblp record.
+			dblpname = cur_extract.crawlWeb()
 		except:
-			print "ERROR: Match FAILED!"
-			#print "Current url is :"+ url 
-			continue
-		if match == "no matches":
-			#No matches in DBLP
-			print "no matches"
 			no_match += 1
-			if(no_match > 5):
-				print "The venue %d can't be searched in DBLP." %cur_venue_id
+			if no_match >=5:
+				warnInfo("The %dth venue is not in DBLP!" %cur_venue_id)
 				break
 			continue
-		else :
-			#match a dblp record successfully!
-			#unavail = soup.find(text = "service temporarily not available")
-			#if unavail:
-			#	print "ERROR: service temporarily not available"
-			#	sleep(3) # Sleep 3 seconds
-			#	continue
-			try:
-				li = soup.find('li', attrs={'class':'entry article'})
-				if li:
-					cur_title = li.find('span', attrs={'class':'title', 'itemprop':'name'}).text
-					if cur_title[-1] != '.':
-						cur_title += '.'
-					if cur_title.lower() != paper_title.lower():
-						no_match +=1
-						print "current title is : " + cur_title
-						print "our taget paper title is : " + paper_title
-						print "They are not the same paper, so we jump this paper."
-						continue
-					span = li.find('span',attrs={'itemprop':'isPartOf'})
-				else:
-					li = soup.find('li', attrs={'class':'entry inproceedings'})
-					if li:
-						cur_title = li.find('span', attrs={'class':'title', 'itemprop':'name'}).text
-						if cur_title != paper_title:
-							no_match +=1
-							continue
-						span = li.find('span',attrs={'itemprop':'isPartOf'})
-					else:
-						li = soup.find('li', attrs={'class':'entry informal'})
-						cur_title = li.find('span', attrs={'class':'title', 'itemprop':'name'})
-						if cur_title != paper_title:
-							no_match +=1
-							continue
-						span = li.find('span',attrs={'itemprop':'isPartOf'})
-			except:
-				print "DBLP FAILED!"
-				continue
-			dblp_name = span.text
-			sql_update = "UPDATE citation1.venue SET venue_dblpname='%s' WHERE venue_id='%d'" %(dblp_name, cur_venue_id)
-			try:
-				cursor.execute(sql_update)
-				db.commit()
-				print "The venue %d dblpname is update SUCCESSFULLY!" %cur_venue_id
-				break;
-			except:
-				sys.exit("This sql sentence : "  + sql_update +"  FAILED!")
+		sql_update = "UPDATE venue SET venue_dblpname='%s' WHERE venue_id='%d'" %(dblp_name, cur_venue_id)
+		try:
+			cursor.execute(sql_update)
+			db.commit()
+			print "The venue %d dblpname is update SUCCESSFULLY!" %cur_venue_id
+			break;
+		except:
+			sys.exit("This sql sentence : "  + sql_update +"  FAILED!")
 
 	cur_venue_id += 1
 
