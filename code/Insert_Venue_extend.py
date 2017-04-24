@@ -67,7 +67,7 @@ class extractPaper(object):
 			warnInfo("Matches FAILED!")
 			raise Exception
 
-		if ((match != "found one match") && (match != "found 1 match")):
+		if ((match != "found one match") and (match != "found 1 match")):
 			warnInfo(match)
 			raise Exception
 		else:
@@ -83,23 +83,23 @@ class extractPaper(object):
 						raise Exception
 					else:
 						#是会议论文
-						dblpname = _getDblp(li)
+						dblpname = self._getDblp(li)
 				else:
-					dblpname = _getDblp(li)
+					dblpname = self._getDblp(li)
 			except:
 				warnInfo("Get dblpname FAILED!")
 				raise Exception
-					
+		return dblpname
 
 	def crawlWeb(self):
 		try:
-			response = _requestWeb()
+			response = self._requestWeb()
 		except:
 			warnInfo("Connection FAILED! The url is: " + self.url)
 			raise Exception
 		try:
 			#获取网页成功
-			dblpname = _parse(self, response)	
+			dblpname = self._parse(response)	
 		except:
 			#获取网页失败
 			warnInfo("Parser is FAILED! The url is: " + self.url)
@@ -134,7 +134,7 @@ try:
 except:
 	sys.exit("ERROR: SELECT the TABLE venue failed!")
 
-sql_select_dblp_notnull = "SELECT * FROM venue WHERE venue_dblpname IS NOT NULL ORDER BY venue_id DESC"
+sql_select_dblp_notnull = "SELECT COUNT(*) FROM venue WHERE venue_dblpname IS NOT NULL ORDER BY venue_id DESC"
 try:
 	cursor.execute(sql_select_dblp_notnull)
 	cur_venue_id = cursor.fetchone()[0]
@@ -163,7 +163,7 @@ while(cur_venue_id <= nb_venue):
 		line = paper_title.replace("%","%25").replace(" ", "%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'","%27")
 		url = "http://dblp.uni-trier.de/search?q=" + line
 
-		cur_extract = extractPaper(url, headers)
+		cur_extract = extractPaper(url, headers, paper_title)
 		try:
 			dblpname = cur_extract.crawlWeb()
 		except:
@@ -171,8 +171,9 @@ while(cur_venue_id <= nb_venue):
 			if no_match >=5:
 				warnInfo("The %dth venue is not in DBLP!" %cur_venue_id)
 				break
+			sleep(2)
 			continue
-		sql_update = "UPDATE venue SET venue_dblpname='%s' WHERE venue_id='%d'" %(dblp_name, cur_venue_id)
+		sql_update = "UPDATE venue SET venue_dblpname='%s' WHERE venue_id='%d'" %(dblpname, cur_venue_id)
 		try:
 			cursor.execute(sql_update)
 			db.commit()
