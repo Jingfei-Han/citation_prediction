@@ -1,0 +1,29 @@
+no matchesParser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20finch%2C%20a%20robot%20for%20the%20CS%20classroom.no matchesParser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20discussion%20on%20adopting%20peer%20instruction%20in%20a%20course%20focused%20on%20risk%20management.no matchesParser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Methodologies%20for%20teaching%20"sprite%20sheet"%20programming%20techniques.no matchesParser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Teaching%20assistant%20in%20residence%3A%20a%20novel%20peer%20mentorship%20program%20for%20less%20experienced%20teaching%20assistants.no matchesParser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20multi-paradigm%20solution%20for%20an%20ancient%20puzzle.The 24th venue is not in DBLP!The two papers are different!
+Current: 'Technical opinion - Random selection from a stream of events.'
+Origin: 'Technical opinion: Random selection from a stream of events.'
+Get dblpname FAILED!Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Technical%20opinion%3A%20Random%20selection%20from%20a%20stream%20of%20events.
+The two papers are different!
+Current: 'Technical opinion - Random selection from a stream of events.'
+Origin: 'Technical opinion: Random selection from a stream of events.'
+
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Technical%20opinion%3A%20Random%20selection%20from%20a%20stream%20of%20events.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Editorial%3A%20Advanced%20technologies%20for%20homeland%20defense%20and%20security.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Detection%20of%20fillet%20weld%20joints%20using%20an%20adaptive%20line%20growing%20algorithm%20for%20robotic%20arc%20welding.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Editorial%3A%20Advanced%20technologies%20for%20homeland%20defense%20and%20security.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Detection%20of%20fillet%20weld%20joints%20using%20an%20adaptive%20line%20growing%20algorithm%20for%20robotic%20arc%20welding.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Micro%20tracking%20and%20positioning%20using%20off-the-shelf%20servopneumatics.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Cable-direct-driven-robot%20(CDDR)%20with%20a%203-link%20passive%20serial%20support.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=An%20accurate%20approach%20to%20roller%20path%20generation%20for%20robotic%20fibre%20placement%20of%20free-form%20surface%20composites.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Helical%20surface%20creation%20by%20wire%20electrical%20discharge%20machining%20for%20micro%20tools.
+The 29th venue is not in DBLP!
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Editorial%3A%20Functional%20and%20(Constraint)%20Logic%20Programming.
