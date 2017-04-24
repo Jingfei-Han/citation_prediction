@@ -257,3 +257,13 @@ DELETE FROM paper WHERE paper_title = '';
 DELETE FROM paper WHERE venue_venue_id = '461';
 DELETE FROM venue WHERE venue_id = '461';
 
+-----------------------------------2017.04.24-------------------------------------
+在ccf和core表中添加两列dblpname，用于记录多个dblp名。解决venue更名的问题。
+
+调查dblp，发现有几种论文类型，如下所示：
+1. Journal Articles:	<li class="entry article" />
+2. Conference and Workshop Papers:	<li class="entry inproceedings" />
+3. Informal and Other Publications:		<li class="entry informal" />
+4. Books and Theses:	<li class="entry book" />
+
+重写程序向venue中插入对应dblp名。
