@@ -18412,3 +18412,82 @@ Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Computational%20
 *********************3735 HAHA*******************
 no matches
 Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Second%20international%20conference%20on%20Algorithmic%20decision%20theory.
+*********************3735 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Second%20international%20conference%20on%20Algorithmic%20decision%20theory.
+*********************3736 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%204th%20European%20conference%20on%20Towards%20a%20service-based%20internet.
+*********************3737 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%209th%20international%20conference%20on%20Automated%20technology%20for%20verification%20and%20analysis.
+found 3 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Statistical%20model%20checking%20for%20cyber-physical%20systems.
+*********************3738 HAHA*******************
+*********************3739 HAHA*******************
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2014th%20international%20conference%20on%20Information%20security.
+*********************3740 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2034th%20Annual%20German%20conference%20on%20Advances%20in%20artificial%20intelligence.
+The two papers are different!
+Current: 'Everything You Always Wanted to Know about Planning - (But Were Afraid to Ask).'
+Origin: 'Everything you always wanted to know about planning (but were afraid to ask).'
+
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Everything%20you%20always%20wanted%20to%20know%20about%20planning%20(but%20were%20afraid%20to%20ask).
+*********************3741 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2018th%20international%20conference%20on%20String%20processing%20and%20information%20retrieval.
+*********************3742 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2015th%20Portugese%20conference%20on%20Progress%20in%20artificial%20intelligence.
+The two papers are different!
+Current: 'Sentiment Analysis of News Titles - The Role of Entities and a New Affective Lexicon.'
+Origin: 'Sentiment analysis of news titles the role of entities and a new affective lexicon.'
+
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Sentiment%20analysis%20of%20news%20titles%20the%20role%20of%20entities%20and%20a%20new%20affective%20lexicon.
+*********************3743 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20international%20conference%20on%20Integrated%20uncertainty%20in%20knowledge%20modelling%20and%20decision%20making.
+*********************3744 HAHA*******************
+*********************3745 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Fifth%20order%20improved%20Runge-Kutta%20method%20for%20solving%20ordinary%20differential%20equations.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20new%20robust%20digital%20watermarking%20algorithm%20based%20on%20genetic%20algorithms%20and%20neural%20networks.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Transmission%20characteristics%20of%20grid-shaped%20networks%20on%20ad-hoc%20wireless%20sensor%20networks.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Fast%20correlation%20algorithm%20for%20an%20orthogonal%20set%20of%20real-valued%20perfect%20sequences%20from%20the%20Huffman%20sequences.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Pre-post%20accident%20analysis%20relates%20to%20pre-cursor%20emotion%20for%20driver%20behavior%20understanding.
+The 3745th venue is not in DBLP!
+*********************3746 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2010th%20WSEAS%20international%20conference%20on%20System%20science%20and%20simulation%20in%20engineering.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Visual%20inspection%20of%20blood%20containers.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=An%20investigation%20of%20the%20protection%20performances%20for%20current-limiting%20fuses%20using%20stainless%20steel%20wires.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Optimal%20low%20thrust%20spacecraft%20maneuvers%20for%20station%20keeping.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20close%20approach%20between%20a%20planet%20and%20a%20particle%3A%20Sun-Jupiter%20system.
+The 3746th venue is not in DBLP!
+*********************3747 HAHA*******************
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20IEEE/ACM%20International%20Symposium%20on%20Nanoscale%20Architectures.
+*********************3748 HAHA*******************
+*********************3749 HAHA*******************
+*********************3750 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Copyright%20Page%20-%20WI%202011.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=WI%202011%20Welcome%20Message%20from%20the%20Conference%20and%20Program%20Chairs.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=WI%202011%20Non-Program%20Committee%20Reviewers.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=WI%202011%20Sponsors.
+*********************3751 HAHA*******************
