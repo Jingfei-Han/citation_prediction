@@ -27,7 +27,6 @@ Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Helical%20surfac
 The 29th venue is not in DBLP!
 no matches
 Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Editorial%3A%20Functional%20and%20(Constraint)%20Logic%20Programming.
-<<<<<<< HEAD
 no matches
 Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Review%3A%20A%20survey%20on%20architectures%20and%20energy%20efficiency%20in%20Data%20Center%20Networks.
 found 2 matches
@@ -17873,5 +17872,543 @@ Matches FAILED!
 Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20Swiss%20Army%20smartphone%3A%20cloud-based%20delivery%20of%20USB%20services.
 The 3612th venue is not in DBLP!
 *********************3613 HAHA*******************
-=======
->>>>>>> f3f9a3499a962f6d5af956a02c72874d79df7f81
+*********************3612 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=MARS%3A%20adaptive%20remote%20execution%20for%20multi-threaded%20mobile%20devices.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Jupiter%3A%20transparent%20augmentation%20of%20smartphone%20capabilities%20through%20cloud%20computing.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Designing%20real-time%20multimedia%20applications%20on%20mobile%20devices.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Avoiding%20nostril-cam%20and%20postage-stamp%20people%20in%20mobile%20video%20conferences.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20Swiss%20Army%20smartphone%3A%20cloud-based%20delivery%20of%20USB%20services.
+The 3612th venue is not in DBLP!
+*********************3613 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Workshop%20on%20Distributional%20Semantics%20and%20Compositionality.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=(Linear)%20maps%20of%20the%20impossible%3A%20capturing%20semantic%20anomalies%20in%20distributional%20space.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Distributed%20structures%20and%20distributional%20meaning.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Two%20multivariate%20generalizations%20of%20pointwise%20mutual%20information.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Distributional%20semantics%20and%20compositionality%202011%3A%20shared%20task%20description%20and%20results.
+The 3613th venue is not in DBLP!
+*********************3614 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%206th%20Workshop%20on%20Innovative%20Use%20of%20NLP%20for%20Building%20Educational%20Applications.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Automatic%20question%20generation%20using%20discourse%20cues.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Understanding%20differences%20in%20perceived%20peer-review%20helpfulness%20using%20natural%20language%20processing.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Generating%20varied%20narrative%20probability%20exercises.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Elicited%20imitation%20for%20prediction%20of%20OPI%20test%20scores.
+The 3614th venue is not in DBLP!
+*********************3615 HAHA*******************
+found 7 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Where%20to%20go%20from%20here%3F.
+*********************3616 HAHA*******************
+*********************3617 HAHA*******************
+*********************3618 HAHA*******************
+*********************3619 HAHA*******************
+*********************3620 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Do%20telemedicine%20wound%20care%20specialist%20consults%20meet%20the%20needs%20of%20the%20referring%20physician%3F%20a%20survey%20of%20primary%20care%20providers.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Teledermatology%3A%20from%20prevention%20to%20diagnosis%20of%20nonmelanoma%20and%20melanoma%20skin%20cancer.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=AToMS%3A%20a%20ubiquitous%20teleconsultation%20system%20for%20supporting%20AMI%20patients%20with%20prehospital%20thrombolysis.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Evaluation%20of%20the%20effect%20of%20consultant%20characteristics%20on%20telemedicine%20diagnosis%20and%20treatment.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20use%20of%20telehealth%20technology%20in%20assessing%20the%20accuracy%20of%20self-reported%20weight%20and%20the%20impact%20of%20a%20daily%3A%20immediate-feedback%20intervention%20among%20obese%20employees.
+The 3620th venue is not in DBLP!
+*********************3621 HAHA*******************
+*********************3622 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2023rd%20International%20Teletraffic%20Congress.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20International%20Workshop%20on%20Modeling%2C%20Analysis%2C%20and%20Control%20of%20Complex%20Networks.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%203rd%20Workshop%20on%20Data%20Center%20-%20Converged%20and%20Virtual%20Ethernet%20Switching.
+*********************3623 HAHA*******************
+*********************3624 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Markov%20property%20of%20correlated%20random%20networks%20and%20its%20application%20to%20the%20analysis%20of%20the%20internet%20topologies.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20graph%20partitioning%20game%20for%20distributed%20simulation%20of%20networks.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=An%20effective%20index%20poisoning%20algorithm%20for%20controlling%20peer-to-peer%20network%20applications.
+no matches
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Exploring%20YouTube%27s%20content%20distribution%20network%20through%20distributed%20application-layer%20measurements%3A%20a%20first%20view.
+The 3624th venue is not in DBLP!
+*********************3625 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Advanced%20FCoE%3A%20extension%20of%20fibre%20channel%20over%20ethernet.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Performance%20evaluation%20of%20the%20RDMA%20over%20ethernet%20(RoCE)%20standard%20in%20enterprise%20data%20centers%20infrastructure.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20distributed%20LAG%20mechanism%20for%20TRILL%20enabled%20fabrics.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Automated%20migration%20of%20port%20profile%20for%20multi-level%20switches.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20case%20for%20overlays%20in%20DCN%20virtualization.
+The 3625th venue is not in DBLP!
+*********************3626 HAHA*******************
+*********************3627 HAHA*******************
+*********************3628 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Third%20International%20Conference%20on%20Internet%20Multimedia%20Computing%20and%20Service.
+*********************3629 HAHA*******************
+*********************3630 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%209th%20International%20Workshop%20on%20Java%20Technologies%20for%20Real-Time%20and%20Embedded%20Systems.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%209th%20International%20Workshop%20on%20Java%20Technologies%20for%20Real-Time%20and%20Embedded%20Systems.
+*********************3631 HAHA*******************
+*********************3632 HAHA*******************
+*********************3633 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=In%20situ%20synthesis%20of%20poly%20(methyl%20methacrylate)/SiO2%20hybrid%20nanocomposites%20via%20"Grafting%20Onto"%20strategy%20based%20on%20UV%20irradiation%20in%20the%20presence%20of%20iron%20aqueous%20solution.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Synchrotron%20x-ray%20absorption%20spectroscopy%20study%20of%20self-assembled%20nanoparticles%20synthesized%20from%20Fe(acac)3%20and%20Pt(acac)2.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Reinforcement%20of%20natural%20rubber%20with%20core-shell%20structure%20silica-poly(methyl%20methacrylate)%20nanoparticles.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Freestanding%20Ge/GeO2%20core-shell%20nanocrystals%20with%20varying%20sizes%20and%20shell%20thicknesses%3A%20microstructure%20and%20photoluminescence%20studies.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Improvement%20in%20comprehensive%20properties%20of%20poly(methyl%20methacrylate)-based%20gel%20polymer%20electrolyte%20by%20a%20core-shell%20poly(methyl%20methacrylate)-grafted%20ordered%20mesoporous%20silica.
+The 3633th venue is not in DBLP!
+*********************3634 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Facile%20synthesis%20of%20colloidal%20CuO%20nanocrystals%20for%20light-harvesting%20applications.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Gold%20nanoparticle%20sensor%20for%20the%20visual%20detection%20of%20pork%20adulteration%20in%20meatball%20formulation.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Fluorescent%20properties%20of%20ZnO%20nanostructures%20fabricated%20by%20hydrothermal%20method.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Study%20of%20structural%20and%20optical%20properties%20of%20zinc%20oxide%20rods%20grown%20on%20glasses%20by%20chemical%20spray%20pyrolysis.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Employing%20photoassisted%20ligand%20exchange%20technique%20in%20layered%20quantum%20dot%20LEDs.
+The 3634th venue is not in DBLP!
+*********************3635 HAHA*******************
+no matches
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Ag-Cu%20bimetallic%20nanoparticles%20prepared%20by%20Microemulsion%20method%20as%20catalyst%20for%20epoxidation%20of%20styrene.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Fabrication%20of%20photofunctional%20nanoporous%20membrane%20and%20its%20photoinactivation%20effect%20of%20vesicular%20stomatitis%20virus.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Catalytic%20activity%20of%20ZrO2%20nanotube%20arrays%20prepared%20by%20anodization%20method.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20physical%20properties%20of%20erbium-doped%20yttrium%20iron%20garnet%20films%20prepared%20by%20sol-gel%20method.
+The 3635th venue is not in DBLP!
+*********************3636 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=In%20vitro%20assessment%20of%20antibacterial%20activity%20and%20cytocompatibility%20of%20quercetin-containing%20PLGA%20nanofibrous%20scaffolds%20for%20tissue%20engineering.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Nanostructures%20for%20medical%20diagnostics.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Enhancement%20of%20oral%20bioavailability%20of%20puerarin%20by%20polybutylcyanoacrylate%20nanoparticles.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=An%20evaluation%20on%20transfection%20efficiency%20of%20pHRE-Egr1-EGFP%20in%20hepatocellular%20carcinoma%20cells%20Bel-7402%20mediated%20by%20PEI-MZF-NPs.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Biosynthesis%20of%20nanoparticles%20by%20microorganisms%20and%20their%20applications.
+The 3636th venue is not in DBLP!
+*********************3637 HAHA*******************
+*********************3638 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=23rd%20French%20Speaking%20Conference%20on%20Human-Computer%20Interaction.
+*********************3639 HAHA*******************
+*********************3640 HAHA*******************
+Get dblpname FAILED!
+*********************3641 HAHA*******************
+*********************3642 HAHA*******************
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Making%20GIScience%20research%20more%20open%20access.
+*********************3643 HAHA*******************
+*********************3644 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2012th%20international%20conference%20on%20Computational%20logic%20in%20multi-agent%20systems.
+The two papers are different!
+Current: 'Some Thoughts on Using Argumentation to Handle Trust - (Invited Talk).'
+Origin: 'Some thoughts on using argumentation to handle trust.'
+
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Some%20thoughts%20on%20using%20argumentation%20to%20handle%20trust.
+*********************3645 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2014th%20international%20conference%20on%20Computer%20analysis%20of%20images%20and%20patterns%20-%20Volume%20Part%20II.
+*********************3646 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2014th%20international%20conference%20on%20Medical%20image%20computing%20and%20computer-assisted%20intervention%20-%20Volume%20Part%20I.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Unified%20detection%20and%20tracking%20in%20retinal%20microsurgery.
+*********************3647 HAHA*******************
+*********************3648 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2014th%20international%20conference%20on%20Medical%20image%20computing%20and%20computer-assisted%20intervention%20-%20Volume%20Part%20III.
+*********************3649 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2013th%20international%20conference%20on%20Cryptographic%20hardware%20and%20embedded%20systems.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=An%20exploration%20of%20mechanisms%20for%20dynamic%20cryptographic%20instruction%20set%20extension.
+*********************3650 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%209th%20international%20conference%20on%20Formal%20modeling%20and%20analysis%20of%20timed%20systems.
+*********************3651 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%205th%20international%20conference%20on%20Convergence%20and%20hybrid%20information%20technology.
+*********************3652 HAHA*******************
+*********************3653 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%207th%20international%20conference%20on%20Advances%20in%20visual%20computing%20-%20Volume%20Part%20II.
+*********************3654 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Second%20international%20conference%20on%20Multilingual%20and%20multimodal%20information%20access%20evaluation.
+*********************3655 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Second%20international%20conference%20on%20Adaptive%20and%20intelligent%20systems.
+*********************3656 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%205th%20international%20conference%20on%20Reachability%20problems.
+The two papers are different!
+Current: 'Graph Games with Reachability Objectives - (Invited Talk).'
+Origin: 'Graph games with reachability objectives.'
+
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Graph%20games%20with%20reachability%20objectives.
+*********************3657 HAHA*******************
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20secure%20D%20Flip-Flop%20against%20side%20channel%20attacks.
+*********************3658 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%208th%20international%20conference%20on%20Computer%20vision%20systems.
+*********************3659 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20international%20conference%20on%20Prostate%20cancer%20imaging%3A%20image%20analysis%20and%20image-guided%20interventions.
+*********************3660 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%206th%20European%20conference%20on%20Technology%20enhanced%20learning%3A%20towards%20ubiquitous%20learning.
+*********************3661 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%207th%20international%20and%20interdisciplinary%20conference%20on%20Modeling%20and%20using%20context.
+The two papers are different!
+Current: 'Modelling Context-Dependence: Ellipsis in Conversational Dialogue - (Keynote Talk).'
+Origin: 'Modelling context-dependence: ellipsis in conversational dialogue.'
+
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Modelling%20context-dependence%3A%20ellipsis%20in%20conversational%20dialogue.
+The two papers are different!
+Current: 'Providing Generic Context for Mobile Games on Phones - (Keynote Talk).'
+Origin: 'Providing generic context for mobile games on phones.'
+
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Providing%20generic%20context%20for%20mobile%20games%20on%20phones.
+*********************3662 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Third%20international%20conference%20on%20Software%20engineering%20for%20resilient%20systems.
+*********************3663 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20international%20conference%20on%20Web%20information%20systems%20and%20mining%20-%20Volume%20Part%20I.
+*********************3664 HAHA*******************
+*********************3665 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Second%20international%20conference%20on%20Computational%20logistics.
+*********************3666 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20international%20conference%20on%20Web%20information%20systems%20and%20mining%20-%20Volume%20Part%20II.
+*********************3667 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Third%20international%20conference%20on%20Artificial%20intelligence%20and%20computational%20intelligence%20-%20Volume%20Part%20II.
+*********************3668 HAHA*******************
+*********************3669 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20First%20international%20conference%20on%20Similarity-based%20pattern%20recognition.
+*********************3670 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20First%20international%20conference%20on%20Multimodal%20brain%20image%20analysis.
+*********************3671 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Second%20international%20conference%20on%20Machine%20learning%20in%20medical%20imaging.
+*********************3672 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2012th%20IFIP%20TC%206/TC%2011%20international%20conference%20on%20Communications%20and%20multimedia%20security.
+*********************3673 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%204th%20international%20conference%20on%20Energy%20%26%20development%2C%20environment%20%26%20biomedicine.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Laboratory%20medicine%20for%20the%20evaluation%20of%20kidney%20disease%3A%20from%20the%20fetus%20to%20the%20adult.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Numerical%20modeling%20of%20organic%20solar%20cell%20with%20heterojunction%20obtained%20from%20new%20II%20conjugated%20oligomers%20with%20holes%20transporter%20type.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Brushless%20D.C.%20motor%20for%20medical%20applications.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20simple%20charge%20controller%20scheme%20based%20on%20PWM%20for%20solar%20standalone%20lighting%20systems.
+The 3673th venue is not in DBLP!
+*********************3674 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Creep%20of%20cement%20paste%20preloaded%20at%20high%20temperature%20and%20prepared%20from%20Portland%20cement.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Performance%20evaluation%20of%20feedforward%20neural%20networks%20for%20modeling%20a%20vehicle%20to%20pole%20central%20collision.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20recursive%20model%20for%20nonlinear%20spring-mass-damper%20estimation%20of%20a%20vehicle%20localized%20impact.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Hysteresis%20modeling%20for%20the%20rotational%20magnetorheological%20damper.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Vibration%20analysis%20for%20the%20rotational%20magnetorheological%20damper.
+The 3674th venue is not in DBLP!
+*********************3675 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%203rd%20WSEAS%20international%20conference%20on%20Engineering%20mechanics%2C%20structures%2C%20engineering%20geology.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Plenary%20lecture%201%3A%20cost%20estimating%20methods%20of%20industrial%20products.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Plenary%20lecture%202%3A%20research%20of%20excellence%20in%20the%20national%20centre%20optimum%20from%20"politehnica"%20university%20of%20Bucharest.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Plenary%20lecture%203%3A%20similarity%20solutions%20for%20boundary%20layer%20flow%20of%20non-newtonian%20fluids.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Plenary%20lecture%204%3A%20modeling%20of%20vibrations%20of%20lumped%20and%20continual%20mechanical%20systems%20by%20ordinary%20differential%20equations.
+The 3675th venue is not in DBLP!
+*********************3676 HAHA*******************
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2024th%20annual%20ACM%20symposium%20adjunct%20on%20User%20interface%20software%20and%20technology.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2024th%20annual%20ACM%20symposium%20on%20User%20interface%20software%20and%20technology.
+*********************3677 HAHA*******************
+*********************3678 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20seventh%20ACM%20workshop%20on%20Scalable%20trusted%20computing.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202012%20ACM%20conference%20on%20Computer%20and%20communications%20security.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202012%20ACM%20conference%20on%20Computer%20and%20communications%20security.
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%205th%20ACM%20workshop%20on%20Security%20and%20artificial%20intelligence.
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202012%20ACM%20Workshop%20on%20Cloud%20computing%20security%20workshop.
+The 3678th venue is not in DBLP!
+*********************3679 HAHA*******************
+*********************3680 HAHA*******************
+*********************3681 HAHA*******************
+*********************3682 HAHA*******************
+*********************3683 HAHA*******************
+*********************3684 HAHA*******************
+*********************3685 HAHA*******************
+*********************3686 HAHA*******************
+*********************3687 HAHA*******************
+*********************3688 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Personalised%20multilingual%20hypertext%20retrieval%3A%20an%20overview.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Challenges%20for%20the%20multi-lingual%2C%20multi-dimensional%20personalised%20web.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Experimental%20evaluation%20and%20hypertexts.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Methods%20of%20personalising%20a%20collection%20of%20images%20using%20linking%20annotations.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20proposal%20for%20the%20evaluation%20of%20adaptive%20content%20retrieval%2C%20modification%20and%20delivery.
+The 3688th venue is not in DBLP!
+*********************3689 HAHA*******************
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202012%20Information%20Security%20Curriculum%20Development%20Conference.
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20Information%20Security%20Curriculum%20Development%20Conference.
+*********************3690 HAHA*******************
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Elliptic%20curve%20for%20data%20protection.
+*********************3691 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Extreme%20animation%3A%20novice%20edition.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Terrene.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q="Ad%20Infinitum"%3A%20how%20to%20make%20a%20fractal.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20Bookshelf%20and%20the%20Skirt%3A%20how%20a%20prop%20tool%20saved%20a%20character%20rigger.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Designing%20a%20splash%20in%20Disney%27s%20"Tangled".
+The 3691th venue is not in DBLP!
+*********************3692 HAHA*******************
+*********************3693 HAHA*******************
+*********************3694 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202013%20companion%20publication%20for%20conference%20on%20Systems%2C%20programming%2C%20%26%20applications%3A%20software%20for%20humanity.
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%209th%20symposium%20on%20Dynamic%20languages.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202013%20ACM%20workshop%20on%20Mobile%20development%20lifecycle.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202013%20ACM%20international%20symposium%20on%20New%20ideas%2C%20new%20paradigms%2C%20and%20reflections%20on%20programming%20%26%20software.
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202013%20ACM%20SIGPLAN%20international%20conference%20on%20Object%20oriented%20programming%20systems%20languages%20%26%20applications.
+The 3694th venue is not in DBLP!
+*********************3695 HAHA*******************
+*********************3696 HAHA*******************
+*********************3697 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202nd%20international%20conference%20on%20Applied%20informatics%20and%20computing%20theory.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Keynote%20lecture%201%3A%20dominating%20the%20constancy%20in%20enhanced%20multivariance%20product%20representation%20(EMPR)%20via%20support%20function%20selection.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Plenary%20lecture%201%3A%20on%20computational%20techniques%20based%20on%20nonlinear%20and%20fuzzy%20systems%20theory%20for%20NMR%20spectroscopy%20data%20mining.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Plenary%20lecture%202%3A%20Rayleigh%20quotient%20flattening%20methods%20for%20the%20eigenvalue%20problems%20of%20linear%20operators%20between%20separable%20Hilbert%20spaces.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Analysis%20of%20a%20telemonitoring%20system%20based%20on%20a%20Bluetooth%20body%20area%20network%20using%20smartphones.
+The 3697th venue is not in DBLP!
+*********************3698 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20international%20conference%20on%20applied%2C%20numerical%20and%20computational%20mathematics%2C%20and%20Proceedings%20of%20the%202011%20international%20conference%20on%20Computers%2C%20digital%20communications%20and%20computing.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Study%20of%20active%20force%20control%20in%20biodynamic%20hand%20model.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Interference%20and%20shortest%20path%20optimization%20on%20a%20ZigBee%20sensors%20network%20application.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Coverage%20problem%20approach%20using%20multi-objective%20scheme.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Multi-objective%20evolutive%20algorithm%20for%20efficient%20coverage%20problem%20of%20WSN%20using%20a%20SPEA%20approach.
+The 3698th venue is not in DBLP!
+*********************3699 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202nd%20international%20conference%20on%20Circuits%2C%20systems%2C%20control%2C%20signals.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Keynote%20lecture%201%3A%20dominating%20the%20constancy%20in%20enhanced%20multivariance%20product%20representation%20(EMPR)%20via%20support%20function%20selection.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Plenary%20lecture%201%3A%20on%20a%20state%20space%20energy%20based%20generalization%20of%20the%20Nose%20-%20Hoover%20non%20-%20Hamiltonian%20dynamics.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20evaluation%20of%20the%20error%20characteristics%20of%20multiple%20GPS%20terminals.
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20influence%20of%20the%20noise%20on%20localizaton%20by%20image%20matching.
+The 3699th venue is not in DBLP!
+*********************3700 HAHA*******************
+found 3 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20sequential%20prison.
+*********************3701 HAHA*******************
+*********************3702 HAHA*******************
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=A%20dynamic%20BRDF%20display.
+*********************3703 HAHA*******************
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2014th%20Communications%20and%20Networking%20Symposium.
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20Symposium%20on%20Theory%20of%20Modeling%20%26%20Simulation%3A%20DEVS%20Integrative%20M%26S%20Symposium.
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20Emerging%20M%26S%20Applications%20in%20Industry%20and%20Academia%20Symposium.
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20Symposium%20on%20Simulation%20for%20Architecture%20and%20Urban%20Design.
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%202011%20Military%20Modeling%20%26%20Simulation%20Symposium.
+The 3703th venue is not in DBLP!
+*********************3704 HAHA*******************
+*********************3705 HAHA*******************
+*********************3706 HAHA*******************
+*********************3707 HAHA*******************
+*********************3708 HAHA*******************
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Modeling%20and%20simulation%20driven%20software%20development.
+*********************3709 HAHA*******************
+*********************3710 HAHA*******************
+*********************3711 HAHA*******************
+*********************3712 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20proceedings%20of%20the%2013th%20international%20ACM%20SIGACCESS%20conference%20on%20Computers%20and%20accessibility.
+*********************3713 HAHA*******************
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Living%20in%20a%20world%20of%20data.
+*********************3714 HAHA*******************
+*********************3715 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2022nd%20international%20conference%20on%20Implementation%20and%20application%20of%20functional%20languages.
+The two papers are different!
+Current: 'Haskell Boards the Ferry - Database-Supported Program Execution for Haskell.'
+Origin: 'Haskell boards the ferry: database-supported program execution for Haskell.'
+
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Haskell%20boards%20the%20ferry%3A%20database-supported%20program%20execution%20for%20Haskell.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Theory%20and%20practice%20of%20fusion.
+*********************3716 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%206th%20international%20conference%20on%20Security%20and%20trust%20management.
+*********************3717 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2011th%20international%20conference%20on%20Agent-oriented%20software%20engineering.
+*********************3718 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2012th%20biennial%20conference%20on%20The%20mathematics%20of%20language.
+*********************3719 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20First%20international%20conference%20on%20Model%20and%20data%20engineering.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Personalization%20in%20web%20search%20and%20data%20management.
+*********************3720 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2014th%20international%20conference%20on%20Discovery%20science.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=On%20the%20expressive%20power%20of%20deep%20architectures.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Learning%20from%20label%20preferences.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Information%20distance%20and%20its%20extensions.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Models%20for%20autonomously%20motivated%20exploration%20in%20reinforcement%20learning.
+The 3720th venue is not in DBLP!
+*********************3721 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%205th%20international%20conference%20on%20Scalable%20uncertainty%20management.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Causality%2C%20responsibility%2C%20and%20blame%3A%20a%20structural-model%20approach.
+*********************3722 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%205th%20international%20conference%20on%20Computer%20vision/computer%20graphics%20collaboration%20techniques.
+*********************3723 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2022nd%20international%20conference%20on%20Algorithmic%20learning%20theory.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Models%20for%20autonomously%20motivated%20exploration%20in%20reinforcement%20learning.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=On%20the%20expressive%20power%20of%20deep%20architectures.
+found 1,129 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Optimal%20estimation.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Learning%20from%20label%20preferences.
+The 3723th venue is not in DBLP!
+*********************3724 HAHA*******************
+*********************3725 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Third%20international%20conference%20on%20Logic%2C%20rationality%2C%20and%20interaction.
+*********************3726 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%206th%20international%20conference%20on%20Rough%20sets%20and%20knowledge%20technology.
+found 2 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Mining%20incomplete%20data%3A%20a%20rough%20set%20approach.
+*********************3727 HAHA*******************
+*********************3728 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%209th%20German%20conference%20on%20Multiagent%20system%20technologies.
+*********************3729 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2013th%20international%20conference%20on%20Stabilization%2C%20safety%2C%20and%20security%20of%20distributed%20systems.
+*********************3730 HAHA*******************
+Get dblpname FAILED!
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%2014th%20international%20conference%20on%20Model%20driven%20engineering%20languages%20and%20systems.
+*********************3731 HAHA*******************
+*********************3732 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Third%20international%20conference%20on%20Social%20informatics.
+*********************3733 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%208th%20international%20conference%20on%20Frontiers%20of%20combining%20systems.
+*********************3734 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%204th%20international%20conference%20on%20Algorithmic%20game%20theory.
+found 51 matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Computational%20game%20theory.
+*********************3735 HAHA*******************
+no matches
+Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Proceedings%20of%20the%20Second%20international%20conference%20on%20Algorithmic%20decision%20theory.
