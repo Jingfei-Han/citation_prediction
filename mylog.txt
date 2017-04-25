@@ -267,3 +267,5 @@ DELETE FROM venue WHERE venue_id = '461';
 4. Books and Theses:	<li class="entry book" />
 
 重写程序向venue中插入对应dblp名。
+问题：程序莫名终止
+解决：requests请求加上timeout字段。

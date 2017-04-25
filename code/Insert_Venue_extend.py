@@ -9,20 +9,25 @@ from time import sleep
 import sys
 
 def warnInfo(string):
+	with open("venue_log.txt","a") as fp:
+		fp.write(string+'\n')
 	print string
 
 
 class extractPaper(object):
 	def __init__(self,url, headers, paper_title):
+		#print "__init__"
 		self.url = url
 		self.headers = headers
 		self.paper_title = paper_title
 	
 	def _requestWeb(self):
+		#print "_requestWeb"
 		cnt_res = 1
 		while(cnt_res <= 5):
+			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
 			try:
-				response = requests.get(self.url, headers = self.headers)
+				response = requests.get(self.url, headers = self.headers, timeout=10)
 				return response
 			except:
 				cnt_res += 1
@@ -30,6 +35,7 @@ class extractPaper(object):
 		raise Exception #如果链接失败，则抛出异常，被调用函数捕获
 	
 	def _getDblp(self, li):
+		#print "_getDblp"
 		try:
 			cur_title = li.find('span', attrs={'class':'title', 'itemprop':'name'}).text
 		except:
@@ -58,6 +64,7 @@ class extractPaper(object):
 
 
 	def _parse(self, response):
+		#print "_parse"
 		assert type(response) == requests.models.Response #判断response类型
 		soup = BeautifulSoup(response.text)
 		try:
@@ -103,6 +110,7 @@ class extractPaper(object):
 		return dblpname
 
 	def crawlWeb(self):
+		#print "crawlWeb"
 		try:
 			response = self._requestWeb()
 		except:
@@ -145,7 +153,7 @@ try:
 except:
 	sys.exit("ERROR: SELECT the TABLE venue failed!")
 
-sql_select_dblp_notnull = "SELECT COUNT(*) FROM venue WHERE venue_dblpname IS NOT NULL ORDER BY venue_id DESC"
+sql_select_dblp_notnull = "SELECT * FROM venue WHERE venue_dblpname IS NOT NULL ORDER BY venue_id DESC"
 try:
 	cursor.execute(sql_select_dblp_notnull)
 	cur_venue_id = cursor.fetchone()[0]
@@ -156,6 +164,7 @@ except:
 #cur_venue_id = 32
 sleep_interval = 0; # When greater than 10, we need sleep.
 while(cur_venue_id <= nb_venue):
+	warnInfo("*********************%d HAHA*******************" %cur_venue_id)
 	sql_select_paper = "SELECT paper_title FROM paper WHERE venue_venue_id='%d' ORDER BY paper_publicationYear DESC" %cur_venue_id
 	try:
 		cursor.execute(sql_select_paper)
@@ -166,7 +175,7 @@ while(cur_venue_id <= nb_venue):
 	no_match = 0 #Record the time of no match.
 
 	for paper_title_tuple in paper_titles:
-		
+		#print "-------------------------------------------"
 		#Search teh paper_title from dblp
 		paper_title = paper_title_tuple[0]
 		if paper_title[-1] != '.':
