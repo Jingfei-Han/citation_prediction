@@ -1,3 +1,4 @@
+#encoding:utf-8
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
@@ -7,8 +8,9 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+from Insert_Venue_extend import extractPaper
 
-db = MySQLdb.connect(host='localhost', user='root', passwd='hanjingfei007', db='citation', charset='utf8')
+db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
 #ACM Transactions on Autonomous and Adaptive Systems
@@ -24,10 +26,46 @@ headers = {
             'Connection':'keep-alive',
             'Cache-Control':'max-age=0',}
 
+class extractDatabase(object):
+	def __init__(self,url, headers):
+		#print "__init__"
+		self.url = url
+		self.headers = headers
+	
+	def _requestWeb(self):
+		#print "_requestWeb"
+		cnt_res = 1
+		while(cnt_res <= 5):
+			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
+			try:
+				response = requests.get(self.url, headers = self.headers, timeout=10)
+				return response
+			except:
+				cnt_res += 1
+				continue
+		raise Exception #如果链接失败，则抛出异常，被调用函数捕获
+
+	def _parserDBLP(self, response):
+		assert type(response) == requests.models.Response #判断response类型
+		soup = BeautifulSoup(response.text)
+		#判断是否有精确匹配
+		try:
+			exact_match = soup.find(text="Exact matches")
+			if exact_match is not None:
+				#表示存在精确匹配
+				
 
 
+	def getPaperURL(self):
+		try:
+			response = self._requestWeb()
+		except:
+			warnInfo("Connection FAILED! The url is: " + self.url)
+			raise Exception
+		paper_set = _parserDBLP(response)
 
-sql_select = "SELECT CCF_id, CCF_name, CCF_abbreviation, CCF_type FROM citation.ccf WHERE CCF_id<10000000 AND CCF_dblpname IS NULL"
+
+sql_select = "SELECT CCF_id, CCF_name, CCF_abbreviation, CCF_type FROM ccf WHERE CCF_id<10000000 AND CCF_dblpname IS NULL"
 try:
 	#Record the number of items of table dblp
 	cursor.execute(sql_select)
@@ -37,13 +75,14 @@ except:
 
 for row_tuple in ccf_set:
 
-	CCF_id = row_tuple[0]
+	CCF_id = int(row_tuple[0])
 	CCF_name = row_tuple[1]
 	CCF_abbreviation = row_tuple[2]
 	CCF_type = row_tuple[3]
 	if CCF_type == 'conference':
+		#当前为会议
 		if CCF_abbreviation != '':
-			sql_update = "UPDATE citation.ccf SET CCF_dblpname = '%s' WHERE CCF_id = '%d' " %(CCF_abbreviation, CCF_id)
+			sql_update = "UPDATE ccf SET CCF_dblpname = '%s' WHERE CCF_id = '%d' " %(CCF_abbreviation, CCF_id)
 			try:
 				cursor.execute(sql_update)
 				db.commit()
@@ -54,11 +93,12 @@ for row_tuple in ccf_set:
 			print "CCF_abbreviation is empty, so we don't unpdate the conference: %s" %CCF_name
 			continue
 	else :
+		#当前为期刊
 		line = CCF_name.replace("%","%25").replace(" ", "%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'","%27")
 		url = "http://dblp.uni-trier.de/search?q=" + line
 		#url = 'http://dblp.uni-trier.de/search?q=Cybernetics%20and%20Systems'
-		if CCF_type != 'journal':
-			sys.exit("Current venue is '%s'") %CCF_type
+		assert CCF_type == 'journal':
+		#sys.exit("Current venue is '%s'") %CCF_type
 
 		flag_jump = 0
 		while(True):
