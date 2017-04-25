@@ -16,7 +16,7 @@ cursor = db.cursor()
 CCF_classification = sys.argv[1]
 CCF_type = sys.argv[2]
 #写入log文件需要改下名字
-fp = open("./log/LOG_paper_"+CCF_classification + "_"+CCF_type+".txt", "a")
+#fp = open("./log/LOG_paper_"+CCF_classification + "_"+CCF_type+".txt", "a")
 
 #镜像headers
 headers = {
@@ -34,24 +34,24 @@ headers = {
 index = 0
 
 #sql_cnt = "SELECT COUNT(*) FROM citation.paper WHERE paper_nbCitation !=-1"
-sql_cnt = "SELECT COUNT(*) FROM citation.paper\
+sql_cnt = "SELECT COUNT(*) FROM paper\
 			WHERE venue_venue_id IN(\
-				SELECT venue_id FROM citation.venue\
+				SELECT venue_id FROM venue\
 				WHERE dblp_dblp_id IN(\
 					SELECT dblp_id\
-					FROM citation.ccf, citation.dblp\
+					FROM ccf, dblp\
 					WHERE CCF_dblpname = dblp_name\
 					AND CCF_type = '%s'\
 					AND CCF_classification = '%s'\
 				)\
 			)" %(CCF_type, CCF_classification)
 
-sql_cnt_index = "SELECT COUNT(*) FROM citation.paper\
+sql_cnt_index = "SELECT COUNT(*) FROM paper\
 			WHERE venue_venue_id IN(\
-				SELECT venue_id FROM citation.venue\
+				SELECT venue_id FROM venue\
 				WHERE dblp_dblp_id IN(\
 					SELECT dblp_id\
-					FROM citation.ccf, citation.dblp\
+					FROM ccf, dblp\
 					WHERE CCF_dblpname = dblp_name\
 					AND CCF_type = '%s'\
 					AND CCF_classification = '%s'\
@@ -70,8 +70,8 @@ info_print = "Now we prepare to crawl %s CCF classification and %s Venue paper" 
 info_cnt = "Total: %5d    Current: %5d" %(total, index)
 print info_print
 print info_cnt
-fp.write(info_print + "\n")
-fp.write(info_cnt + "\n")
+#fp.write(info_print + "\n")
+#fp.write(info_cnt + "\n")
 
 #sql_select = "SELECT paper_id, paper_title\
 #			FROM citation.paper WHERE paper_nbCitation =-1"
@@ -98,55 +98,106 @@ res_set = cursor.fetchall()
 
 url = "https://b.ggkai.men/extdomains/scholar.google.com/"
 
-def Parser_google(urlTitle, paper_title, headers, proxies=None):
-	flag_jump = 0
-	paper_nbCitation = -2
-	paper_isseen = -1
-	paper_citationURL = ""
-	paper_pdfURL = ""
-	while True:
-		try:
-			response = requests.get(urlTitle, headers = headers, timeout=10)
-			#time_sleep = random.randint(1,3)
-			#sleep(time_sleep) #break 2 seconds
-			break
-		except:
-			print "Connection FAILED! We need have 3 seconds break."
-			fp.write("Connection FAILED! We need have a 5 seconds break.\n") 
-			flag_jump += 1
-			if flag_jump > 5:
-				fp.write("This paper can't be connected!\n") 
-				return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
-			sleep(3)
+def warnInfo(string):
+	#with open("venue_log.txt","a") as fp:
+	#	fp.write(string+'\n')
+	print string
 
-	#print "The status code: %d" %response.status_code
-	soup = BeautifulSoup(response.text)
-	try:
-		soup.find("a", text = re.compile("Try your query on the entire web")).get_text()
-		fp.write("PAPER: " + paper_title + " :Not found in goole scholar.\n") 
-		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
-	except:
+
+class extractCitation(object):
+	def __init__(self,url, headers, paper_title):
+		#print "__init__"
+		self.url = url
+		self.headers = headers
+		self.paper_title = paper_title
+	
+	def _requestWeb(self):
+		#print "_requestWeb"
+		cnt_res = 1
+		while(cnt_res <= 5):
+			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
+			try:
+				response = requests.get(self.url, headers = self.headers, timeout=10)
+				return response
+			except:
+				cnt_res += 1
+				continue
+		raise Exception #如果链接失败，则抛出异常，被调用函数捕获
+
+	def _parseGoogle(self, response):
+		#解析google页面
+		paper_nbCitation = -1
+		paper_isseen = -1
+		paper_citationURL = ""
+		paper_pdfURL = ""
+
+		#print "The status code: %d" %response.status_code
+		soup = BeautifulSoup(response.text)
 		try:
-			soup.find("div", {"class":"gs_a"}).get_text()
-			#print "Found in google scholar."
+			soup.find("a", text = re.compile("Try your query on the entire web")).get_text()
+			warnInfo("PAPER: " + paper_title + " :Not found in goole scholar.\n") 
+			raise Exception
 		except:
-			fp.write("The paper " + paper_title +" need be checked by hand!\n")
-			return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
-	try:
-		link_raw = soup.find("a", text=re.compile("Cited"))
-		link = link_raw.get_text()
-		paper_citationURL = link_raw.get('href') #获得引用链接
-		paper_nbCitation = int(link.strip('Cited by'))
-	except:
-		paper_nbCitation = 0
-	try:
-		link_pdf = soup.find("div", attrs={"class":"gs_ggsd"})
-		paper_pdfURL = link_pdf.a['href']
-		soup.find("span", attrs={"class":"gs_ctg2"}).get_text()
-		paper_isseen = 1
-	except:
-		paper_isseen = 0
-	return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
+			try:
+				soup.find("div", attrs={"class":"gs_a"}).get_text()
+				#print "Found in google scholar."
+			except:
+				warnInfo("The paper " + paper_title +" need be checked by hand!\n")
+				raise Exception
+
+		#判断第一个名字是否与paper title相同
+		try:
+			gs_ccl_results = soup.find("div", attrs={"id":"gs_ccl_results"})
+			gs_r = gs_ccl_results.find("div", attrs={"class":"gs_r"})
+			#gs_r为第一个结果的div
+			assert gs_r.name == 'div'
+			cur_title = gs_r.h3.a.text #当前得到的文章title
+		except:
+			warnInfo("Get Current paper title FAILED!")
+			raise Exception
+		try:
+			#去掉所有非字母字符来比较，使用filter
+			paper_title_tmp = filter(str.isalpha, self.paper_title)
+			cur_title_tmp = filter(str.isalpha, cur_title)
+			assert paper_title_tmp == cur_title_tmp
+		except:
+			warnInfo("The two papers are different!\nCurrent: '%s'\nOrigin: '%s'\n"%(cur_title, paper_title))
+			raise Exception
+
+		#查看是否存在引用
+		try:
+			link_raw = gs_r.find("a", text=re.compile("Cited"))
+			link = link_raw.get_text()
+			paper_citationURL = link_raw.get('href') #获得引用链接
+			paper_nbCitation = int(link.strip('Cited by')) #获得引用数
+		except:
+			paper_nbCitation = 0 #没有找到Cited by， 则引用数为0
+		#查看是否存在pdf
+		try:
+			gs_r.find("span", attrs={"class":"gs_ctg2"}).get_text() #找到[pdf]
+			link_pdf = gs_r.find("div", attrs={"class":"gs_ggsd"})
+			paper_pdfURL = link_pdf.a['href'] #获得pdf链接
+			paper_isseen = 1
+		except:
+			paper_isseen = 0 #没有找到[pdf],则pdf不可得到
+		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
+
+	def crawlWeb(self):
+		#print "crawlWeb"
+		try:
+			response = self._requestWeb()
+		except:
+			warnInfo("Connection FAILED! The url is: " + self.url)
+			raise Exception
+		try:
+			#获取网页成功
+			paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL = self._parseGoogle(response)	
+		except:
+			#获取网页失败
+			warnInfo("Parser is FAILED! The url is: " + self.url)
+			raise Exception #
+		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL #返回paper信息，包括paper_nbCitation, paper_issen, paper_citationURL, paper_pdfURL
+
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -157,21 +208,28 @@ for row_tuple in res_set:
 		
 	urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdt=1%2C5&as_sdtp='
 	
-	paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL = Parser_google(urlTitle, paper_title, headers)
-	if paper_nbCitation == -1:
-		#当前论文未找到
-		continue
+	cur_extract = extractPaper(urlTitle, headers, paper_title)
 	try:
-		sql_update = "UPDATE citation.paper SET paper_nbCitation = '%d'\
+		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL = cur_extract.crawlWeb()
+	except:
+		#出现错误，需要赋一个特殊值
+		paper_nbCitation = -2 #-2表示找过，但是没有找到
+		paper_isseen = -2 #-2表示找过，但没找到
+		paper_citationURL = ''
+		paper_pdfURL = ''
+
+	#无论解析阶段是否出现异常都写入数据库
+	try:
+		sql_update = "UPDATE paper SET paper_nbCitation = '%d'\
 				, paper_isseen= '%d', paper_citationURL = '%s', paper_pdfURL = '%s'\
 				WHERE paper_id='%d'"\
 				%(paper_nbCitation, paper_isseen, paper_citationURL.replace('\'', '\\\'').strip(), paper_pdfURL.replace('\'', '\\\'').strip(), paper_id)
 		cursor.execute(sql_update)
 		db.commit()
 	except:
-		fp.write("Update FAILED!\n")
+		#fp.write("Update FAILED!\n")
 	print "----------------------%d SUSCESSED!  ----------------------" %index 
-	fp.write("----------------------%d SUSCESSED!  ----------------------\n" %index) 
+	#fp.write("----------------------%d SUSCESSED!  ----------------------\n" %index) 
 	index += 1
 
-fp.close()
+#fp.close()
