@@ -100,15 +100,15 @@ url = "https://b.ggkai.men/extdomains/scholar.google.com/"
 
 def Parser_google(urlTitle, paper_title, headers, proxies=None):
 	flag_jump = 0
-	paper_nbCitation = -1
+	paper_nbCitation = -2
 	paper_isseen = -1
 	paper_citationURL = ""
 	paper_pdfURL = ""
 	while True:
 		try:
-			response = requests.get(urlTitle, headers = headers)
-			time_sleep = random.randint(1,3)
-			sleep(time_sleep) #break 2 seconds
+			response = requests.get(urlTitle, headers = headers, timeout=10)
+			#time_sleep = random.randint(1,3)
+			#sleep(time_sleep) #break 2 seconds
 			break
 		except:
 			print "Connection FAILED! We need have 3 seconds break."
@@ -155,7 +155,7 @@ for row_tuple in res_set:
 	paper_id = int(row_tuple[0])
 	paper_title = row_tuple[1]
 		
-	urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace("+","%2B").replace("Fast track article: ","").replace("Research Article: ","").replace("Guest editorial: ","").replace("Letters: ","").replace("Editorial: ","").replace("Chaos and Graphics: ","").replace("Review: ","").replace("Education: ","").replace("Computer Graphics in Spain: ","").replace("Graphics for Serious Games: ","").replace("Short Survey: ","").replace("Brief paper: ","").replace("Original Research Paper: ","").replace("Review: ","").replace("Poster abstract: ","").replace("Erratum to: ","").replace("Review: ","").replace("Guest Editorial: ","").replace("Review article: ","").replace("Editorial: ","").replace("Short Communication: ","").replace("Invited paper: ","").replace("Book review: ","").replace("Technical Section: ","").replace("Fast communication: ","").replace("Note: ","").replace("Introduction: ","").replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdt=1%2C5&as_sdtp='
+	urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdt=1%2C5&as_sdtp='
 	
 	paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL = Parser_google(urlTitle, paper_title, headers)
 	if paper_nbCitation == -1:
