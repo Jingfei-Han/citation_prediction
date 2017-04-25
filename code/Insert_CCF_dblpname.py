@@ -11,6 +11,11 @@ from bs4 import BeautifulSoup
 from time import sleep
 from Insert_Venue_extend import extractPaper
 
+def warnInfo(string):
+	#with open("venue_log.txt","a") as fp:
+	#	fp.write(string+'\n')
+	print string
+
 db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
@@ -33,13 +38,13 @@ class extractDatabase(object):
 		self.url = url
 		self.headers = headers
 	
-	def _requestWeb(self):
+	def _requestWeb(self, url):
 		#print "_requestWeb"
 		cnt_res = 1
 		while(cnt_res <= 5):
 			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
 			try:
-				response = requests.get(self.url, headers = self.headers, timeout=10)
+				response = requests.get(url, headers = self.headers, timeout=10)
 				return response
 			except:
 				cnt_res += 1
@@ -92,7 +97,7 @@ class extractDatabase(object):
 		try:
 			venue_res = soup.find("div", attrs={"id":"completesearch-venues"})
 			div_hide_body = venue_res.find("div", {"class":"body hide-body"})
-			all_li = div_hide_body.ul.find_all(li)
+			all_li = div_hide_body.ul.find_all('li')
 			#只有唯一匹配才继续进行
 			assert len(all_li) == 1
 		except:
@@ -100,17 +105,17 @@ class extractDatabase(object):
 			raise Exception
 		#此时只有唯一匹配
 		try:
-			venue_link = _extractLinkONE(soup)
+			venue_link = self._extractLinkONE(soup)
 		except:
 			raise Exception
 		try:
-			res_ONE = _requestWeb(venue_link)
+			res_ONE = self._requestWeb(venue_link)
 		except:
 			warnInfo("res_ONE: Connection FAILED! The url is: " + venue_link)
 			raise Exception
 		soup_ONE = BeautifulSoup(res_ONE.text)
 		try:
-			volume_link = _extractLinkTWO(soup_ONE) #返回的volume_link为列表形式，因为可能有多个dblpname
+			volume_link = self._extractLinkTWO(soup_ONE) #返回的volume_link为列表形式，因为可能有多个dblpname
 		except:
 			warnInfo("ul is not found????")
 			raise Exception
@@ -121,14 +126,14 @@ class extractDatabase(object):
 			try:
 				#尝试获取该论文的dblpname
 				try:
-					res_TWO = _requestWeb(one_volume_link)
+					res_TWO = self._requestWeb(one_volume_link)
 				except:
 					warnInfo("res_TWO: Connection FAILED! The url is: " + one_volume_link)
 					raise Exception
 				soup_TWO = BeautifulSoup(res_TWO.text)
 				try:
 					#获得对应volume的paper的名字
-					paper_title = _extractLinkTHREE(soup_TWO)
+					paper_title = self._extractLinkTHREE(soup_TWO)
 				except:
 					#warnInfo("paper_title is not found????")
 					raise Exception
@@ -153,12 +158,12 @@ class extractDatabase(object):
 
 	def getDBLPname(self):
 		try:
-			response = self._requestWeb()
+			response = self._requestWeb(self.url)
 		except:
 			warnInfo("Connection FAILED! The url is: " + self.url)
 			raise Exception
 		try:
-			dblpname_list = _parserDBLP(response)
+			dblpname_list = self._parserDBLP(response)
 		except:
 			warnInfo("Parser DBLP FAILED!!")
 			raise Exception
@@ -199,7 +204,7 @@ for row_tuple in ccf_set:
 		line = CCF_name.replace("%","%25").replace(" ", "%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'","%27")
 		url = "http://dblp.uni-trier.de/search?q=" + line
 		#url = 'http://dblp.uni-trier.de/search?q=Cybernetics%20and%20Systems'
-		assert CCF_type == 'journal':
+		assert CCF_type == 'journal'
 		#sys.exit("Current venue is '%s'") %CCF_type
 		cur_extract_database = extractDatabase(url, headers)
 
@@ -234,7 +239,7 @@ for row_tuple in ccf_set:
 				print "%dth ccf venue's dblpname is updated successfully!" %CCF_id
 			except:
 				sys.exit("ERROR: Update the TABLE ccf failed!")
-			del dblp_name #Delete last variable
+			#del dblp_name #Delete last variable
 		except :
 			print "Not found the venue: '%s' IN DBLP" %CCF_name
 
