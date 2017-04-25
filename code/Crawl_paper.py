@@ -8,7 +8,7 @@ import re
 import random
 import sys
 
-db = MySQLdb.connect(host='localhost', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
+db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
 #这里记录参数，命令行访问格式为:
@@ -157,8 +157,8 @@ class extractCitation(object):
 			raise Exception
 		try:
 			#去掉所有非字母字符来比较，使用filter
-			paper_title_tmp = filter(str.isalpha, self.paper_title)
-			cur_title_tmp = filter(str.isalpha, cur_title)
+			paper_title_tmp = filter(str.isalpha, self.paper_title).lower()
+			cur_title_tmp = filter(str.isalpha, cur_title).lower()
 			assert paper_title_tmp == cur_title_tmp
 		except:
 			warnInfo("The two papers are different!\nCurrent: '%s'\nOrigin: '%s'\n"%(cur_title, paper_title))
