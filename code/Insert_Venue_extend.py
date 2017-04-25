@@ -126,7 +126,12 @@ class extractPaper(object):
 			raise Exception #
 		return dblpname #返回dblpname值
 
-def SQL_Operation(cur_venue_id, nb_venue, cursor, headers):
+def SQL_Operation(cur_venue_id, nb_venue, headers):
+
+	sql_ip = "192.168.1.198"
+	#sql_ip = "127.0.0.1"
+	db = MySQLdb.connect(host=sql_ip, user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
+	cursor = db.cursor()
 
 	while(cur_venue_id <= nb_venue):
 		warnInfo("*********************%d HAHA*******************" %cur_venue_id)
@@ -214,12 +219,14 @@ if __name__ == "__main__":
 		sys.exit("ERROR: SELECT the TABLE venue failed!")	
 
 	interval = (end_paper - cur_venue_id + 1) / 4
+	t = []
 	for i in range(3):
-		t = threading.Thread(target=SQL_Operation, args=(cur_venue_id+i*interval, cur_venue_id+(i+1)*interval-1, cursor, headers))
-		t.start()
+		tmp = threading.Thread(target=SQL_Operation, args=(cur_venue_id+i*interval, cur_venue_id+(i+1)*interval-1, headers))
+		t.append(tmp)
+		t[i].start()
 
-	t = threading.Thread(target=SQL_Operation, args=(cur_venue_id+3*interval, end_paper, cursor, headers))
-	t.start()
+	tmp3 = threading.Thread(target=SQL_Operation, args=(cur_venue_id+3*interval, end_paper, headers))
+	tmp3.start()
 	#SQL_Operation(cur_venue_id, nb_venue, cursor, headers)
 
 
