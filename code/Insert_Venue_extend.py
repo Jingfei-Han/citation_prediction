@@ -164,7 +164,11 @@ except:
 #cur_venue_id = 32
 sleep_interval = 0; # When greater than 10, we need sleep.
 while(cur_venue_id <= nb_venue):
+<<<<<<< HEAD
 	warnInfo("*********************%d HAHA*******************" %cur_venue_id)
+=======
+	#print "*********************%d HAHA*******************" %cur_venue_id
+>>>>>>> f3f9a3499a962f6d5af956a02c72874d79df7f81
 	sql_select_paper = "SELECT paper_title FROM paper WHERE venue_venue_id='%d' ORDER BY paper_publicationYear DESC" %cur_venue_id
 	try:
 		cursor.execute(sql_select_paper)

@@ -27,6 +27,7 @@ Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Helical%20surfac
 The 29th venue is not in DBLP!
 no matches
 Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Editorial%3A%20Functional%20and%20(Constraint)%20Logic%20Programming.
+<<<<<<< HEAD
 no matches
 Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=Review%3A%20A%20survey%20on%20architectures%20and%20energy%20efficiency%20in%20Data%20Center%20Networks.
 found 2 matches
@@ -17872,3 +17873,5 @@ Matches FAILED!
 Parser is FAILED! The url is: http://dblp.uni-trier.de/search?q=The%20Swiss%20Army%20smartphone%3A%20cloud-based%20delivery%20of%20USB%20services.
 The 3612th venue is not in DBLP!
 *********************3613 HAHA*******************
+=======
+>>>>>>> f3f9a3499a962f6d5af956a02c72874d79df7f81
