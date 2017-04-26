@@ -197,7 +197,7 @@ class extractDatabase(object):
 
 
 
-sql_select = "SELECT CORE_id, CORE_name, CORE_abbreviation, CORE_type FROM CORE WHERE CORE_id<10000000 AND CORE_dblpname IS NULL"
+sql_select = "SELECT CORE_id, CORE_name, CORE_abbreviation, CORE_type FROM core WHERE CORE_id<10000000 AND CORE_dblpname IS NULL"
 try:
 	#Record the number of items of table dblp
 	cursor.execute(sql_select)
@@ -214,11 +214,11 @@ for row_tuple in CORE_set:
 	if CORE_type == 'conference':
 		#当前为会议
 		if CORE_abbreviation != '':
-			sql_update = "UPDATE CORE SET CORE_dblpname = '%s' WHERE CORE_id = '%d' " %(CORE_abbreviation, CORE_id)
+			sql_update = "UPDATE core SET CORE_dblpname = '%s' WHERE CORE_id = '%d' " %(CORE_abbreviation, CORE_id)
 			try:
 				cursor.execute(sql_update)
 				db.commit()
-				print "%dth CORE venue's dblpname is updated successfully!" %CORE_id
+				print "%dth core venue's dblpname is updated successfully!" %CORE_id
 			except:
 				sys.exit("ERROR: Update the TABLE CORE failed!")
 		else:
@@ -251,15 +251,15 @@ for row_tuple in CORE_set:
 			if len(dblpname_list) == 1:
 				#只有唯一一个dblp名
 				print "The venue :'%s' DBLP name is: '%s'" %(CORE_name, dblpname_list[0])
-				sql_update = "UPDATE CORE SET CORE_dblpname = '%s' WHERE CORE_id = '%d'" %(dblpname_list[0], CORE_id)
+				sql_update = "UPDATE core SET CORE_dblpname = '%s' WHERE CORE_id = '%d'" %(dblpname_list[0], CORE_id)
 			elif len(dblpname_list) == 2:
 				#有两个dblp名
 				print "The venue :'%s' DBLP name is: '%s' and '%s'" %(CORE_name, dblpname_list[0], dblpname_list[1])
-				sql_update = "UPDATE CORE SET CORE_dblpname = '%s', CORE_dblpname2 = '%s' WHERE CORE_id = '%d'" %(dblpname_list[0], dblpname_list[1], CORE_id)
+				sql_update = "UPDATE core SET CORE_dblpname = '%s', CORE_dblpname2 = '%s' WHERE CORE_id = '%d'" %(dblpname_list[0], dblpname_list[1], CORE_id)
 			else:
 				#有至少3个dblp名，只取前3个
 				print "The venue :'%s' DBLP name is: '%s' and '%s' and '%s'" %(CORE_name, dblpname_list[0], dblpname_list[1], dblpname_list[2])
-				sql_update = "UPDATE CORE SET CORE_dblpname = '%s', CORE_dblpname2 = '%s', CORE_dblpname3 = '%s' WHERE CORE_id = '%d'" %(dblpname_list[0], dblpname_list[1], dblpname_list[2], CORE_id)
+				sql_update = "UPDATE core SET CORE_dblpname = '%s', CORE_dblpname2 = '%s', CORE_dblpname3 = '%s' WHERE CORE_id = '%d'" %(dblpname_list[0], dblpname_list[1], dblpname_list[2], CORE_id)
 			#更新数据库
 			try:
 				cursor.execute(sql_update)
