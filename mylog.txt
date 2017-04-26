@@ -292,3 +292,25 @@ International Joint Conferences on Computer, Information, and Systems Sciences, 
 但是这个就和venue完全不同， 因为程序未进行命名匹配，所以存在漏洞。
 同时，发现CISSE既不是期刊也不是会议。（entry editor）
 解决：捕获断言异常，赋dblpname为NOT IN DBLP。
+
+core中dblpname也已经更新完成。下面对数据进行一点整理：
+1. venue表中共有22288个venue，其中4472个venue为"NOT IN DBLP"， 936个venue末尾带括号，最后在匹配时候应该去掉括号；
+	大概20%的venue不在dblp中
+2. CCF表中共有572个venue（包含一个NOT IN CCF），其中38个venue为"NOT IN DBLP"， 6%的venue不在dblp中，
+   有29个venue存在第二个dblp名（但是有些和第一个是一样的）， 有8个venue存在第三个dblp名。
+3. CORE表中共有2566个venue（包含一个NOT IN CORE），其中379个venue为"NOT IN DBLP"，14%的venue不在dblp中，
+   有44个venue存在第二个dblp名（但是有些和第一个是一样的）， 有12个venue存在第三个dblp名。
+4. CCF表中：
+	A: 68个，3个NOT IN DBLP
+	B: 230个，10个NOT IN DBLP
+	C: 273个，25个NOT IN DBLP
+5. CORE表中：
+	A*: 124个，14个NOT IN DBLP
+	A : 387个， 49个NOT IN DBLP
+	B : 679个， 99个NOT IN DBLP
+	C : 1258个， 211个NOT IN DBLP
+	Australasian: 78个（均为会议）
+	其他：39个
+
+下面将venue， ccf， core表中的所有dblpname放入dblp表中
+应先将venue加入dblp表中，等爬完所有论文之后再统一扩充dblp表
