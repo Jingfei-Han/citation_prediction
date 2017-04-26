@@ -1,3 +1,4 @@
+#encoding:utf-8
 import MySQLdb
 import MySQLdb.cursors
 import sys
@@ -35,6 +36,8 @@ for onevenue_tuple in venue_set:
 		pattern = re.match(r'(.*)(\(.*\))', onevenue)
 		onevenue = pattern.group(1)
 	onevenue = onevenue.strip()
+	#测试
+	#onevenue = "NASA Formal Methods"
 	sql_select1 = "SELECT dblp_id FROM dblp WHERE dblp_name='%s'" %onevenue
 	try:
 		#Search the dblp id
