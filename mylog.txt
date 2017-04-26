@@ -280,3 +280,6 @@ DELETE FROM venue WHERE venue_id = '461';
 下面修改Crawl_paper程序，更改逻辑错误。
 程序修改完成，但是由于CCF和CORE的dblpname问题，还需先爬取CCF的dblpname
 
+----------------------------------2017.04.26--------------------------------------
+问题：CCF的dblpname很多为NOT IN DBLP
+解决：当前所找到的论文在dblp中不唯一，应该找到唯一的paper来确定dblpname
