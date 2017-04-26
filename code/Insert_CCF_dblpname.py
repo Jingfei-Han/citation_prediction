@@ -75,17 +75,32 @@ class extractDatabase(object):
 			raise Exception
 		#判断ul是否为一个集合
 		volume_link = []
+		#只记录最后3次的名字
+		index = 1
 		for ul_element in ul:
 			tmp_link = ul_element.li.a['href']
 			volume_link.append(tmp_link)
+			if index >= 3:
+				break
+			else:
+				index += 1
 		return volume_link #返回列表
 
 	def _extractLinkTHREE(self, soup_TWO):
 		try:
-			li = soup_TWO.find("li", attrs={"class":"entry article"})
-			span = li.find("span",attrs={"class":"title"})
-			paper_title =  span.text
-			return paper_title
+			li = soup_TWO.find_all("li", attrs={"class":"entry article"})
+			paper_title_list = []
+			#更新为得到文章列表，加入10篇论文即可
+			index = 0
+			for li_element in li:
+				span = li_element.find("span",attrs={"class":"title"})
+				paper_title =  span.text
+				paper_title_list.append(paper_title)
+				if index >= 10:
+					break
+				else:
+					index += 1
+			return paper_title_list #返回一个volume对应的文章列表
 		except:
 			warnInfo("Level 3: No paper can be gotten!")
 			raise Exception
@@ -132,22 +147,32 @@ class extractDatabase(object):
 					raise Exception
 				soup_TWO = BeautifulSoup(res_TWO.text)
 				try:
-					#获得对应volume的paper的名字
-					paper_title = self._extractLinkTHREE(soup_TWO)
+					#获得对应volume的paper的文章名列表
+					paper_title_list = self._extractLinkTHREE(soup_TWO)
 				except:
 					#warnInfo("paper_title is not found????")
 					raise Exception
 				#对于给定的paper title，应该用extractPaper类抽取论文的dblp name
-				line = paper_title.replace("%","%25").replace(" ", "%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'","%27")
-				url = "http://dblp.uni-trier.de/search?q=" + line
+				mul_match = 0
+				for paper_title in paper_title_list:
+					line = paper_title.replace("%","%25").replace(" ", "%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'","%27")
+					url = "http://dblp.uni-trier.de/search?q=" + line
 
-				cur_extract = extractPaper(url, headers, paper_title)
-				try:
-					dblpname = cur_extract.crawlWeb()
-					dblpname_list.append(dblpname) #加入列表
-				except:
-					warnInfo("Current is not in DBLP, that is IMPOSSIBLE!")
-					raise Exception
+					cur_extract = extractPaper(url, headers, paper_title)
+					try:
+						dblpname = cur_extract.crawlWeb()
+						dblpname_list.append(dblpname) #加入列表
+						break #找到当前volume的dblpname之后则跳出循环
+
+					except:
+						mul_match += 1
+						if mul_match >=5:
+							warnInfo("The paper: %s is not in DBLP! IMPOSSIBLE!!" %paper_title)
+							raise Exception
+						else:
+							continue
+						#warnInfo("Current is not in DBLP, that is IMPOSSIBLE!")
+						#raise Exception
 			except:
 				warnInfo("Current dblpname can't be GOTTEN!!")
 				raise Exception
