@@ -20,7 +20,7 @@ except:
 cnt_index = cnt_venue
 
 
-sql_select = "SELECT venue_dblpname FROM venue"
+sql_select = "SELECT venue_dblpname FROM venue WHERE dblp_dblp_id='999999999'"
 
 try:
 	#Get the set of venue's dblpname where the dblpname is not null.
@@ -35,6 +35,8 @@ for onevenue_tuple in venue_set:
 	if onevenue_raw[-1] == ')':
 		pattern = re.match(r'(.*)(\(.*\))', onevenue_raw)
 		onevenue = pattern.group(1)
+	else:
+		onevenue = onevenue_raw
 	onevenue = onevenue.strip()
 	#测试
 	#onevenue = "NASA Formal Methods"
