@@ -283,3 +283,12 @@ DELETE FROM venue WHERE venue_id = '461';
 ----------------------------------2017.04.26--------------------------------------
 问题：CCF的dblpname很多为NOT IN DBLP
 解决：当前所找到的论文在dblp中不唯一，应该找到唯一的paper来确定dblpname
+
+问题：assert断言发现可能dblpname_list < 1，发现一个例子是：
+venue: Information and Software Technology
+发现匹配的likely match为：
+Likely matches
+International Joint Conferences on Computer, Information, and Systems Sciences, and Engineering (CISSE)
+但是这个就和venue完全不同， 因为程序未进行命名匹配，所以存在漏洞。
+同时，发现CISSE既不是期刊也不是会议。（entry editor）
+解决：捕获断言异常，赋dblpname为NOT IN DBLP。
