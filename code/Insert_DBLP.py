@@ -3,10 +3,10 @@ import MySQLdb.cursors
 import sys
 import re
 
-db = MySQLdb.connect(host='localhost', user='root', passwd='hanjingfei007', db='citation', charset='utf8')
+db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
-sql_select_cnt = "SELECT COUNT(*) FROM citation.dblp WHERE dblp_id<10000000"
+sql_select_cnt = "SELECT COUNT(*) FROM dblp WHERE dblp_id<10000000"
 try:
 	#Record the number of items of table dblp
 	cursor.execute(sql_select_cnt)
@@ -19,7 +19,7 @@ except:
 cnt_index = cnt_venue
 
 
-sql_select = "SELECT venue_dblpname FROM citation.venue WHERE venue_dblpname IS NOT NULL"
+sql_select = "SELECT venue_dblpname FROM venue"
 
 try:
 	#Get the set of venue's dblpname where the dblpname is not null.
@@ -35,26 +35,26 @@ for onevenue_tuple in venue_set:
 		pattern = re.match(r'(.*)(\(.*\))', onevenue)
 		onevenue = pattern.group(1)
 	onevenue = onevenue.strip()
-	sql_select1 = "SELECT dblp_id FROM citation.dblp WHERE dblp_name='%s'" %onevenue
+	sql_select1 = "SELECT dblp_id FROM dblp WHERE dblp_name='%s'" %onevenue
 	try:
 		#Search the dblp id
 		cursor.execute(sql_select1)
 		id = cursor.fetchone()[0]
-		sql_update = "UPDATE citation.venue SET dblp_dblp_id='%d' WHERE venue_dblpname='%s'" %(id, onevenue)
+		sql_update = "UPDATE venue SET dblp_dblp_id='%d' WHERE venue_dblpname='%s'" %(id, onevenue)
 		try:
 			cursor.execute(sql_update)
 			db.commit()
 		except:
 			sys.exit("ERROR: Update the TABLE dblp failed!")
 	except:
-		sql1 = "INSERT INTO citation.dblp(dblp_id, dblp_name) VALUES('%d', '%s')" % (cnt_venue, onevenue)
+		sql1 = "INSERT INTO dblp(dblp_id, dblp_name) VALUES('%d', '%s')" % (cnt_venue, onevenue)
 		try:
 			cursor.execute(sql1)
 			db.commit()
 		except:
 			sys.exit("ERROR: INSERT INTO the TABLE dblp failed!")
 
-		sql_update = "UPDATE citation.venue SET dblp_dblp_id='%d' WHERE venue_dblpname='%s'" %(cnt_venue, onevenue)
+		sql_update = "UPDATE venue SET dblp_dblp_id='%d' WHERE venue_dblpname='%s'" %(cnt_venue, onevenue)
 		try:
 			cursor.execute(sql_update)
 			db.commit()
