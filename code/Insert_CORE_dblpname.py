@@ -1,3 +1,4 @@
+#encoding:utf-8
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
@@ -5,10 +6,17 @@ import MySQLdb
 import MySQLdb.cursors
 import sys
 import requests
+import bs4
 from bs4 import BeautifulSoup
 from time import sleep
+from Insert_Venue_extend import extractPaper
 
-db = MySQLdb.connect(host='localhost', user='root', passwd='hanjingfei007', db='citation', charset='utf8')
+def warnInfo(string):
+	#with open("venue_log.txt","a") as fp:
+	#	fp.write(string+'\n')
+	print string
+
+db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
 #ACM Transactions on Autonomous and Adaptive Systems
@@ -24,24 +32,172 @@ headers = {
             'Connection':'keep-alive',
             'Cache-Control':'max-age=0',}
 
+class extractDatabase(object):
+	def __init__(self,url, headers):
+		#print "__init__"
+		self.url = url
+		self.headers = headers
+	
+	def _requestWeb(self, url):
+		#print "_requestWeb"
+		cnt_res = 1
+		while(cnt_res <= 5):
+			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
+			try:
+				response = requests.get(url, headers = self.headers, timeout=10)
+				return response
+			except:
+				cnt_res += 1
+				continue
+		raise Exception #如果链接失败，则抛出异常，被调用函数捕获
 
-#Deal with Interupt
-sql_index_select = "SELECT CORE_id\
-		FROM citation.core\
-		WHERE CORE_dblpname IS  NOT NULL\
-		ORDER BY CORE_id DESC"
+	def _extractLinkONE(self, soup):
+		#抽取一级链接
+		try:
+			venue_res = soup.find("div", attrs={"id":"completesearch-venues"})
+			div_hide_body = venue_res.find("div", {"class":"body hide-body"})
+			link_tag = div_hide_body.ul.li.a
+			venue_link = link_tag['href']
+			return venue_link
+		except:
+			warnInfo("Level 1: No venue link can be gotten!")
+			raise Exception
 
-try:
-	#Record the number of items of table dblp
-	cursor.execute(sql_index_select)
-	cur_venue_id = cursor.fetchone()[0]
-except:
-	sys.exit("ERROR: SELECT the TABLE CORE failed!")
+	def _extractLinkTWO(self, soup_ONE):
+		#抽取二级链接
+		div_main = soup_ONE.find("div", {"id":"main"})
+		ul = div_main.find_all('ul', recursive=False)
+		#判断当前ul已经被返回,否则返回异常
+		try:
+			assert type(ul) == bs4.element.ResultSet
+		except:
+			warnInfo("Level 2: No volume can be gotten!")
+			raise Exception
+		#判断ul是否为一个集合
+		volume_link = []
+		#只记录最后3次的名字
+		index = 1
+		for ul_element in ul:
+			tmp_link = ul_element.li.a['href']
+			volume_link.append(tmp_link)
+			if index >= 3:
+				break
+			else:
+				index += 1
+		return volume_link #返回列表
+
+	def _extractLinkTHREE(self, soup_TWO):
+		try:
+			li = soup_TWO.find_all("li", attrs={"class":"entry article"})
+			paper_title_list = []
+			#更新为得到文章列表，加入10篇论文即可
+			index = 0
+			for li_element in li:
+				span = li_element.find("span",attrs={"class":"title"})
+				paper_title =  span.text
+				paper_title_list.append(paper_title)
+				if index >= 10:
+					break
+				else:
+					index += 1
+			return paper_title_list #返回一个volume对应的文章列表
+		except:
+			warnInfo("Level 3: No paper can be gotten!")
+			raise Exception
+
+	def _parserDBLP(self, response):
+		assert type(response) == requests.models.Response #判断response类型
+		soup = BeautifulSoup(response.text)
+		#判断是否只有唯一匹配
+		try:
+			venue_res = soup.find("div", attrs={"id":"completesearch-venues"})
+			div_hide_body = venue_res.find("div", {"class":"body hide-body"})
+			all_li = div_hide_body.ul.find_all('li')
+			#只有唯一匹配才继续进行
+			assert len(all_li) == 1
+		except:
+			warnInfo("No only MATCHES!")
+			raise Exception
+		#此时只有唯一匹配
+		try:
+			venue_link = self._extractLinkONE(soup)
+		except:
+			raise Exception
+		try:
+			res_ONE = self._requestWeb(venue_link)
+		except:
+			warnInfo("res_ONE: Connection FAILED! The url is: " + venue_link)
+			raise Exception
+		soup_ONE = BeautifulSoup(res_ONE.text)
+		try:
+			volume_link = self._extractLinkTWO(soup_ONE) #返回的volume_link为列表形式，因为可能有多个dblpname
+		except:
+			warnInfo("ul is not found????")
+			raise Exception
+		#得到volume_link之后继续爬该列表对应链接的文章的链接。
+		dblpname_list = []
+		for one_volume_link in volume_link:
+			#对于每个链接，对应一个dblpname
+			try:
+				#尝试获取该论文的dblpname
+				try:
+					res_TWO = self._requestWeb(one_volume_link)
+				except:
+					warnInfo("res_TWO: Connection FAILED! The url is: " + one_volume_link)
+					raise Exception
+				soup_TWO = BeautifulSoup(res_TWO.text)
+				try:
+					#获得对应volume的paper的文章名列表
+					paper_title_list = self._extractLinkTHREE(soup_TWO)
+				except:
+					#warnInfo("paper_title is not found????")
+					raise Exception
+				#对于给定的paper title，应该用extractPaper类抽取论文的dblp name
+				mul_match = 0
+				for paper_title in paper_title_list:
+					line = paper_title.replace("%","%25").replace(" ", "%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'","%27")
+					url = "http://dblp.uni-trier.de/search?q=" + line
+
+					cur_extract = extractPaper(url, headers, paper_title)
+					try:
+						dblpname = cur_extract.crawlWeb()
+						dblpname_list.append(dblpname) #加入列表
+						break #找到当前volume的dblpname之后则跳出循环
+
+					except:
+						mul_match += 1
+						if mul_match >=5:
+							warnInfo("The paper: %s is not in DBLP! IMPOSSIBLE!!" %paper_title)
+							raise Exception
+						else:
+							continue
+						#warnInfo("Current is not in DBLP, that is IMPOSSIBLE!")
+						#raise Exception
+			except:
+				warnInfo("Current dblpname can't be GOTTEN!!")
+				raise Exception
+
+		return dblpname_list #返回该venue的dblpname列表
 
 
 
+	def getDBLPname(self):
+		try:
+			response = self._requestWeb(self.url)
+		except:
+			warnInfo("Connection FAILED! The url is: " + self.url)
+			raise Exception
+		try:
+			dblpname_list = self._parserDBLP(response)
+		except:
+			warnInfo("Parser DBLP FAILED!!")
+			raise Exception
+		return dblpname_list
+		#此时应将dblpname_list写入数据库
 
-sql_select = "SELECT CORE_id, CORE_name, CORE_abbreviation, CORE_type FROM citation.CORE WHERE CORE_id<10000000  AND CORE_id>'%d' AND CORE_dblpname IS NULL" %cur_venue_id
+
+
+sql_select = "SELECT CORE_id, CORE_name, CORE_abbreviation, CORE_type FROM CORE WHERE CORE_id<10000000 AND CORE_dblpname IS NULL"
 try:
 	#Record the number of items of table dblp
 	cursor.execute(sql_select)
@@ -51,13 +207,14 @@ except:
 
 for row_tuple in CORE_set:
 
-	CORE_id = row_tuple[0]
+	CORE_id = int(row_tuple[0])
 	CORE_name = row_tuple[1]
 	CORE_abbreviation = row_tuple[2]
 	CORE_type = row_tuple[3]
 	if CORE_type == 'conference':
+		#当前为会议
 		if CORE_abbreviation != '':
-			sql_update = "UPDATE citation.CORE SET CORE_dblpname = '%s' WHERE CORE_id = '%d' " %(CORE_abbreviation, CORE_id)
+			sql_update = "UPDATE CORE SET CORE_dblpname = '%s' WHERE CORE_id = '%d' " %(CORE_abbreviation, CORE_id)
 			try:
 				cursor.execute(sql_update)
 				db.commit()
@@ -68,273 +225,49 @@ for row_tuple in CORE_set:
 			print "CORE_abbreviation is empty, so we don't unpdate the conference: %s" %CORE_name
 			continue
 	else :
+		#当前为期刊
 		line = CORE_name.replace("%","%25").replace(" ", "%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'","%27")
 		url = "http://dblp.uni-trier.de/search?q=" + line
 		#url = 'http://dblp.uni-trier.de/search?q=Cybernetics%20and%20Systems'
-		if CORE_type != 'journal':
-			sys.exit("Current venue is '%s'") %CORE_type
+		assert CORE_type == 'journal'
+		#sys.exit("Current venue is '%s'") %CORE_type
+		cur_extract_database = extractDatabase(url, headers)
 
-		flag_jump = 0
-		while(True):
-			try:
-				r = requests.get(url, headers = headers, timeout=15)#, proxies=proxies)
-				break
-			except:
-				print "Connection FAILED! We need have a 5 seconds break."
-				flag_jump += 1
-				if flag_jump > 10:
-					print "This venue can't be connected! We must change the next venue."
-					break
-				sleep(5)
-		if (flag_jump > 10):
-			continue
-
-		soup1 = BeautifulSoup(r.text)
-
-		exact_match = ''
-		exact_match = soup1.find(text="Exact matches")
-		if exact_match:
-			#We can get the venue
-			tag = soup1.find('mark').parent
-
-			link = tag['href']
-
-			flag_jump = 0
-			while(True):
-				try:
-					r2 = requests.get(link, headers = headers, timeout=15)#, proxies=proxies)
-					break
-				except:
-					print "Connection FAILED! We need have a 5 seconds break."
-					flag_jump += 1
-					if flag_jump > 10:
-						print "This venue can't be connected! We must change the next venue."
-						break
-					sleep(5)
-			if (flag_jump > 10):
-				continue
-
-			soup2 = BeautifulSoup(r2.text)
-			
-			main = soup2.find('div', id='main')
-			ul = main.find('ul', recursive=False)
-
-			if ul:
-			
-				link3 = ul.find('a')['href'] 
-
-				flag_jump = 0
-				while(True):
-					try:
-						r3 = requests.get(link3, headers = headers, timeout=15)#, proxies=proxies)
-						break
-					except:
-						print "Connection FAILED! We need have a 5 seconds break."
-						flag_jump += 1
-						if flag_jump > 10:
-							print "This venue can't be connected! We must change the next venue."
-							break
-						sleep(5)
-				if (flag_jump > 10):
-					continue
-
-				soup3 = BeautifulSoup(r3.text)
-
-				paper_set = soup3.find_all('span', attrs={'class':'title'})
-				for row in paper_set:
-					one_paper = row.text
-					#one_paper = soup3.find('span', attrs={'class':'title'}).text
-					line = one_paper.replace("%","%25").replace(" ","%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'", "%27")
-
-					url = "http://dblp.uni-trier.de/search?q=" + line
-
-					flag_jump = 0
-					while(True):
-						try:
-							response = requests.get(url, headers = headers, timeout=15)#, proxies=proxies)
-							break
-						except:
-							print "Connection FAILED! We need have a 5 seconds break."
-							flag_jump += 1
-							if flag_jump > 10:
-								print "This venue can't be connected! We must change the next venue."
-								break
-							sleep(5)
-					if (flag_jump > 10):
-						continue
-
-					soup = BeautifulSoup(response.text)
-
-					try:
-						match = soup.find(id='completesearch-info-matches').text
-						if match == "found 1 match" or match == "found one match":
-							print "Search successfully!"
-						else:
-							print "The paper is not the only one."
-							continue
-					except:
-						print "ERROR: Match FAILED!"
-						continue
-					try:
-						li = soup.find('li', attrs={'class':'entry article'})
-						span = li.find('span',attrs={'itemprop':'isPartOf'})
-					except:
-						try:
-							li = soup.find('li', attrs={'class':'entry inproceedings'})
-							span = li.find('span',attrs={'itemprop':'isPartOf'})
-						except:
-							try:
-								li = soup.find('li', attrs={'class':'entry informal'})
-								span = li.find('span',attrs={'itemprop':'isPartOf'})
-							except:
-								print "DBLP FAILED!"
-								continue
-
-					dblp_name = span.text
-					if dblp_name:
-						break
-					#print dblp_name
-					#return dblp_name
-				else:
-					#Not Found
-					print "The venue %s NOT FOUND in DBLP" %CORE_name
-					break
-		else :
-			print "No exact matches."
-			#No exact matches , but we can check whether only one likely matches
-
-			likely_matches = ''
-			likely_matches = soup1.find(text='Likely matches')
-			if likely_matches:
-				#We consider this is the venue's dblpname when only one likely matches
-				div_likely = soup1.find(id = 'completesearch-venues')
-				div_likely2 = div_likely.find('div', attrs={'class':'body hide-body'})
-				ul_likely = div_likely2.find('ul',recursive=False)
-				lis_likely = ul_likely.find_all('li')
-				cnt_likely = 0
-				for li_likely in lis_likely:
-					cnt_likely += 1
-
-				if cnt_likely == 1:
-					print "Only 1 likely matches!"
-					link = li_likely.find('a')['href']
-					#tag = soup1.find('mark').parent
-					#link = tag['href']
-
-					flag_jump = 0
-					while(True):
-						try:
-							r2 = requests.get(link, headers = headers, timeout=15)#, proxies=proxies)
-							break
-						except:
-							print "Connection FAILED! We need have a 5 seconds break."
-							flag_jump += 1
-							if flag_jump > 10:
-								print "This venue can't be connected! We must change the next venue."
-								break
-							sleep(5)
-					if (flag_jump > 10):
-						continue
-
-					soup2 = BeautifulSoup(r2.text)
-					
-					main = soup2.find('div', id='main')
-					ul = main.find('ul', recursive=False)
-
-					if ul:
-					
-						link3 = ul.find('a')['href'] 
-
-						flag_jump = 0
-						while(True):
-							try:
-								r3 = requests.get(link3, headers = headers, timeout=15)#, proxies=proxies)
-								break
-							except:
-								print "Connection FAILED! We need have a 5 seconds break."
-								flag_jump += 1
-								if flag_jump > 10:
-									print "This venue can't be connected! We must change the next venue."
-									break
-								sleep(5)
-						if (flag_jump > 10):
-							continue
-
-						soup3 = BeautifulSoup(r3.text)
-
-						paper_set = soup3.find_all('span', attrs={'class':'title'})
-						for row in paper_set:
-							one_paper = row.text
-							#one_paper = soup3.find('span', attrs={'class':'title'}).text
-							line = one_paper.replace("%","%25").replace(" ","%20").replace(",", "%2C").replace(":", "%3A").replace("?", "%3F").replace("&", "%26").replace("'", "%27")
-
-							url = "http://dblp.uni-trier.de/search?q=" + line
-
-							flag_jump = 0
-							while(True):
-								try:
-									response = requests.get(url, headers = headers, timeout=15)#, proxies=proxies)
-									break
-								except:
-									print "Connection FAILED! We need have a 5 seconds break."
-									flag_jump += 1
-									if flag_jump > 10:
-										print "This venue can't be connected! We must change the next venue."
-										break
-									sleep(5)
-							if (flag_jump > 10):
-								continue
-
-							soup = BeautifulSoup(response.text)
-
-							try:
-								match = soup.find(id='completesearch-info-matches').text
-								if match == "found 1 match" or match == "found one match":
-									print "Search successfully!"
-								else:
-									print "The paper is not the only one."
-									continue
-							except:
-								print "ERROR: Match FAILED!"
-								continue
-							try:
-								li = soup.find('li', attrs={'class':'entry article'})
-								span = li.find('span',attrs={'itemprop':'isPartOf'})
-							except:
-								try:
-									li = soup.find('li', attrs={'class':'entry inproceedings'})
-									span = li.find('span',attrs={'itemprop':'isPartOf'})
-								except:
-									try:
-										li = soup.find('li', attrs={'class':'entry informal'})
-										span = li.find('span',attrs={'itemprop':'isPartOf'})
-									except:
-										print "DBLP FAILED!"
-										continue
-
-							dblp_name = span.text
-							if dblp_name:
-								break
-							#print dblp_name
-							#return dblp_name
-					else:
-						#Not Found
-						print "The venue %s NOT FOUND in DBLP" %CORE_name
-						break
-				else:
-					continue
-			else:
-				continue
+		dblpname_list = [] #初始化为空列表
 		try:
-			print "The venue :'%s' DBLP name is: '%s'" %(CORE_name, dblp_name)
-			sql_update = "UPDATE citation.CORE SET CORE_dblpname = '%s' WHERE CORE_id = '%d'" %(dblp_name, CORE_id)
+			dblpname_list = cur_extract_database.getDBLPname()
+		except:
+			warnInfo("Get DBLP LIST FAILED!!")
+			dblpname = "NOT IN DBLP" #没有找到，则得到dblpname为NOT IN DBLP
+			dblpname_list.append(dblpname)
+			#continue
+
+		#得到dblpname_list之后，尝试写入数据库
+		try:
+			assert len(dblpname_list) >= 1
+		except:
+			dblpname_list = ['NOT IN DBLP']
+		try:
+			if len(dblpname_list) == 1:
+				#只有唯一一个dblp名
+				print "The venue :'%s' DBLP name is: '%s'" %(CORE_name, dblpname_list[0])
+				sql_update = "UPDATE CORE SET CORE_dblpname = '%s' WHERE CORE_id = '%d'" %(dblpname_list[0], CORE_id)
+			elif len(dblpname_list) == 2:
+				#有两个dblp名
+				print "The venue :'%s' DBLP name is: '%s' and '%s'" %(CORE_name, dblpname_list[0], dblpname_list[1])
+				sql_update = "UPDATE CORE SET CORE_dblpname = '%s', CORE_dblpname2 = '%s' WHERE CORE_id = '%d'" %(dblpname_list[0], dblpname_list[1], CORE_id)
+			else:
+				#有至少3个dblp名，只取前3个
+				print "The venue :'%s' DBLP name is: '%s' and '%s' and '%s'" %(CORE_name, dblpname_list[0], dblpname_list[1], dblpname_list[2])
+				sql_update = "UPDATE CORE SET CORE_dblpname = '%s', CORE_dblpname2 = '%s', CORE_dblpname3 = '%s' WHERE CORE_id = '%d'" %(dblpname_list[0], dblpname_list[1], dblpname_list[2], CORE_id)
+			#更新数据库
 			try:
 				cursor.execute(sql_update)
 				db.commit()
 				print "%dth CORE venue's dblpname is updated successfully!" %CORE_id
 			except:
 				sys.exit("ERROR: Update the TABLE CORE failed!")
-			del dblp_name #Delete last variable
+			#del dblp_name #Delete last variable
 		except :
 			print "Not found the venue: '%s' IN DBLP" %CORE_name
 
