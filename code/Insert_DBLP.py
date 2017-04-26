@@ -30,10 +30,10 @@ except:
 	sys.exit("ERROR: SELECT the TABLE dblp failed!")
 
 for onevenue_tuple in venue_set:
-	onevenue = onevenue_tuple[0]
+	onevenue_raw = onevenue_tuple[0]
 	#Whether the venue' last character is )
-	if onevenue[-1] == ')':
-		pattern = re.match(r'(.*)(\(.*\))', onevenue)
+	if onevenue_raw[-1] == ')':
+		pattern = re.match(r'(.*)(\(.*\))', onevenue_raw)
 		onevenue = pattern.group(1)
 	onevenue = onevenue.strip()
 	#测试
@@ -43,7 +43,7 @@ for onevenue_tuple in venue_set:
 		#Search the dblp id
 		cursor.execute(sql_select1)
 		id = cursor.fetchone()[0]
-		sql_update = "UPDATE venue SET dblp_dblp_id='%d' WHERE venue_dblpname='%s'" %(id, onevenue)
+		sql_update = "UPDATE venue SET dblp_dblp_id='%d' WHERE venue_dblpname='%s'" %(id, onevenue_raw)
 		try:
 			cursor.execute(sql_update)
 			db.commit()
@@ -57,7 +57,7 @@ for onevenue_tuple in venue_set:
 		except:
 			sys.exit("ERROR: INSERT INTO the TABLE dblp failed!")
 
-		sql_update = "UPDATE venue SET dblp_dblp_id='%d' WHERE venue_dblpname='%s'" %(cnt_venue, onevenue)
+		sql_update = "UPDATE venue SET dblp_dblp_id='%d' WHERE venue_dblpname='%s'" %(cnt_venue, onevenue_raw)
 		try:
 			cursor.execute(sql_update)
 			db.commit()
