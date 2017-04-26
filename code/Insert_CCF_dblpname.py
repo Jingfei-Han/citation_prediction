@@ -243,7 +243,10 @@ for row_tuple in ccf_set:
 			#continue
 
 		#得到dblpname_list之后，尝试写入数据库
-		assert len(dblpname_list) >= 1
+		try:
+			assert len(dblpname_list) >= 1
+		except:
+			dblpname_list = ['NOT IN DBLP']
 		try:
 			if len(dblpname_list) == 1:
 				#只有唯一一个dblp名
