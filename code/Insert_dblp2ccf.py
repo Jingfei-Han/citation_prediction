@@ -5,7 +5,7 @@ import sys
 db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
-sql_select = "SELECT CCF_id, dblp_id FROM citation.ccf, citation.dblp WHERE CCF_dblpname=dblp_name"
+sql_select = "SELECT CCF_id, dblp_id FROM citation.ccf, citation.dblp WHERE CCF_dblpname=dblp_name OR CCF_dblpname2=dblp_name OR CCF_dblpname3=dblp_name"
 
 try:
 	cursor.execute(sql_select)
