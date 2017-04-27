@@ -14,15 +14,15 @@ cursor = db.cursor()
 #这里记录参数，命令行访问格式为:
 #python Crawl_paper.py A Conference
 
-#CCF_classification = sys.argv[1]
-#CCF_type = sys.argv[2]
+CCF_classification = sys.argv[1]
+CCF_type = sys.argv[2]
 
 #写入log文件需要改下名字
 #fp = open("./log/LOG_paper_"+CCF_classification + "_"+CCF_type+".txt", "a")
 
 #用于测试
-CCF_classification = 'A'
-CCF_type = 'Conference'
+#CCF_classification = 'A'
+#CCF_type = 'Conference'
 
 #镜像headers
 headers = {
