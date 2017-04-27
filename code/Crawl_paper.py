@@ -13,10 +13,16 @@ cursor = db.cursor()
 
 #这里记录参数，命令行访问格式为:
 #python Crawl_paper.py A Conference
-CCF_classification = sys.argv[1]
-CCF_type = sys.argv[2]
+
+#CCF_classification = sys.argv[1]
+#CCF_type = sys.argv[2]
+
 #写入log文件需要改下名字
 #fp = open("./log/LOG_paper_"+CCF_classification + "_"+CCF_type+".txt", "a")
+
+#用于测试
+CCF_classification = 'A'
+CCF_type = 'Conference'
 
 #镜像headers
 headers = {
@@ -24,8 +30,8 @@ headers = {
 	'Accept-Encoding':'gzip, deflate, sdch, br',
 	'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4',
 	'Connection':'keep-alive',
-	'Host':'b.ggkai.men',
-	'Referer':'https://b.ggkai.men/extdomains/scholar.google.com/schhp?hl=en&num=20&as_sdt=0',
+	'Host':'a.ggkai.men',
+	'Referer':'https://a.ggkai.men/extdomains/scholar.google.com/schhp?hl=en&num=20&as_sdt=0',
 	'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
 	'Cache-Control':'max-age=0',
 	'Cookie':'NID=101=ZPX_tebnsmlbtsniyMAFKDXfTNmNmI9p9jF6HVl5luswkM7qLeWnkHFpPmdL0beGn0lCaJjGgevBsBOj2qnLDPHi2NCujP3CRk-8rUIfsHXc0ycB_ToZS5gAO5buBDzJ; GSP=LM=1492323405:S=6WH6FgIC17h7zhM5; Hm_lvt_df11358c4b6a37507eca01dfe919e040=1492323406,1492341461; Hm_lpvt_df11358c4b6a37507eca01dfe919e040=1492341461',
@@ -96,7 +102,7 @@ res_set = cursor.fetchall()
 
 
 
-url = "https://b.ggkai.men/extdomains/scholar.google.com/"
+url = "https://a.ggkai.men/extdomains/scholar.google.com/"
 
 def warnInfo(string):
 	#with open("venue_log.txt","a") as fp:
@@ -157,8 +163,9 @@ class extractCitation(object):
 			raise Exception
 		try:
 			#去掉所有非字母字符来比较，使用filter
-			paper_title_tmp = filter(str.isalpha, self.paper_title).lower()
-			cur_title_tmp = filter(str.isalpha, cur_title).lower()
+			#因为paper_title和cur_title是unicode类型，不能用str.isalpha，应使用unicode.isalpha
+			paper_title_tmp = filter(unicode.isalpha, self.paper_title).lower()
+			cur_title_tmp = filter(unicode.isalpha, cur_title).lower()
 			assert paper_title_tmp == cur_title_tmp
 		except:
 			warnInfo("The two papers are different!\nCurrent: '%s'\nOrigin: '%s'\n"%(cur_title, paper_title))
@@ -208,7 +215,7 @@ for row_tuple in res_set:
 		
 	urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdt=1%2C5&as_sdtp='
 	
-	cur_extract = extractPaper(urlTitle, headers, paper_title)
+	cur_extract = extractCitation(urlTitle, headers, paper_title)
 	try:
 		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL = cur_extract.crawlWeb()
 	except:
@@ -227,6 +234,7 @@ for row_tuple in res_set:
 		cursor.execute(sql_update)
 		db.commit()
 	except:
+		print "UPDATE FAILED!"
 		#fp.write("Update FAILED!\n")
 	print "----------------------%d SUSCESSED!  ----------------------" %index 
 	#fp.write("----------------------%d SUSCESSED!  ----------------------\n" %index) 
