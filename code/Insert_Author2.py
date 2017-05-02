@@ -8,7 +8,7 @@ import sys
 db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
 cursor = db.cursor()
 
-f = open(r'D:/Citation_prediction/AMiner/AMiner-Author.txt', 'r')
+f = open(r'/home/jingfei/AMiner/AMiner-Author.txt', 'r')
 #i = 0
 
 dic = {
