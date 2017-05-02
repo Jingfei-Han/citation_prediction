@@ -31,6 +31,8 @@ class extractCitation(object):
 			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
 			try:
 				response = requests.get(self.url, headers = self.headers, timeout=10)
+				random_time = random.randint(1,3) #随机停止1到3秒
+				sleep(random_time)
 				return response
 			except:
 				cnt_res += 1
