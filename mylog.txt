@@ -343,3 +343,8 @@ https://a.ggkai.men/extdomains/scholar.google.com/scholar?q=Debugging+via+run-ti
 
 下面的一个重要工作是分析现有数据集的信息，对当前数据集应有一个清晰的认识。
 先添加数据库的author和a2p两个表的内容。
+
+最终得到
+author数目为：171,2433（包括所有作者，可能有些作者的论文不在paper中）
+paper数目为：134,3165
+作者与paper关系数目为：378,9487
