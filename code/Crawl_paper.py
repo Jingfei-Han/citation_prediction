@@ -30,15 +30,17 @@ class extractCitation(object):
 		while(cnt_res <= 5):
 			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
 			try:
-				response = requests.get(self.url, headers = self.headers, timeout=10)
+				response = requests.get(self.url, headers = self.headers, timeout=15, verify=False)
 				random_time = random.randint(1,3) #随机停止1到3秒
 				sleep(random_time)
 				return response
 			except:
+				print "Connection: %d FAILED" %cnt_res
 				cnt_res += 1
 				sleep(2) #等待两秒
 				continue
-		raise Exception #如果链接失败，则抛出异常，被调用函数捕获
+		warnInfo("_requestWeb: 5 times requests FAILED")
+		raise Exception#如果链接失败，则抛出异常，被调用函数捕获
 
 	def _parseGoogle(self, response):
 		#解析google页面
@@ -47,7 +49,6 @@ class extractCitation(object):
 		paper_citationURL = ""
 		paper_pdfURL = ""
 		paper_scholarInfo = ""
-		paper_pdfURL = ""
 		paper_rawInfo = ""
 		paper_rawURL = ""
 		paper_relatedURL = ""
@@ -131,6 +132,27 @@ class extractCitation(object):
 			raise Exception #
 		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL #返回paper信息，包括paper_nbCitation, paper_issen, paper_citationURL, paper_pdfURL
 
+def SQL_single(paper_title, paper_publicationYear,headers, cursor):
+	url = "https://c.ggkai.men/extdomains/scholar.google.com/"
+	#weizhui = '&btnG=&as_sdt=1%2C5&as_sdtp=&as_ylo=%d&as_yhi=%d' %(paper_publicationYear, paper_publicationYear)
+	urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdtp=&as_ylo=' + paper_publicationYear + '&as_yhi=' + paper_publicationYear
+	
+	cur_extract = extractCitation(urlTitle, headers, paper_title)
+
+	try:
+		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = cur_extract.crawlWeb()
+	except:
+		#出现错误，需要赋一个特殊值
+		paper_nbCitation = -2 #-2表示找过，但是没有找到
+		paper_isseen = -2 #-2表示找过，但没找到
+		paper_citationURL = ''
+		paper_pdfURL = ''
+		paper_rawURL = ''
+		paper_scholarInfo = ''
+		paper_rawInfo = ''
+		paper_relatedURL = ''
+	return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL
+
 def SQL_Operation(cur_index_id, nb_venue, headers):	
 	sql_ip = "192.168.1.198"
 	#sql_ip = "127.0.0.1"
@@ -148,7 +170,8 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 		except:
 			sys.exit("ERROR: SELECT the TABLE paper failed!")
 
-		url = "https://a.ggkai.men/extdomains/scholar.google.com/"
+		"""
+		url = "https://c.ggkai.men/extdomains/scholar.google.com/"
 		#weizhui = '&btnG=&as_sdt=1%2C5&as_sdtp=&as_ylo=%d&as_yhi=%d' %(paper_publicationYear, paper_publicationYear)
 		urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdtp=&as_ylo=' + paper_publicationYear + '&as_yhi=' + paper_publicationYear
 		
@@ -161,6 +184,10 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 			paper_isseen = -2 #-2表示找过，但没找到
 			paper_citationURL = ''
 			paper_pdfURL = ''
+		"""
+		#抽象成函数
+		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = SQL_single(paper_title, paper_publicationYear,headers, cursor)
+
 
 		#无论解析阶段是否出现异常都写入数据库
 		try:
@@ -179,12 +206,21 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 
 
 if __name__ == "__main__":
+
+	#CCF_classification = sys.argv[1]
+	#CCF_type = sys.argv[2]
+
+	CCF_classification = "A"
+	CCF_type = "Conference"
+	"""
+	#此处为按照paper的index编号大小来爬虫
 	start_paper = int(sys.argv[1])
 	end_paper = int(sys.argv[2])
 
 	#TEST
 	#start_paper = 1
 	#end_paper = 100
+	"""
 
 	reload(sys)
 	sys.setdefaultencoding("utf-8")
@@ -206,22 +242,25 @@ if __name__ == "__main__":
 	#CCF_type = 'Conference'
 
 	#镜像headers
+	#给出cookie列表：
+
 	headers = {
 		'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 		'Accept-Encoding':'gzip, deflate, sdch, br',
 		'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4',
 		'Connection':'keep-alive',
-		'Host':'a.ggkai.men',
-		'Referer':'https://a.ggkai.men/extdomains/scholar.google.com/schhp?hl=en&num=20&as_sdt=0',
+		'Host':'c.ggkai.men',
+		'Referer':'https://c.ggkai.men/extdomains/scholar.google.com/schhp?hl=en&num=20&as_sdt=0',
 		'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
 		'Cache-Control':'max-age=0',
-		'Cookie':'NID=101=ZPX_tebnsmlbtsniyMAFKDXfTNmNmI9p9jF6HVl5luswkM7qLeWnkHFpPmdL0beGn0lCaJjGgevBsBOj2qnLDPHi2NCujP3CRk-8rUIfsHXc0ycB_ToZS5gAO5buBDzJ; GSP=LM=1492323405:S=6WH6FgIC17h7zhM5; Hm_lvt_df11358c4b6a37507eca01dfe919e040=1492323406,1492341461; Hm_lpvt_df11358c4b6a37507eca01dfe919e040=1492341461',
+		'Cookie':'NID=102=HNh06xAKVf7ktAENU5Nk1jRrhgY5SdZ5XAfzD3k5FPJsmhAFlTSL4Aj0-wEWwAwLtE7QMKRBpLcJ6lOQ7p7xP_XfEWqdbBRnbJENiYY2DrOH-Sg4guPb37xHkHZQd3Ib; GSP=IN=7e6cc990821af63:LD=en:NR=20:LM=1493882337:S=u-rD5bmKdyhwkJPX; Hm_lvt_780b344d5d35a7233dc24bdc336d9884=1493882325; Hm_lpvt_780b344d5d35a7233dc24bdc336d9884=1493883702',
 	}
 
-	"""
+	
 	index = 0
 	#此处用于按CCF分类来爬虫
 	#sql_cnt = "SELECT COUNT(*) FROM citation.paper WHERE paper_nbCitation !=-1"
+	"""
 	sql_cnt = "SELECT COUNT(*) FROM paper\
 				WHERE venue_venue_id IN(\
 					SELECT venue_id FROM venue\
@@ -246,6 +285,28 @@ if __name__ == "__main__":
 					)\
 				)\
 				AND paper_nbCitation != -1" %(CCF_type, CCF_classification)
+	"""
+
+	sql_cnt = "SELECT COUNT(*)\
+				from paper, venue, dblp, dblp2ccf, ccf\
+				where dblp_id != '999999999' \
+				and venue_venue_id = venue_id \
+				and venue.dblp_dblp_id = dblp_id \
+				and dblp_id = dblp2ccf.dblp_dblp_id \
+				and ccf_CCF_id = CCF_id\
+				and CCF_classification = '%s'\
+				and CCF_type = '%s'" %(CCF_classification, CCF_type)
+
+	sql_cnt_index = "SELECT COUNT(*)\
+				from paper, venue, dblp, dblp2ccf, ccf\
+				where dblp_id != '999999999' \
+				and venue_venue_id = venue_id \
+				and venue.dblp_dblp_id = dblp_id \
+				and dblp_id = dblp2ccf.dblp_dblp_id \
+				and ccf_CCF_id = CCF_id\
+				and CCF_classification = '%s'\
+				and CCF_type = '%s'\
+				and paper_nbCitation != -1" %(CCF_classification, CCF_type)
 
 	cursor.execute(sql_cnt)
 	total = cursor.fetchone()[0] #总共的论文数量
@@ -254,13 +315,13 @@ if __name__ == "__main__":
 	index = cursor.fetchone()[0]
 	index += 1 #当前条数
 
-	info_print = "Now we prepare to crawl %s CCF classification and %s Venue paper" %(CCF_classification, CCF_type)
+	info_print = "Now we prepare to crawl %s CCF classification and %s Venue paper" %(CCF_type, CCF_classification)
 	info_cnt = "Total: %5d    Current: %5d" %(total, index)
 	print info_print
 	print info_cnt
 
 
-
+	"""
 	sql_select = "SELECT paper_id, paper_title\
 				FROM citation.paper\
 				WHERE venue_venue_id IN(\
@@ -274,12 +335,54 @@ if __name__ == "__main__":
 						AND CCF_classification = '%s'\
 					)\
 				)\
-				AND paper_nbCitation = -1" %(CCF_type, CCF_classification)		
+				AND paper_nbCitation = -1" %(CCF_type, CCF_classification)
 	"""
-	sql_select = "SELECT index_id FROM paper WHERE paper_nbCitation = -1 AND index_id>='%d' AND index_id<='%d'" %(start_paper, end_paper)	
+	sql_select = "SELECT paper_id, paper_title, paper_publicationYear\
+				from paper, venue, dblp, dblp2ccf, ccf\
+				where dblp_id != '999999999' \
+				and venue_venue_id = venue_id \
+				and venue.dblp_dblp_id = dblp_id \
+				and dblp_id = dblp2ccf.dblp_dblp_id \
+				and ccf_CCF_id = CCF_id\
+				and CCF_classification = '%s'\
+				and CCF_type = '%s'\
+				and paper_nbCitation = -1" %(CCF_classification, CCF_type)	
 
+	#单线程工作
 	cursor.execute(sql_select)
-	cur_index_id = cursor.fetchone()[0]
+	res_set = cursor.fetchall()
+
+	for row_tuple in res_set:
+		paper_id = int(row_tuple[0])
+		paper_title = row_tuple[1]
+		paper_publicationYear = str(row_tuple[2])
+
+		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = SQL_single(paper_title, paper_publicationYear,headers, cursor)
+
+		#无论解析阶段是否出现异常都写入数据库
+		try:
+			sql_update = "UPDATE paper SET paper_nbCitation = '%d'\
+					, paper_isseen= '%d', paper_citationURL = '%s', paper_pdfURL = '%s'\
+					, paper_rawURL= '%s', paper_scholarInfo = '%s', paper_rawInfo = '%s', paper_relatedURL = '%s'\
+					WHERE paper_id='%d'"\
+					%(paper_nbCitation, paper_isseen, paper_citationURL.replace('\'', '\\\'').strip(), paper_pdfURL.replace('\'', '\\\'').strip(), paper_rawURL.replace('\'', '\\\'').strip(), paper_scholarInfo.replace('\'', '\\\'').strip(), paper_rawInfo.replace('\'', '\\\'').strip(), paper_relatedURL.replace('\'', '\\\'').strip(), paper_id)
+			cursor.execute(sql_update)
+			db.commit()
+		except:
+			print "UPDATE FAILED!"
+
+		print "----------------------------------%d SUSCESSED!-------------------------------" %index
+		index += 1
+
+
+
+	
+	"""
+	#包含多线程，这里不准备使用多线程，以防被封
+	#sql_select = "SELECT index_id FROM paper WHERE paper_nbCitation = -1 AND index_id>='%d' AND index_id<='%d'" %(start_paper, end_paper)	
+
+	#cursor.execute(sql_select)
+	#cur_index_id = cursor.fetchone()[0]
 
 	#SQL_Operation(1, 100, headers)
 
@@ -293,6 +396,7 @@ if __name__ == "__main__":
 	tmp3 = threading.Thread(target=SQL_Operation, args=(cur_index_id+3*interval, end_paper, headers))
 	tmp3.start()
 	#SQL_Operation(cur_venue_id, nb_venue, cursor, headers)
+	"""
 
 
 
