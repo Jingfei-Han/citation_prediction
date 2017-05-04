@@ -348,3 +348,14 @@ https://a.ggkai.men/extdomains/scholar.google.com/scholar?q=Debugging+via+run-ti
 author数目为：171,2433（包括所有作者，可能有些作者的论文不在paper中）
 paper数目为：134,3165
 作者与paper关系数目为：378,9487
+
+----------------------------------2017.05.04-----------------------------------------
+删除论文不在paper表中的作者后
+author数目为：127,7094（删除数目为435,339）
+
+备份数据库的author表
+
+问题：dblp2ccf表中数据有歧义，导致问题，
+		比如CCF_id = 19， 该CCF venue是可以在dblp网站上查到的，但是在dblp表中没有，因此链接到NOT IN DBLP， 这一类有10个
+		比如CCF_id = 140， 该CCF venue是不能在dblp网站上查到的，在dblp表中也没有，因此链接到NOT IN DBLP， 这一类有28个
+解决：将CCF和CORE中的所有venue也放到dblp表中
