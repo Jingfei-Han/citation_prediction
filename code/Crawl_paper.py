@@ -207,11 +207,11 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 
 if __name__ == "__main__":
 
-	#CCF_classification = sys.argv[1]
-	#CCF_type = sys.argv[2]
+	CCF_classification = sys.argv[1]
+	CCF_type = sys.argv[2]
 
-	CCF_classification = "A"
-	CCF_type = "Conference"
+	#CCF_classification = "A"
+	#CCF_type = "Conference"
 	"""
 	#此处为按照paper的index编号大小来爬虫
 	start_paper = int(sys.argv[1])
