@@ -46,11 +46,6 @@ class extractCitation(object):
 		paper_isseen = -1
 		paper_citationURL = ""
 		paper_pdfURL = ""
-		paper_scholarInfo = ""
-		paper_pdfURL = ""
-		paper_rawInfo = ""
-		paper_rawURL = ""
-		paper_relatedURL = ""
 
 		#print "The status code: %d" %response.status_code
 		soup = BeautifulSoup(response.text)
@@ -102,18 +97,7 @@ class extractCitation(object):
 			paper_isseen = 1
 		except:
 			paper_isseen = 0 #没有找到[pdf],则pdf不可得到
-
-		# 获取其他信息
-		try:
-			paper_rawURL = gs_r.find("h3", attrs={"class": "gs_rt"}).a['href'] # 找到论文原始主页
-			paper_scholarInfo = gs_r.find("div", attrs={"class": "gs_a"}).get_text() # 找到论文下一行信息
-			paper_rawInfo = unicode(gs_r.find("div", attrs={"class": "gs_rs"}).get_text()) # 找到论文的部分摘要
-			paper_relatedURL = gs_r.find("a", text=re.compile("Related")).get('href') # 找到论文的相关文档
-		except:
-			paper_relatedURL = ""
-
-
-		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL
+		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL
 
 	def crawlWeb(self):
 		#print "crawlWeb"
@@ -124,12 +108,12 @@ class extractCitation(object):
 			raise Exception
 		try:
 			#获取网页成功
-			paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = self._parseGoogle(response)
+			paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL = self._parseGoogle(response)	
 		except:
 			#获取网页失败
 			warnInfo("Parser is FAILED! The url is: " + self.url)
 			raise Exception #
-		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL #返回paper信息，包括paper_nbCitation, paper_issen, paper_citationURL, paper_pdfURL
+		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL #返回paper信息，包括paper_nbCitation, paper_issen, paper_citationURL, paper_pdfURL
 
 def SQL_Operation(cur_index_id, nb_venue, headers):	
 	sql_ip = "192.168.1.198"
@@ -154,7 +138,7 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 		
 		cur_extract = extractCitation(urlTitle, headers, paper_title)
 		try:
-			paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = cur_extract.crawlWeb()
+			paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL = cur_extract.crawlWeb()
 		except:
 			#出现错误，需要赋一个特殊值
 			paper_nbCitation = -2 #-2表示找过，但是没有找到
@@ -166,9 +150,8 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 		try:
 			sql_update = "UPDATE paper SET paper_nbCitation = '%d'\
 					, paper_isseen= '%d', paper_citationURL = '%s', paper_pdfURL = '%s'\
-					, paper_rawURL= '%s', paper_scholarInfo = '%s', paper_rawInfo = '%s', paper_relatedURL = '%s'\
 					WHERE index_id='%d'"\
-					%(paper_nbCitation, paper_isseen, paper_citationURL.replace('\'', '\\\'').strip(), paper_pdfURL.replace('\'', '\\\'').strip(), paper_rawURL.replace('\'', '\\\'').strip(), paper_scholarInfo.replace('\'', '\\\'').strip(), paper_rawInfo.replace('\'', '\\\'').strip(), paper_relatedURL.replace('\'', '\\\'').strip(), cur_index_id)
+					%(paper_nbCitation, paper_isseen, paper_citationURL.replace('\'', '\\\'').strip(), paper_pdfURL.replace('\'', '\\\'').strip(), cur_index_id)
 			cursor.execute(sql_update)
 			db.commit()
 		except:
