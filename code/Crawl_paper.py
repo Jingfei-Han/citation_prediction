@@ -18,11 +18,12 @@ def warnInfo(string):
 
 
 class extractCitation(object):
-	def __init__(self,url, headers, paper_title):
+	def __init__(self,url, headers, paper_title, proxies):
 		#print "__init__"
 		self.url = url
 		self.headers = headers
 		self.paper_title = paper_title
+		self.proxies = proxies
 	
 	def _requestWeb(self):
 		#print "_requestWeb"
@@ -30,14 +31,17 @@ class extractCitation(object):
 		while(cnt_res <= 5):
 			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
 			try:
-				response = requests.get(self.url, headers = self.headers, timeout=15, verify=False)
-				random_time = random.randint(1,3) #随机停止1到3秒
+				response = requests.get(self.url, headers = self.headers, timeout=15)#, verify=False)#, proxise = self.proxies
+				random_time = random.gauss(mu=5, sigma=1) #随机停止平均5秒,小数时间
+				print "Success!, sleep: ", random_time
 				sleep(random_time)
 				return response
 			except:
 				print "Connection: %d FAILED" %cnt_res
 				cnt_res += 1
-				sleep(2) #等待两秒
+				random_time2 = random.gauss(mu=8, sigma=1)
+				print "Failed!, sleep: ", random_time2
+				sleep(random_time2) #等待平均8秒
 				continue
 		warnInfo("_requestWeb: 5 times requests FAILED")
 		raise Exception#如果链接失败，则抛出异常，被调用函数捕获
@@ -132,12 +136,12 @@ class extractCitation(object):
 			raise Exception #
 		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL #返回paper信息，包括paper_nbCitation, paper_issen, paper_citationURL, paper_pdfURL
 
-def SQL_single(paper_title, paper_publicationYear,headers, cursor):
-	url = "https://c.ggkai.men/extdomains/scholar.google.com/"
+def SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies):
+	url = "https://www.xichuan.pub/"
 	#weizhui = '&btnG=&as_sdt=1%2C5&as_sdtp=&as_ylo=%d&as_yhi=%d' %(paper_publicationYear, paper_publicationYear)
 	urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdtp=&as_ylo=' + paper_publicationYear + '&as_yhi=' + paper_publicationYear
 	
-	cur_extract = extractCitation(urlTitle, headers, paper_title)
+	cur_extract = extractCitation(urlTitle, headers, paper_title, proxies)
 
 	try:
 		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = cur_extract.crawlWeb()
@@ -171,7 +175,7 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 			sys.exit("ERROR: SELECT the TABLE paper failed!")
 
 		"""
-		url = "https://c.ggkai.men/extdomains/scholar.google.com/"
+		url = "https://b.ggkai.men/extdomains/scholar.google.com/"
 		#weizhui = '&btnG=&as_sdt=1%2C5&as_sdtp=&as_ylo=%d&as_yhi=%d' %(paper_publicationYear, paper_publicationYear)
 		urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdtp=&as_ylo=' + paper_publicationYear + '&as_yhi=' + paper_publicationYear
 		
@@ -207,11 +211,11 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 
 if __name__ == "__main__":
 
-	CCF_classification = sys.argv[1]
-	CCF_type = sys.argv[2]
+	#CCF_classification = sys.argv[1]
+	#CCF_type = sys.argv[2]
 
-	#CCF_classification = "A"
-	#CCF_type = "Conference"
+	CCF_classification = "A"
+	CCF_type = "Journal"
 	"""
 	#此处为按照paper的index编号大小来爬虫
 	start_paper = int(sys.argv[1])
@@ -249,12 +253,21 @@ if __name__ == "__main__":
 		'Accept-Encoding':'gzip, deflate, sdch, br',
 		'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4',
 		'Connection':'keep-alive',
-		'Host':'c.ggkai.men',
-		'Referer':'https://c.ggkai.men/extdomains/scholar.google.com/schhp?hl=en&num=20&as_sdt=0',
+		'Host':'www.xichuan.pub',
+		'Referer':'https://www.xichuan.pub/scholar',
 		'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-		'Cache-Control':'max-age=0',
-		'Cookie':'NID=102=HNh06xAKVf7ktAENU5Nk1jRrhgY5SdZ5XAfzD3k5FPJsmhAFlTSL4Aj0-wEWwAwLtE7QMKRBpLcJ6lOQ7p7xP_XfEWqdbBRnbJENiYY2DrOH-Sg4guPb37xHkHZQd3Ib; GSP=IN=7e6cc990821af63:LD=en:NR=20:LM=1493882337:S=u-rD5bmKdyhwkJPX; Hm_lvt_780b344d5d35a7233dc24bdc336d9884=1493882325; Hm_lpvt_780b344d5d35a7233dc24bdc336d9884=1493883702',
+		#'Cache-Control':'max-age=0',
+		#'Cookie': 'NID=102=C8ZTj1uteWbxWzmZjbJuFcNkXFLIX4s7qFmloyhkRzjNAHrF_rSo88HHzP4QUOnGvx0K_SrNfLW51IkJkriYaczFPyz5ssGy1LvBtPwZsrlO-CIVE3BKW3s0TdptiDtW; GSP=NW=1:LM=1493986059:S=uZuW4aN81rrr5iQP',
+		'Upgrade-Insecure-Requests':'1',
 	}
+
+	#设置代理池
+	proxy_list = []
+	fp = open("proxies.txt", "r")
+	lines = fp.readlines()
+	for line in lines:
+		proxy_list.append(line.strip())
+
 
 	
 	index = 0
@@ -357,7 +370,12 @@ if __name__ == "__main__":
 		paper_title = row_tuple[1]
 		paper_publicationYear = str(row_tuple[2])
 
-		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = SQL_single(paper_title, paper_publicationYear,headers, cursor)
+		#传代理
+		len_proxise = len(proxy_list)
+		p_id = random.randint(0,len_proxise-1)
+		proxies = {"http": proxy_list[p_id]}
+
+		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies)
 
 		#无论解析阶段是否出现异常都写入数据库
 		try:

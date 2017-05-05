@@ -359,3 +359,35 @@ author数目为：127,7094（删除数目为435,339）
 		比如CCF_id = 19， 该CCF venue是可以在dblp网站上查到的，但是在dblp表中没有，因此链接到NOT IN DBLP， 这一类有10个
 		比如CCF_id = 140， 该CCF venue是不能在dblp网站上查到的，在dblp表中也没有，因此链接到NOT IN DBLP， 这一类有28个
 解决：将CCF和CORE中的所有venue也放到dblp表中
+
+----------------------------------2017.05.05--------------------------------------------
+无论如何也解决不了反爬虫问题。
+代理也不行
+
+禁用浏览器cookie，观察Response Headers 和 Request Headers:
+第一次：
+https://www.xichuan.pub/scholar?hl=zh-CN&q=recurrent+neural+network&lr=&oq=recurrent
+Response:
+Set-Cookie:NID=102=fFpEjF6Pt3-jxpl-MvHJvtJDrIa98T_uQFuX5PyR17TlD2kzUNONOZMlvluupfBqmNvbKxt7s9rHAgSIKFZqA36KH-LLXUb1MBLX7Ongm5vV8nXHF1yPHotQg5m_TRWY; expires=Sat, 04-Nov-2017 14:03:18 GMT; path=/; domain=.www.xichuan.pub
+Set-Cookie:GSP=LM=1493992998:NW=1:S=U3cQ42jHEcQnm64J; expires=Sun, 05-May-2019 14:03:18 GMT; path=/; domain=.www.xichuan.pub
+
+Request:
+Cookie:空
+
+第二次
+https://www.xichuan.pub/scholar?q=recurrent+neural+network+tutorial&hl=zh-CN&as_sdt=0%2C5&oq=recurrent+neural+network
+Response:
+Set-Cookie:NID=102=YZkQCasCKZuK2YXzyj7jHUk96PWYgoOa1yzOQriPQqwpf_D1Sag2suBSmn5A9QZ4ihwIu-h-kwhx5wZo7lDKYOhe6NiAHQx8yJpJnze8AwA9NZZ80Awdq75Zd4hxjUnY; expires=Sat, 04-Nov-2017 14:05:16 GMT; path=/; domain=.www.xichuan.pub
+Set-Cookie:GSP=LM=1493993116:NW=1:S=aC5AndsAufIxu5Y1; expires=Sun, 05-May-2019 14:05:16 GMT; path=/; domain=.www.xichuan.pub
+
+Request：
+Cookie：空
+
+第三次：
+https://www.xichuan.pub/scholar?q=computer+simulation&hl=zh-CN&as_sdt=0%2C5&oq=computer+
+Response:
+Set-Cookie:NID=102=AKNVt64dxXX2mz4AB1sZD_cclvTyYbGDyB9N3kPl4yeKuHExzYPW-Mk87BfYl4yTBiS7XdPy_NXI3Bcmti1vIdytcyw-_6Qf9Gf9LISDOJgpMfHjLO2OW8K7tl7_gSi2; expires=Sat, 04-Nov-2017 14:06:14 GMT; path=/; domain=.www.xichuan.pub
+Set-Cookie:GSP=LM=1493993174:NW=1:S=X_oXClDA3xGAnd8L; expires=Sun, 05-May-2019 14:06:14 GMT; path=/; domain=.www.xichuan.pub
+
+Request:
+Cookie:空
