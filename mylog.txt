@@ -391,3 +391,10 @@ Set-Cookie:GSP=LM=1493993174:NW=1:S=X_oXClDA3xGAnd8L; expires=Sun, 05-May-2019 1
 
 Request:
 Cookie:空
+
+
+https://github.com/geekan/google-scholar-crawler
+这是google scholar的爬虫，但是对我们程序意义不大。
+找到了一个aminer-spider项目和说明，如下：
+http://billy-inn.github.io/Homepage/Crawler%20For%20Google%20Scholar.pdf
+https://github.com/neozhangthe1/aminer-spider
