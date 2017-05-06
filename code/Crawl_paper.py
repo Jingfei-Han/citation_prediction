@@ -8,6 +8,7 @@ import re
 import random
 import sys
 import threading
+from user_agent import generate_user_agent
 
 
 
@@ -31,8 +32,11 @@ class extractCitation(object):
 		while(cnt_res <= 5):
 			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
 			try:
-				response = requests.get(self.url, headers = self.headers, timeout=15)#, verify=False)#, proxise = self.proxies
-				random_time = random.gauss(mu=5, sigma=1) #随机停止平均5秒,小数时间
+				response = requests.get(self.url, headers = self.headers)#, timeout=15, verify=False)#, proxise = self.proxies
+				assert response.status_code==200
+				random_time = random.gauss(mu=4, sigma=1) #随机停止平均5秒,小数时间
+				if random_time < 0: 
+					random_time = 0.3
 				print "Success!, sleep: ", random_time
 				sleep(random_time)
 				return response
@@ -137,7 +141,7 @@ class extractCitation(object):
 		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL #返回paper信息，包括paper_nbCitation, paper_issen, paper_citationURL, paper_pdfURL
 
 def SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies):
-	url = "https://www.xichuan.pub/"
+	url = "https://e.ggkai.men/extdomains/scholar.google.com/"
 	#weizhui = '&btnG=&as_sdt=1%2C5&as_sdtp=&as_ylo=%d&as_yhi=%d' %(paper_publicationYear, paper_publicationYear)
 	urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdtp=&as_ylo=' + paper_publicationYear + '&as_yhi=' + paper_publicationYear
 	
@@ -208,6 +212,37 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 		print "----------------------%d SUSCESSED!  ----------------------" %cur_index_id 
 		cur_index_id += 1
 
+def Change_Cookie(headers):
+	#Referer_tmp =  headers['Referer']
+	url = "https://e.ggkai.men/extdomains/scholar.google.com/"
+	headers['User-Agent'] = generate_user_agent()
+	#headers['Referer'] = 'http://dir.scmor.com/google/'
+	flag_jump = 0
+	while True:
+		try:
+			response = requests.get(url, headers = headers)#, timeout = 15
+			assert response.status_code == 200
+			
+			#更换Cookie，重置headers
+			cookie_dic = requests.utils.dict_from_cookiejar(response.cookies) #为cookie属性与值的字典
+			try:
+				cookie = "NID=" + cookie_dic['NID'] + "; GSP=" + cookie_dic['GSP']
+				headers['Cookie'] = cookie
+				print "CURRENT COOKIE: " + cookie
+				#headers['Referer'] = Referer_tmp #换回原来的Referer
+				return cookie 
+			except:
+				print "Change cookie FAILED!"
+			break
+		except:
+			print "Connection Failed! 5 seconds break."
+			flag_jump += 1
+			if flag_jump > 5:
+				print "This url FAILED! we must be change the next url."
+				break
+			sleep(5)
+	raise Exception
+
 
 if __name__ == "__main__":
 
@@ -247,18 +282,19 @@ if __name__ == "__main__":
 
 	#镜像headers
 	#给出cookie列表：
-
+	cookie = 'NID=102=hFdlXnjgzxOsrXJfo1kcYlhkp_9m8jYWBRTYe9u6CBOlK6nAa7hPVFamveKEwOO4Q8z7_OnQO_wkgAguKzi6VK8ye5IsGDvafsKGn1ylLgPCSw2ZNBc6sRwBl2qRpg_H; GSP=IN=7e6cc990821af63:LD=en:NR=20:LM=1494062922:S=e2QTRxcgOdtmjc43; Hm_lvt_09385bdf635cd5a44ddc54c6e2c8beaf=1494062721,1494062873,1494062894,1494067426; Hm_lpvt_09385bdf635cd5a44ddc54c6e2c8beaf=1494067433'
+	#cookie = 'NID=102=L_uc26dsyz4fa875NA12TKfXwaF0EYPCiV1fgsKXmV0dESpB-4TSRmk3jkTyEp255IQL9SgPwv69y1NmTZHCKkpfiL3WG-sv-X1P7lbM4F1ak3nGDLxBzYgiom3WFDV6; GSP=LM=1494034043:NW=1:S=9dsbqjAGHJg3qdbr'
 	headers = {
 		'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 		'Accept-Encoding':'gzip, deflate, sdch, br',
 		'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4',
 		'Connection':'keep-alive',
-		'Host':'www.xichuan.pub',
-		'Referer':'https://www.xichuan.pub/scholar',
+		'Host':'e.ggkai.men',
+		'Referer':'https://e.ggkai.men/extdomains/scholar.google.com/schhp?hl=en&num=20&as_sdt=0',
 		'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
 		#'Cache-Control':'max-age=0',
-		#'Cookie': 'NID=102=C8ZTj1uteWbxWzmZjbJuFcNkXFLIX4s7qFmloyhkRzjNAHrF_rSo88HHzP4QUOnGvx0K_SrNfLW51IkJkriYaczFPyz5ssGy1LvBtPwZsrlO-CIVE3BKW3s0TdptiDtW; GSP=NW=1:LM=1493986059:S=uZuW4aN81rrr5iQP',
-		'Upgrade-Insecure-Requests':'1',
+		#'Cookie': cookie,
+		#'Upgrade-Insecure-Requests':'1',
 	}
 
 	#设置代理池
@@ -364,7 +400,9 @@ if __name__ == "__main__":
 	#单线程工作
 	cursor.execute(sql_select)
 	res_set = cursor.fetchall()
-
+	cookie_index = 0 #一个Cookie运行的次数记录
+	cookie_max = 100 #最大cookie使用次数
+	#url_Cookie = headers['Referer']
 	for row_tuple in res_set:
 		paper_id = int(row_tuple[0])
 		paper_title = row_tuple[1]
@@ -376,6 +414,24 @@ if __name__ == "__main__":
 		proxies = {"http": proxy_list[p_id]}
 
 		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies)
+
+		#记录cookie使用次数，并每50次进行一次更换
+		cookie_index += 1
+		print "Current cookie index: ", cookie_index
+		if cookie_index >= cookie_max:
+			#将headers的Cookie字段去掉，然后调用函数获得新的headers
+			try:
+				del headers['Cookie'] #尝试删除Cookie字段
+				
+			except:
+				print "Cookie is not exists!"
+			try:
+				headers['Cookie'] = Change_Cookie(headers)
+				print "Change Cookie SUSCESS!"
+			except:
+				print "Change Cookie FAILED!"
+			
+			cookie_index = 0 #重置cookie计数器
 
 		#无论解析阶段是否出现异常都写入数据库
 		try:

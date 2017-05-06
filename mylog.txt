@@ -398,3 +398,50 @@ https://github.com/geekan/google-scholar-crawler
 找到了一个aminer-spider项目和说明，如下：
 http://billy-inn.github.io/Homepage/Crawler%20For%20Google%20Scholar.pdf
 https://github.com/neozhangthe1/aminer-spider
+作者的github：
+https://github.com/billy-inn/CrawlerForGoogleScholar
+https://billy-inn.github.io/
+
+----------------------------------2017.05.06--------------------------------------------
+问题：静态Cookie会被封IP的问题
+准备尝试使用
+
+不禁用浏览器Cookie，观察结果
+第一次：
+Response:
+Set-Cookie:NID=102=CU-wknFUNgzcZrg-C9ouRh4LzMsFrV-3Rhl2T_qf6rj7fY4Ofhm1FRsJ9w8RFMfwrKnkkw4N69uabPZVwUB_Eh6a-0F33IZeN3MsD4AlYpOJ7MGtspzfvxuOztQ3nQ46; expires=Sun, 05-Nov-2017 01:46:39 GMT; path=/; domain=.g.sci-hub.cn
+Set-Cookie:GSP=LM=1494035199:NW=1:S=ZpKmGabAURKEYQAj; expires=Mon, 06-May-2019 01:46:39 GMT; path=/; domain=.g.sci-hub.cn
+
+Request:
+Cookie:空
+
+第二次：
+Set-Cookie:GSP=NW=1:LM=1494035255:S=ZvRNnr2rJJeM9TdV; expires=Mon, 06-May-2019 01:47:35 GMT; path=/; domain=.g.sci-hub.cn
+
+Request:
+Cookie:NID=102=CU-wknFUNgzcZrg-C9ouRh4LzMsFrV-3Rhl2T_qf6rj7fY4Ofhm1FRsJ9w8RFMfwrKnkkw4N69uabPZVwUB_Eh6a-0F33IZeN3MsD4AlYpOJ7MGtspzfvxuOztQ3nQ46; GSP=LM=1494035199:NW=1:S=ZpKmGabAURKEYQAj; Hm_lvt_a1ee2279175d79290813a36e213338e7=1494035192; Hm_lpvt_a1ee2279175d79290813a36e213338e7=1494035192
+
+第三次：
+Response:
+Set-Cookie:空
+
+Request:
+Cookie:NID=102=CU-wknFUNgzcZrg-C9ouRh4LzMsFrV-3Rhl2T_qf6rj7fY4Ofhm1FRsJ9w8RFMfwrKnkkw4N69uabPZVwUB_Eh6a-0F33IZeN3MsD4AlYpOJ7MGtspzfvxuOztQ3nQ46; GSP=NW=1:LM=1494035255:S=ZvRNnr2rJJeM9TdV; Hm_lvt_a1ee2279175d79290813a36e213338e7=1494035192; Hm_lpvt_a1ee2279175d79290813a36e213338e7=1494035248
+
+使用每50次更换一次cookie的方法顺利爬取了150次，下面尝试缩短等待时间， 成功运行500次则开启多线程
+
+问题：访问xue.glgoo.com不用cookie，但是返回的cookie为空
+
+尝试：不改cookie，删掉cookie，试一下效果
+结果：只运行了4次就失败了。
+
+有一种情况，加入删去cookie，就报错误，但是加上cookie就可以访问
+对于浏览器，如果清空cookie，然后再刷新页面就需要验证。
+
+
+###cookielib学习
+CookieJar.extract_cookies(response, request)
+从response中抽取cookie放到CookieJar中。
+其实requests的res.cookies是获得的response headers中的cookies,如果想获得requests的cookie,应该使用res.request.headers
+
+免费试用讯代理的代理IP效果很差
