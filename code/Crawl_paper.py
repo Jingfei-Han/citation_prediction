@@ -32,9 +32,9 @@ class extractCitation(object):
 		while(cnt_res <= 5):
 			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
 			try:
-				response = requests.get(self.url, headers = self.headers)#, timeout=15, verify=False)#, proxise = self.proxies
+				response = requests.get(self.url, headers = self.headers, timeout=15, proxies = self.proxies)#, verify=False)#
 				assert response.status_code==200
-				random_time = random.gauss(mu=4, sigma=1) #随机停止平均5秒,小数时间
+				random_time = random.gauss(mu=2, sigma=1) #随机停止平均5秒,小数时间
 				if random_time < 0: 
 					random_time = 0.3
 				print "Success!, sleep: ", random_time
@@ -43,9 +43,11 @@ class extractCitation(object):
 			except:
 				print "Connection: %d FAILED" %cnt_res
 				cnt_res += 1
-				random_time2 = random.gauss(mu=8, sigma=1)
+				random_time2 = random.gauss(mu=3, sigma=1)
 				print "Failed!, sleep: ", random_time2
 				sleep(random_time2) #等待平均8秒
+				#换个代理
+				self.proxies = getProxyList() #在列表中随机选择一个可用的cookie
 				continue
 		warnInfo("_requestWeb: 5 times requests FAILED")
 		raise Exception#如果链接失败，则抛出异常，被调用函数捕获
@@ -141,7 +143,7 @@ class extractCitation(object):
 		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL #返回paper信息，包括paper_nbCitation, paper_issen, paper_citationURL, paper_pdfURL
 
 def SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies):
-	url = "https://e.ggkai.men/extdomains/scholar.google.com/"
+	url = "http://202.168.155.123/"
 	#weizhui = '&btnG=&as_sdt=1%2C5&as_sdtp=&as_ylo=%d&as_yhi=%d' %(paper_publicationYear, paper_publicationYear)
 	urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdtp=&as_ylo=' + paper_publicationYear + '&as_yhi=' + paper_publicationYear
 	
@@ -212,15 +214,15 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 		print "----------------------%d SUSCESSED!  ----------------------" %cur_index_id 
 		cur_index_id += 1
 
-def Change_Cookie(headers):
+def Change_Cookie(headers, proxies):
 	#Referer_tmp =  headers['Referer']
-	url = "https://e.ggkai.men/extdomains/scholar.google.com/"
+	url = "http://202.168.155.123/scholar/"
 	headers['User-Agent'] = generate_user_agent()
 	#headers['Referer'] = 'http://dir.scmor.com/google/'
 	flag_jump = 0
 	while True:
 		try:
-			response = requests.get(url, headers = headers)#, timeout = 15
+			response = requests.get(url, headers = headers, proxies = proxies)#, timeout = 15
 			assert response.status_code == 200
 			
 			#更换Cookie，重置headers
@@ -242,6 +244,37 @@ def Change_Cookie(headers):
 				break
 			sleep(5)
 	raise Exception
+
+def getProxyList():
+	db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
+	cursor = db.cursor()
+	ProxyList = []
+	#Select all http proxy
+	sql_select_proxy = "SELECT proxies_link FROM proxies WHERE proxies_type='http'"
+	while len(ProxyList)==0:
+		try:
+			cursor.execute(sql_select_proxy)
+			proxy_set = cursor.fetchall()
+			for proxy_tuple in proxy_set:
+				ProxyList.append(proxy_tuple[0]) 
+		except:
+			print "Can't get ProxyList"
+
+	proxy = random.choice(ProxyList)
+	proxies = {"http": str(proxy)}
+
+
+	return proxies #结果为字典类型
+
+# def testProxy(proxies):
+# 	#测试代理是否可用
+# 	url = "http://dblp.uni-trier.de/search?q=recurrent"
+# 	try:
+# 		res = requests.get(url, proxies = proxies)
+# 		assert res.status_code == 200
+# 		return True
+# 	except:
+# 		return False
 
 
 if __name__ == "__main__":
@@ -282,29 +315,20 @@ if __name__ == "__main__":
 
 	#镜像headers
 	#给出cookie列表：
-	cookie = 'NID=102=hFdlXnjgzxOsrXJfo1kcYlhkp_9m8jYWBRTYe9u6CBOlK6nAa7hPVFamveKEwOO4Q8z7_OnQO_wkgAguKzi6VK8ye5IsGDvafsKGn1ylLgPCSw2ZNBc6sRwBl2qRpg_H; GSP=IN=7e6cc990821af63:LD=en:NR=20:LM=1494062922:S=e2QTRxcgOdtmjc43; Hm_lvt_09385bdf635cd5a44ddc54c6e2c8beaf=1494062721,1494062873,1494062894,1494067426; Hm_lpvt_09385bdf635cd5a44ddc54c6e2c8beaf=1494067433'
+	#cookie = 'NID=102=GQDU-HAClzAFmSfJx7XW-y7rVDL3mAx5Jx-5wI1WYrH-16LZs24ipiq9OqHKpqUehCVu8cEuXIr6E_oaNLwF0XKfvstSFdG9_j8dji3jid7qaj218a4JpTFwBN5Z_sOB; GSP=LM=1494081858:S=-LSImnp4zY2MVEvH'
 	#cookie = 'NID=102=L_uc26dsyz4fa875NA12TKfXwaF0EYPCiV1fgsKXmV0dESpB-4TSRmk3jkTyEp255IQL9SgPwv69y1NmTZHCKkpfiL3WG-sv-X1P7lbM4F1ak3nGDLxBzYgiom3WFDV6; GSP=LM=1494034043:NW=1:S=9dsbqjAGHJg3qdbr'
 	headers = {
 		'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 		'Accept-Encoding':'gzip, deflate, sdch, br',
 		'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4',
 		'Connection':'keep-alive',
-		'Host':'e.ggkai.men',
-		'Referer':'https://e.ggkai.men/extdomains/scholar.google.com/schhp?hl=en&num=20&as_sdt=0',
+		'Host':'202.168.155.123',
+		'Referer':'http://202.168.155.123/scholar',
 		'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
 		#'Cache-Control':'max-age=0',
 		#'Cookie': cookie,
 		#'Upgrade-Insecure-Requests':'1',
 	}
-
-	#设置代理池
-	proxy_list = []
-	fp = open("proxies.txt", "r")
-	lines = fp.readlines()
-	for line in lines:
-		proxy_list.append(line.strip())
-
-
 	
 	index = 0
 	#此处用于按CCF分类来爬虫
@@ -401,21 +425,24 @@ if __name__ == "__main__":
 	cursor.execute(sql_select)
 	res_set = cursor.fetchall()
 	cookie_index = 0 #一个Cookie运行的次数记录
-	cookie_max = 100 #最大cookie使用次数
+	cookie_max = 20 #最大cookie使用次数
 	#url_Cookie = headers['Referer']
 	for row_tuple in res_set:
 		paper_id = int(row_tuple[0])
 		paper_title = row_tuple[1]
 		paper_publicationYear = str(row_tuple[2])
 
-		#传代理
-		len_proxise = len(proxy_list)
-		p_id = random.randint(0,len_proxise-1)
-		proxies = {"http": proxy_list[p_id]}
+		#设置代理
+		proxies = getProxyList() #在列表中随机选择一个可用的cookie
+
 
 		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies)
 
+		#设置User Agent
+		headers['User-Agent'] = generate_user_agent()
 		#记录cookie使用次数，并每50次进行一次更换
+		"""
+		#是否开启cookie
 		cookie_index += 1
 		print "Current cookie index: ", cookie_index
 		if cookie_index >= cookie_max:
@@ -426,12 +453,13 @@ if __name__ == "__main__":
 			except:
 				print "Cookie is not exists!"
 			try:
-				headers['Cookie'] = Change_Cookie(headers)
+				headers['Cookie'] = Change_Cookie(headers, proxies) #使用代理获取cookie
 				print "Change Cookie SUSCESS!"
 			except:
 				print "Change Cookie FAILED!"
 			
 			cookie_index = 0 #重置cookie计数器
+		"""
 
 		#无论解析阶段是否出现异常都写入数据库
 		try:

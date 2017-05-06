@@ -445,3 +445,12 @@ CookieJar.extract_cookies(response, request)
 其实requests的res.cookies是获得的response headers中的cookies,如果想获得requests的cookie,应该使用res.request.headers
 
 免费试用讯代理的代理IP效果很差
+
+
+尝试：去掉timeout，定时重启程序，更换cookie和user_agent
+结果：连续运行100多个也会被封。
+
+使用test_http_proxy.py程序测试http代理的使用问题，发现代理失效速度很快，因此确实需要不断更换代理
+下面准备向程序中引入代理
+
+现在不断更换cookie和代理可以完成访问，但是可能访问量太大，导致代理服务器出现问题。
