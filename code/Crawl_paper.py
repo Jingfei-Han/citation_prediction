@@ -26,6 +26,8 @@ class extractCitation(object):
 		self.paper_title = paper_title
 		self.proxies = proxies
 		self.using_proxies = using_proxies #默认为不使用代理
+		self.ok_interval = 5 #访问成功的间隔时间
+		self.false_interval = 8 #访问不成功的间隔时间
 	
 	def _requestWeb(self):
 		#默认url为self.url
@@ -39,7 +41,7 @@ class extractCitation(object):
 				else:
 					response = requests.get(self.url, headers = self.headers, timeout=15)
 				assert response.status_code==200
-				random_time = random.gauss(mu=5, sigma=1) #随机停止平均5秒,小数时间
+				random_time = random.gauss(mu=self.ok_interval, sigma=1) #随机停止平均5秒,小数时间
 				if random_time < 0: 
 					random_time = 0.3
 				print "Success!, sleep: ", random_time
@@ -48,7 +50,7 @@ class extractCitation(object):
 			except:
 				print "Connection: %d FAILED" %cnt_res
 				cnt_res += 1
-				random_time2 = random.gauss(mu=8, sigma=1)
+				random_time2 = random.gauss(mu=self.false_interval, sigma=1)
 				print "Failed!, sleep: ", random_time2
 				sleep(random_time2) #等待平均8秒
 				#换个代理
