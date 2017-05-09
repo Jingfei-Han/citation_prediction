@@ -8,7 +8,7 @@ import re
 import random
 import sys
 import threading
-from user_agent import generate_user_agent
+#from user_agent import generate_user_agent
 
 
 
@@ -19,22 +19,27 @@ def warnInfo(string):
 
 
 class extractCitation(object):
-	def __init__(self,url, headers, paper_title, proxies):
+	def __init__(self,url, headers, paper_title, proxies, using_proxies=False):
 		#print "__init__"
 		self.url = url
 		self.headers = headers
 		self.paper_title = paper_title
 		self.proxies = proxies
+		self.using_proxies = using_proxies #默认为不使用代理
 	
 	def _requestWeb(self):
+		#默认url为self.url
 		#print "_requestWeb"
 		cnt_res = 1
 		while(cnt_res <= 5):
 			#print "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV"
 			try:
-				response = requests.get(self.url, headers = self.headers, timeout=15, proxies = self.proxies)#, verify=False)#
+				if using_proxies == True:
+					response = requests.get(self.url, headers = self.headers, timeout=15, proxies = proxies)#, proxies = self.proxies)#, verify=False)#
+				else:
+					response = requests.get(self.url, headers = self.headers, timeout=15)
 				assert response.status_code==200
-				random_time = random.gauss(mu=2, sigma=1) #随机停止平均5秒,小数时间
+				random_time = random.gauss(mu=5, sigma=1) #随机停止平均5秒,小数时间
 				if random_time < 0: 
 					random_time = 0.3
 				print "Success!, sleep: ", random_time
@@ -43,7 +48,7 @@ class extractCitation(object):
 			except:
 				print "Connection: %d FAILED" %cnt_res
 				cnt_res += 1
-				random_time2 = random.gauss(mu=3, sigma=1)
+				random_time2 = random.gauss(mu=8, sigma=1)
 				print "Failed!, sleep: ", random_time2
 				sleep(random_time2) #等待平均8秒
 				#换个代理
@@ -142,12 +147,11 @@ class extractCitation(object):
 			raise Exception #
 		return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL #返回paper信息，包括paper_nbCitation, paper_issen, paper_citationURL, paper_pdfURL
 
-def SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies):
-	url = "http://202.168.155.123/"
+def SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies, url, using_proxies=False):
 	#weizhui = '&btnG=&as_sdt=1%2C5&as_sdtp=&as_ylo=%d&as_yhi=%d' %(paper_publicationYear, paper_publicationYear)
 	urlTitle = url + "scholar?hl=en&q="  +  str(paper_title.replace(":","%3A").replace("'","%27").replace("&","%26").replace("(","%28").replace(")","%29").replace("/","%2F").replace(" ","+")) + '+' + '&btnG=&as_sdtp=&as_ylo=' + paper_publicationYear + '&as_yhi=' + paper_publicationYear
 	
-	cur_extract = extractCitation(urlTitle, headers, paper_title, proxies)
+	cur_extract = extractCitation(urlTitle, headers, paper_title, proxies, using_proxies)
 
 	try:
 		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = cur_extract.crawlWeb()
@@ -164,9 +168,11 @@ def SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies):
 	return paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL
 
 def SQL_Operation(cur_index_id, nb_venue, headers):	
+	#用于多线程，暂时不用管
 	sql_ip = "192.168.1.198"
 	#sql_ip = "127.0.0.1"
 	db = MySQLdb.connect(host=sql_ip, user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
+	#db = MySQLdb.connect(host='shhr.online', user='jingfei', port=33755, passwd='hanjingfei007', db='citation', charset='utf8')
 	cursor = db.cursor()
 
 	while(cur_index_id <= nb_venue):
@@ -214,15 +220,14 @@ def SQL_Operation(cur_index_id, nb_venue, headers):
 		print "----------------------%d SUSCESSED!  ----------------------" %cur_index_id 
 		cur_index_id += 1
 
-def Change_Cookie(headers, proxies):
+def Change_Cookie(headers, proxies, url, using_proxies=False):
 	#Referer_tmp =  headers['Referer']
-	url = "http://202.168.155.123/scholar/"
-	headers['User-Agent'] = generate_user_agent()
+	#url = "https://scholar.google.com.hk"
 	#headers['Referer'] = 'http://dir.scmor.com/google/'
 	flag_jump = 0
 	while True:
 		try:
-			response = requests.get(url, headers = headers, proxies = proxies)#, timeout = 15
+			response = requests.get(url, headers = headers, proxies = proxies, timeout=15)#, proxies = proxies)#, timeout = 15
 			assert response.status_code == 200
 			
 			#更换Cookie，重置headers
@@ -230,7 +235,7 @@ def Change_Cookie(headers, proxies):
 			try:
 				cookie = "NID=" + cookie_dic['NID'] + "; GSP=" + cookie_dic['GSP']
 				headers['Cookie'] = cookie
-				print "CURRENT COOKIE: " + cookie
+				#print "CURRENT COOKIE: " + cookie
 				#headers['Referer'] = Referer_tmp #换回原来的Referer
 				return cookie 
 			except:
@@ -247,6 +252,7 @@ def Change_Cookie(headers, proxies):
 
 def getProxyList():
 	db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
+	#db = MySQLdb.connect(host='shhr.online', user='jingfei', port=33755, passwd='hanjingfei007', db='citation', charset='utf8')
 	cursor = db.cursor()
 	ProxyList = []
 	#Select all http proxy
@@ -266,39 +272,38 @@ def getProxyList():
 
 	return proxies #结果为字典类型
 
-# def testProxy(proxies):
-# 	#测试代理是否可用
-# 	url = "http://dblp.uni-trier.de/search?q=recurrent"
-# 	try:
-# 		res = requests.get(url, proxies = proxies)
-# 		assert res.status_code == 200
-# 		return True
-# 	except:
-# 		return False
-
-
 if __name__ == "__main__":
 
-	#CCF_classification = sys.argv[1]
-	#CCF_type = sys.argv[2]
+	#首先设置参数
+	#数据库参数
+	sql_ip = "192.168.1.198" #数据库地址
+	port = 3306 #数据库端口号
+	user = "jingfei" #用户名
+	passwd = "hanjingfei007"
+	db = "citation"
 
-	CCF_classification = "A"
-	CCF_type = "Journal"
-	"""
-	#此处为按照paper的index编号大小来爬虫
-	start_paper = int(sys.argv[1])
-	end_paper = int(sys.argv[2])
+	#访问参数
+	url = "https://ga.shhr.online/extdomains/scholar.google.com/"
+	host = "ga.shhr.online" #headers中的Host字段
+	using_proxies = False #是否使用代理
+	proxies_type = "https" #代理类型
+	#设置初始cookie
+	cookie = 'NID=103=gbCPErM0LV-e_Fmt62GDBERDlJe3qkXfNfthwvXX1lNAtGYq5hxvNWQr2RPKfIKTsbmAHESUGVhbqfv1JK44y8xwxHN52-5t6YZmsf7aqd8t-pd_DQkvy2i7tqNkzsIY; GSP=LM=1494311848:S=SYYUsD7oVa3HJKbG'
+	cookie_max = 4000 #每个cookie最大cookie使用次数
 
-	#TEST
-	#start_paper = 1
-	#end_paper = 100
-	"""
-
-	reload(sys)
-	sys.setdefaultencoding("utf-8")
-
-	db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
-	cursor = db.cursor()
+	#设置headers
+	headers = {
+		'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+		'Accept-Encoding':'gzip, deflate, sdch, br',
+		'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4',
+		'Connection':'keep-alive',
+		'Host':host,
+		'Referer':url,
+		'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+		'Cache-Control':'max-age=0',
+		'Cookie': cookie,
+		#'Upgrade-Insecure-Requests':'1',
+	}
 
 	#这里记录参数，命令行访问格式为:
 	#python Crawl_paper.py A Conference
@@ -306,60 +311,17 @@ if __name__ == "__main__":
 	#CCF_classification = sys.argv[1]
 	#CCF_type = sys.argv[2]
 
-	#写入log文件需要改下名字
-	#fp = open("./log/LOG_paper_"+CCF_classification + "_"+CCF_type+".txt", "a")
+	#固定爬取A 类 Journal
+	CCF_classification = "A"
+	CCF_type = "Journal"
 
-	#用于测试
-	#CCF_classification = 'A'
-	#CCF_type = 'Conference'
+	reload(sys)
+	sys.setdefaultencoding("utf-8")
 
-	#镜像headers
-	#给出cookie列表：
-	#cookie = 'NID=102=GQDU-HAClzAFmSfJx7XW-y7rVDL3mAx5Jx-5wI1WYrH-16LZs24ipiq9OqHKpqUehCVu8cEuXIr6E_oaNLwF0XKfvstSFdG9_j8dji3jid7qaj218a4JpTFwBN5Z_sOB; GSP=LM=1494081858:S=-LSImnp4zY2MVEvH'
-	#cookie = 'NID=102=L_uc26dsyz4fa875NA12TKfXwaF0EYPCiV1fgsKXmV0dESpB-4TSRmk3jkTyEp255IQL9SgPwv69y1NmTZHCKkpfiL3WG-sv-X1P7lbM4F1ak3nGDLxBzYgiom3WFDV6; GSP=LM=1494034043:NW=1:S=9dsbqjAGHJg3qdbr'
-	headers = {
-		'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-		'Accept-Encoding':'gzip, deflate, sdch, br',
-		'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4',
-		'Connection':'keep-alive',
-		'Host':'202.168.155.123',
-		'Referer':'http://202.168.155.123/scholar',
-		'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
-		#'Cache-Control':'max-age=0',
-		#'Cookie': cookie,
-		#'Upgrade-Insecure-Requests':'1',
-	}
+	db = MySQLdb.connect(host=sql_ip, user='jingfei', port=port, passwd=passwd, db=db, charset='utf8')
+	cursor = db.cursor()	
 	
-	index = 0
-	#此处用于按CCF分类来爬虫
-	#sql_cnt = "SELECT COUNT(*) FROM citation.paper WHERE paper_nbCitation !=-1"
-	"""
-	sql_cnt = "SELECT COUNT(*) FROM paper\
-				WHERE venue_venue_id IN(\
-					SELECT venue_id FROM venue\
-					WHERE dblp_dblp_id IN(\
-						SELECT dblp_id\
-						FROM ccf, dblp\
-						WHERE CCF_dblpname = dblp_name\
-						AND CCF_type = '%s'\
-						AND CCF_classification = '%s'\
-					)\
-				)" %(CCF_type, CCF_classification)
-
-	sql_cnt_index = "SELECT COUNT(*) FROM paper\
-				WHERE venue_venue_id IN(\
-					SELECT venue_id FROM venue\
-					WHERE dblp_dblp_id IN(\
-						SELECT dblp_id\
-						FROM ccf, dblp\
-						WHERE CCF_dblpname = dblp_name\
-						AND CCF_type = '%s'\
-						AND CCF_classification = '%s'\
-					)\
-				)\
-				AND paper_nbCitation != -1" %(CCF_type, CCF_classification)
-	"""
-
+	#记录当前类别下总共需要爬取的论文数以及当前已经爬取的论文数
 	sql_cnt = "SELECT COUNT(*)\
 				from paper, venue, dblp, dblp2ccf, ccf\
 				where dblp_id != '999999999' \
@@ -380,7 +342,7 @@ if __name__ == "__main__":
 				and CCF_classification = '%s'\
 				and CCF_type = '%s'\
 				and paper_nbCitation != -1" %(CCF_classification, CCF_type)
-
+	index = 0
 	cursor.execute(sql_cnt)
 	total = cursor.fetchone()[0] #总共的论文数量
 
@@ -393,23 +355,7 @@ if __name__ == "__main__":
 	print info_print
 	print info_cnt
 
-
-	"""
-	sql_select = "SELECT paper_id, paper_title\
-				FROM citation.paper\
-				WHERE venue_venue_id IN(\
-					SELECT venue_id\
-					FROM citation.venue\
-					WHERE dblp_dblp_id IN (\
-						SELECT dblp_id\
-						FROM citation.ccf, citation.dblp\
-						WHERE CCF_dblpname = dblp_name\
-						AND CCF_type = '%s'\
-						AND CCF_classification = '%s'\
-					)\
-				)\
-				AND paper_nbCitation = -1" %(CCF_type, CCF_classification)
-	"""
+	#找出需要爬取的论文信息
 	sql_select = "SELECT paper_id, paper_title, paper_publicationYear\
 				from paper, venue, dblp, dblp2ccf, ccf\
 				where dblp_id != '999999999' \
@@ -425,24 +371,22 @@ if __name__ == "__main__":
 	cursor.execute(sql_select)
 	res_set = cursor.fetchall()
 	cookie_index = 0 #一个Cookie运行的次数记录
-	cookie_max = 20 #最大cookie使用次数
-	#url_Cookie = headers['Referer']
+	
 	for row_tuple in res_set:
 		paper_id = int(row_tuple[0])
 		paper_title = row_tuple[1]
 		paper_publicationYear = str(row_tuple[2])
 
 		#设置代理
-		proxies = getProxyList() #在列表中随机选择一个可用的cookie
+		#proxies = getProxyList() #在列表中随机选择一个可用的cookie
+		proxies = {}
 
-
-		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies)
+		paper_nbCitation, paper_isseen, paper_citationURL, paper_pdfURL, paper_rawURL, paper_scholarInfo, paper_rawInfo, paper_relatedURL = SQL_single(paper_title, paper_publicationYear,headers, cursor, proxies, url, using_proxies)
 
 		#设置User Agent
-		headers['User-Agent'] = generate_user_agent()
-		#记录cookie使用次数，并每50次进行一次更换
-		"""
-		#是否开启cookie
+		#headers['User-Agent'] = generate_user_agent()
+
+		#记录cookie使用次数，并每cookie_max次进行一次更换
 		cookie_index += 1
 		print "Current cookie index: ", cookie_index
 		if cookie_index >= cookie_max:
@@ -453,13 +397,16 @@ if __name__ == "__main__":
 			except:
 				print "Cookie is not exists!"
 			try:
-				headers['Cookie'] = Change_Cookie(headers, proxies) #使用代理获取cookie
+				headers['Cookie'] = Change_Cookie(headers, proxies, url, using_proxies) #使用代理获取cookie
+				#headers['User-Agent'] = generate_user_agent()
 				print "Change Cookie SUSCESS!"
+				print "Current Cookie : ", headers['Cookie']
+				print "Current User Agent : ", headers['User-Agent']
 			except:
 				print "Change Cookie FAILED!"
 			
 			cookie_index = 0 #重置cookie计数器
-		"""
+		
 
 		#无论解析阶段是否出现异常都写入数据库
 		try:
