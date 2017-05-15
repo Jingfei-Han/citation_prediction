@@ -7,7 +7,7 @@ from time import sleep
 import re
 import random
 import sys
-
+from user_agent import generate_user_agent
 
 
 def warnInfo(string):
@@ -24,8 +24,8 @@ class extractCitation(object):
 		self.paper_title = paper_title
 		self.proxies = proxies
 		self.using_proxies = using_proxies #默认为不使用代理
-		self.ok_interval = 5 #访问成功的间隔时间
-		self.false_interval = 8 #访问不成功的间隔时间
+		self.ok_interval = 3 #访问成功的间隔时间
+		self.false_interval = 5 #访问不成功的间隔时间
 	
 	def _requestWeb(self):
 		#默认url为self.url
@@ -240,7 +240,8 @@ if __name__ == "__main__":
 	proxies_type = "https" #代理类型
 	#设置初始cookie
 	#cookie = 'NID=103=gbCPErM0LV-e_Fmt62GDBERDlJe3qkXfNfthwvXX1lNAtGYq5hxvNWQr2RPKfIKTsbmAHESUGVhbqfv1JK44y8xwxHN52-5t6YZmsf7aqd8t-pd_DQkvy2i7tqNkzsIY; GSP=LM=1494311848:S=SYYUsD7oVa3HJKbG'
-	cookie_max = 40 #每个cookie最大cookie使用次数
+	cookie_max = random.randint(40, 80) #每个cookie最大cookie使用次数，设置随机
+	print "Max cookie: ", cookie_max
 
 	#设置headers
 	headers = {
@@ -363,10 +364,12 @@ if __name__ == "__main__":
 				print "Cookie is not exists!"
 			try:
 				headers['Cookie'] = Change_Cookie(headers, proxies, url, using_proxies) #使用代理获取cookie
-				#headers['User-Agent'] = generate_user_agent()
+				headers['User-Agent'] = generate_user_agent() #更新user agent
 				print "Change Cookie SUSCESS!"
 				print "Current Cookie : ", headers['Cookie']
-				#print "Current User Agent : ", headers['User-Agent']
+				print "Current User Agent : ", headers['User-Agent']
+				cookie_max = random.randint(40, 80) #更新之后重置randint
+				print "Max cookie: ", cookie_max
 			except:
 				print "Change Cookie FAILED!"
 			
