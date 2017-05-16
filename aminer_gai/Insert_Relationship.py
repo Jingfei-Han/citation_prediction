@@ -4,8 +4,10 @@ import MySQLdb.cursors
 import sys
 import re
 #数据库参数
-sql_ip = "shhr.online" #数据库地址
-port = 33755 #数据库端口号
+#sql_ip = "shhr.online" #数据库地址
+#port = 33755 #数据库端口号
+sql_ip = "localhost"
+port = 3306
 user = "jingfei" #用户名
 passwd = "hanjingfei007"
 db = "aminer_gai"
@@ -13,8 +15,8 @@ db = "aminer_gai"
 db = MySQLdb.connect(host=sql_ip, user='jingfei', port=port, passwd=passwd, db=db, charset='utf8')
 cursor = db.cursor()
 
-f = open(r'D:/Citation_prediction/AMiner/AMiner-Paper.txt', 'r')
-
+#f = open(r'D:/Citation_prediction/AMiner/AMiner-Paper.txt', 'r')
+f = open("/home/jingfei/AMiner/AMiner-Paper.txt", "r")
 
 cur_index = 1
 citation_list = [] #设置引用列表为空
