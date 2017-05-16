@@ -1,4 +1,6 @@
 #encoding:utf-8
+
+#暂时不需要该程序
 import MySQLdb
 import MySQLdb.cursors
 import sys
@@ -59,7 +61,7 @@ while True:
 				cursor.execute(sql_select1)
 				id = cursor.fetchone()[0]
 			except:
-				sql1 = "INSERT INTO venue(venue_id, venue_name) VALUES('%d', '%s')" % (cnt_aff, dic['venue_name'])
+				sql1 = "INSERT INTO venue(venue_id, venue_name, dblp_dblp_id) VALUES('%d', '%s', '%d')" % (cnt_aff, dic['venue_name'], 123456789) #当前venue未检查
 				try:
 					cursor.execute(sql1)
 					db.commit()
