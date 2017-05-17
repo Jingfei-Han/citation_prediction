@@ -39,13 +39,27 @@ def analyze_one_paper(paper_id, cursor):
 	and author_id = author_author_id\
 	group by paper_id" %paper_id
 
+	year = get_publicationyear(sql_year, cursor)
+	print "paper_id: ", paper_id, " paper_publicationYear: ", year
+
 	#画图
-	#p1 = plt.subplot(1,2,1)
+	plt.figure(figsize=(38,28))
+	plt.subplot(1,2,1)
 	plot_onepaper_Hindex(sql_max_Hindex, cursor)
-	#plt.hold(True)
-	#plt.subplot(1,2,2)
+
+	plt.subplot(1,2,2)
 	plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor)
 
+	plt.show()
+
+def get_publicationyear(sql_year, cursor):
+	#返回当前文章的发表年份
+	try:
+		cursor.execute(sql_year)
+		res = cursor.fetchone()[0]
+	except:
+		sys.exit("Year: query failed!")
+	return res
 
 def plot_onepaper_Hindex(sql_max_Hindex, cursor):
 	#画出当前论文在每一年的引用的最大H因子，散点图
@@ -69,8 +83,6 @@ def plot_onepaper_Hindex(sql_max_Hindex, cursor):
 	plt.title("H index")
 	plt.xlabel("Year")
 	plt.ylabel("Max H index")
-	plt.show()
-	plt.hold(True)
 
 
 def plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor):
@@ -89,14 +101,13 @@ def plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor):
 		x.append(paper_publicationyear)
 		y.append(cnt)
 
-	#plt.figure(2)
+	#这里计算y的cusum结果
+	y  = reduce(lambda x,z: x+[x[-1]+z], y, [0])[1:]
 	plt.plot(x, y)
 	plt.xlim(1999, 2015)
 	plt.title("Year number of citation")
 	plt.xlabel("Year")
 	plt.ylabel("number of citation")
-	plt.show()
-	plt.hold(True)
 
 if __name__ == "__main__":
 
@@ -114,5 +125,6 @@ if __name__ == "__main__":
 
 
 	#设置paper_id
-	paper_id = 760805
+	paper_id = 760805 #nbCitation:3873
+	#paper_id = 292088 #nbCitation:71
 	analyze_one_paper(paper_id, cursor)
