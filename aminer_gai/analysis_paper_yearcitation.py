@@ -40,9 +40,10 @@ def analyze_one_paper(paper_id, cursor):
 	group by paper_id" %paper_id
 
 	#画图
-	plt.figure(1)
+	#p1 = plt.subplot(1,2,1)
 	plot_onepaper_Hindex(sql_max_Hindex, cursor)
-	plt.figure(2)
+	#plt.hold(True)
+	#plt.subplot(1,2,2)
 	plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor)
 
 
@@ -62,14 +63,18 @@ def plot_onepaper_Hindex(sql_max_Hindex, cursor):
 
 		x.append(paper_publicationyear)
 		y.append(paper_max_Hindex)
-	plt.plot(x, y)
-	plt.xlim(2000, 2014)
+	#plt.figure(1)
+	plt.scatter(x, y)
+	plt.xlim(1999, 2015)
 	plt.title("H index")
 	plt.xlabel("Year")
 	plt.ylabel("Max H index")
 	plt.show()
+	plt.hold(True)
+
 
 def plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor):
+	#画出每一年的引用量分布图， 折线图
 	try:
 		cursor.execute(sql_year_nbcitation)
 		res = cursor.fetchall()
@@ -83,12 +88,15 @@ def plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor):
 
 		x.append(paper_publicationyear)
 		y.append(cnt)
+
+	#plt.figure(2)
 	plt.plot(x, y)
-	plt.xlim(2000, 2014)
+	plt.xlim(1999, 2015)
 	plt.title("Year number of citation")
 	plt.xlabel("Year")
 	plt.ylabel("number of citation")
 	plt.show()
+	plt.hold(True)
 
 if __name__ == "__main__":
 
