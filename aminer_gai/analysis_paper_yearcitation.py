@@ -4,19 +4,9 @@ import MySQLdb.cursors
 import sys
 import matplotlib.pyplot as plt
 
-#数据库参数
-#sql_ip = "shhr.online" #数据库地址
-#port = 33755 #数据库端口号
-sql_ip = "192.168.1.198"
-port = 3306
-user = "jingfei" #用户名
-passwd = "hanjingfei007"
-db = "aminer_gai"
 
-db = MySQLdb.connect(host=sql_ip, user='jingfei', port=port, passwd=passwd, db=db, charset='utf8')
-cursor = db.cursor()
 
-def analyze_one_paper(paper_id):
+def analyze_one_paper(paper_id, cursor):
 	#查找该paper的发表年份
 	sql_year = "SELECT paper_publicationYear FROM paper WHERE paper_id='%d'" %paper_id
 	#查找引用该paper的文章id
@@ -51,9 +41,9 @@ def analyze_one_paper(paper_id):
 
 	#画图
 	plt.figure(1)
-	plot_onepaper_Hindex(sql_max_Hindex)
+	plot_onepaper_Hindex(sql_max_Hindex, cursor)
 	plt.figure(2)
-	plot_onepaper_year_nbCitation(sql_year_nbcitation)
+	plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor)
 
 
 def plot_onepaper_Hindex(sql_max_Hindex, cursor):
@@ -101,6 +91,20 @@ def plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor):
 	plt.show()
 
 if __name__ == "__main__":
+
+	#数据库参数
+	#sql_ip = "shhr.online" #数据库地址
+	#port = 33755 #数据库端口号
+	sql_ip = "192.168.1.198"
+	port = 3306
+	user = "jingfei" #用户名
+	passwd = "hanjingfei007"
+	db = "aminer_gai"
+
+	db = MySQLdb.connect(host=sql_ip, user='jingfei', port=port, passwd=passwd, db=db, charset='utf8')
+	cursor = db.cursor()
+
+
 	#设置paper_id
 	paper_id = 760805
-	analyze_one_paper(paper_id)
+	analyze_one_paper(paper_id, cursor)
