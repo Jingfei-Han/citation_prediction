@@ -472,3 +472,56 @@ CookieJar.extract_cookies(response, request)
 --------------------------------------------2017.05.12---------------------------------------------
 尝试添加Crawl_paper_foreign.py文件，尝试使用国外ip访问google。
 发现只更换cookie但是不换ip 大概运行80次就会人机验证。（2次更换cookie）。问题有待解决。
+
+--------------------------------------------2017.05.17---------------------------------------------
+将aminer数据库引用关系进行了更新， 将aminer_gai数据库进行备份。更新格式类似我们所建数据库的形式。下面进行简单的统计
+
+1. 基本信息：
+	author: 1,277,094个作者信息
+	paper: 1,343,165篇论文信息
+	a2p: 3,789,487个作者与论文的关系
+	relationship: 4,328,659个引用关系（A->B表示B论文引用了A论文， A的出度就是A的引文个数，但是不全）
+
+	venue: 22,288个venue信息 
+	dblp : 5,083个dblp信息（包含了ccf和dblp中在dblp中的全部信息）
+	ccf : 571个ccf信息（其中24个不在dblp中）
+	core : 2,566个core信息
+	dblp2ccf: 594个关系，（其中24个ccf_CCF_id与NOT IN DBLP对应）
+	dblp2core: 2,593个关系 （其中370个core_CORE_id与NOT IN DBLP 对应， 364个属于A*, A, B, C）
+
+2. author表：
+	1) 411,766个作者没有affiliation信息，占32.24%
+	2) 2个作者名为空
+	3) 2,164个作者没有tag信息，占0.17%
+	4) 708,994个作者H因子为0， 占55.52%
+	5) 每个作者至少都发了1篇论文，只发表1篇的共784,713个，占61.45%， 只发表2篇的共182,864个， 占14.32%。
+	6) 作者最多发表论文数为：752篇，具体信息为：
+		'1175581', 
+		'STAFF', 
+		'752', 
+		'3', 
+		'International Conference;Author Index Volume;Index Volume;Special Issue;Conference Calendars;European Conference;Ambient Intelligence;Information Science;German Conference;IEEE International Conference', 
+		'Computer Standards & Interfaces;Springer London Ltd., UK;NONE;25–28 April 2000, University of Vienna, Austria;http://www.bcs‐sges.org/es2001/;http://www.kr.tuwien.ac.at/KI2001/;bogus;Office of the Privacy Commissioner'
+		经过查找，发现该作者好像不是一个人，而且都是一些一看就不是论文的论文。
+
+		排名第2多的作者发表论文：601篇， 具体信息为：(该作者存在)
+		'234102', 
+		'Jack J. Dongarra', 
+		'601', 
+		'33', 
+		'high performance;performance analysis;performance result;good performance;performance data;high performance computing platform;performance issue;peak performance;performance penalty;collective communicationsThe performance', 
+		'Argonne National Laboratory, Argonne, IL;Univ. of Tennessee, Knoxville;University of Tennessee;Oak Ridge National Laboratory and University of Tennessee;Computer Science and Engineering, Seoul National University, Seoul, 151742, Korea;DEPARTMENT OF ELECTRICAL ENGINEERING AND COMPUTER SCIENCE, UNIVERSITY OF                        TENNESSEE, KNOXVILLE, TENNESSEE, OAK RIDGE NATIONAL LABORATORY, OAK RIDGE,                        TE ...;Dept. of Elec. Eng. and Comp. Sci., Univ. of Tennessee and Comp. Sci. and Math. Div., Oak Ridge National Laboratory, Oak Ridge, TN, U.S.A. and Univ. of Manchester, Manchester, U.K.;Computer Science Department, University of Tennessee, Kruislaan 403, Knoxville, TN, The Netherlands;Computer Science Department, University of Tennessee, Knoxville, TN, China;Computer Science Department, University of Tennessee, Altenbergerstraße 69, Knoxville, TN, Austria;Computer Science Department, University of Tennessee, Real Casa dell\'Annunziata  via Roma, Knoxville, TN, Italy;Computer Science Department, University of Tennessee, Kruislaan 403, Knoxville, SJ, The Netherlands;Computer Science Department, University of Tennessee, rue CharlesCamichel, Knoxville, TN, France;Computer Science Department, University of Tennessee, Kruislaan 403, TN, Knoxville, The Netherlands;Computer Science Department, University of Tennessee, Kruislaan 403, Knoxville, The Netherlands;Computer Science Department, University of Tennessee, Nordbergstr. 15/C/3, Knoxville, Caltech, Italy;dongarra@cs.utk.edu;Electrical Engineering and Computer Science Department, University of Tennessee, Knoxville, TN, Poland;Faculty of Computer Science, Research Group Scientific Computing, University of Tennessee, Währinger Str. 29/6.21, Knoxville, TN, Austria'
+	7) 最高H因子作者为：60， 具体信息为：
+		'1336062', 
+		'Hector Garcia-Molina', 
+		'408', 
+		'60', 
+		'data model;data warehousing;data cloud;data item;data replication;data source;relational data;source data;structured data;base data', 
+		'Princeton Univ., Princeton, NJ;Princeton;Arvin Park;Department of Computer Science, Stanford University, Stanford, CA;Department of Computer Science, Stanford, CA;Dept. of Computer Science, Stanford, CA;Department of Computer Sciences, Stanford, CA;Stanford, CA;Serra Mall, Stanford, CA'
+	8) affiliation中带有China的作者个数为：105,845个， 占8.29%
+	9) affiliation中带有Australia的作者个数为：15,648个， 占1.23%
+	10) affiliation中带有USA, CA, LA的作者个数为：469,933个，占36.80%
+		（这还是不全的美国作者，可见数据集中大约有接近一半是美国作者。）
+
+
+
