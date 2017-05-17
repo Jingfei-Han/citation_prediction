@@ -29,22 +29,22 @@ while True:
 			#记录引用量
 			length = len(citation_list)
 			#将length写入对应论文的paper_nbCitation字段
-			sql_citation = "UPDATE paper SET paper_nbCitation='%d' WHERE paper_id= '%d'" %(length, relationship_dst)
-			try:
-				cursor.execute(sql_citation)
-				db.commit()
-			except:
-				sys.exit("Update failed!")
+			# sql_citation = "UPDATE paper SET paper_nbCitation='%d' WHERE paper_id= '%d'" %(length, relationship_dst)
+			# try:
+			# 	cursor.execute(sql_citation)
+			# 	db.commit()
+			# except:
+			# 	sys.exit("Update failed!")
 
-			# for relationship_src in citation_list:
-			# 	sql1 = "INSERT INTO relationship(relationship_src, relationship_dst)\
-			# 			VALUES('%d', '%d')" %(relationship_src, relationship_dst)
-			# 	try:
-			# 		cursor.execute(sql1)
-			# 		db.commit()
-			# 	except:
-			# 		#没有插入成功就不用管， 直接去掉就行
-			# 		pass
+			for relationship_src in citation_list:
+				sql1 = "INSERT INTO relationship(relationship_src, relationship_dst)\
+						VALUES('%d', '%d')" %(relationship_src, relationship_dst)
+				try:
+					cursor.execute(sql1)
+					db.commit()
+				except:
+					#没有插入成功就不用管， 直接去掉就行
+					pass
 
 			#将引用列表赋为空
 			citation_list = []

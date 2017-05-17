@@ -489,7 +489,7 @@ CookieJar.extract_cookies(response, request)
 	dblp2ccf: 594个关系，（其中24个ccf_CCF_id与NOT IN DBLP对应）
 	dblp2core: 2,593个关系 （其中370个core_CORE_id与NOT IN DBLP 对应， 364个属于A*, A, B, C）
 
-2. author表：
+2. author表：（1,277,094个作者信息）
 	1) 411,766个作者没有affiliation信息，占32.24%
 	2) 2个作者名为空
 	3) 2,164个作者没有tag信息，占0.17%
@@ -522,6 +522,24 @@ CookieJar.extract_cookies(response, request)
 	9) affiliation中带有Australia的作者个数为：15,648个， 占1.23%
 	10) affiliation中带有USA, CA, LA的作者个数为：469,933个，占36.80%
 		（这还是不全的美国作者，可见数据集中大约有接近一半是美国作者。）
+
+3. paper表（1,343,165篇论文信息）
+	1) 引用数最多的论文，引用量为：3,873，具体信息为：（谷歌学术现在搜索的引用量为41643）
+		'760805', 
+		'Distinctive Image Features from Scale-Invariant Keypoints', 
+		'2004', 
+		'20', （这个是他的参考文献数，实际比这个要多，因为我们只考虑我们数据集内部的文章）
+		'This paper presents a method for extracting distinctive invariant features from images that can be used to perform reliable matching between different views of an object or scene. The features are invariant to image scale and rotation, and are shown to provide robust matching across a substantial range of affine distortion, change in 3D viewpoint, addition of noise, and change in illumination. The features are highly distinctive, in the sense that a single feature can be correctly matched with high probability against a large database of features from many images. This paper also describes an approach to using these features for object recognition. The recognition proceeds by matching individual features to a database of features from known objects using a fast nearest-neighbor algorithm, followed by a Hough transform to identify clusters belonging to a single object, and finally performing verification through least-squares solution for consistent pose parameters. This approach to recognition can robustly identify objects among clutter and occlusion while achieving near real-time performance.', NULL, '131', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+	2) 论文发表年份最小的为2000， 最大的为2014
+	3) 论文引用量为0的有707,936篇论文， 占52.71%，引用量为1的有203,556， 占15.15%
+	4) 论文摘要信息为空的有98,775篇论文， 占7.35%
+
+
+下面有如下几个问题需进一步分析：
+1. 每篇存在引用的论文每一年的引用量变化情况
+2. 不同国家作者在ccf和venue交叉部分的平均论文发表量
+3. 每一类交叉部分引用其他类交叉部分的情况
+
 
 
 
