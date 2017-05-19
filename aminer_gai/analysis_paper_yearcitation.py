@@ -125,6 +125,6 @@ if __name__ == "__main__":
 
 
 	#设置paper_id
-	paper_id = 760805 #nbCitation:3873
-	#paper_id = 292088 #nbCitation:71
+	#paper_id = 760805 #nbCitation:3873
+	paper_id = 292088 #nbCitation:71
 	analyze_one_paper(paper_id, cursor)

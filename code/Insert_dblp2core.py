@@ -2,10 +2,10 @@ import MySQLdb
 import MySQLdb.cursors
 import sys
 
-db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='citation', charset='utf8')
+db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='aminer_gai', charset='utf8')
 cursor = db.cursor()
 
-sql_select = "SELECT CORE_id, dblp_id FROM citation.core, citation.dblp WHERE CORE_dblpname=dblp_name OR CORE_dblpname2=dblp_name OR CORE_dblpname3=dblp_name"
+sql_select = "SELECT CORE_id, dblp_id FROM core, dblp WHERE CORE_dblpname=dblp_name OR CORE_dblpname2=dblp_name OR CORE_dblpname3=dblp_name"
 
 try:
 	cursor.execute(sql_select)
@@ -18,7 +18,7 @@ for row_tuple in dblp2core_set:
 	
 	core_id = row_tuple[0]
 	dblp_id = row_tuple[1]
-	sql_insert = "INSERT INTO citation.dblp2core(dblp2core_id, dblp_dblp_id, core_CORE_id) VALUES('%d', '%d', '%d')" %(index, dblp_id, core_id)
+	sql_insert = "INSERT INTO dblp2core(dblp2core_id, dblp_dblp_id, core_CORE_id) VALUES('%d', '%d', '%d')" %(index, dblp_id, core_id)
 	try:
 		cursor.execute(sql_insert)
 		db.commit()

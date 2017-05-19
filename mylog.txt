@@ -541,5 +541,62 @@ CookieJar.extract_cookies(response, request)
 3. 每一类交叉部分引用其他类交叉部分的情况
 
 
+--------------------------------------------2017.05.18---------------------------------------------
+问题：CCF中存在同名venue属于不同computer category的情况
+解决：暂时不管，没有影响
+
+问题：CORE中存在同名venue属于不同classification的情况
+例如：
+1. core_id: 3453， 1674， 既属于A, 又属于C
+2. 2132, 699 B, C
+3. 845, 3195 A B
+4. 873, 2034 B C
+5. 1048, 1990 A C
+6. 2059, 1064 B C
+7. 1552, 3684 C B (J/C)
+8. 2086, 1577 B, C
+9. 3453 1674 A, C (J/C)
+
+待删core_id
+1236
+3594
+59
+995
+2056
+426
+52
+1207
+787
+1884
+208
+820
+1340
+2080
+708
+620
 
 
+
+
+
+问题
+ccf 538--IDC
+core 995 2056 -- IDC
+ccf 161--DSN
+core 787 1884 -- DSN
+
+
+根据dblp无法对应
+
+完成上述删除之后发现没有update重复情况了，成功解决问题
+
+下面准备在relationship表中加入一些字段，这些字段可能与mysql信息冗余，但是为了查找方便决定加入下列冗余信息：
+src:
+src_publicationYear, src_max_Hindex, src_label, src_country(0,1,2,3, 分别表示其他、中、澳、混合中澳)
+
+dst:
+dst_publicationYear, dst_max_Hindex, dst_label, dst_country(0,1,2,3, 分别表示其他、中、澳、混合中澳)
+
+--------------------------------------------2017.05.19---------------------------------------------
+本想在relationship中加入冗余信息， 但是可能信息量太大，导致添加速度缓慢，下面考虑在paper表中增加
+paper_max_Hindex, paper_country两个字段
