@@ -64,6 +64,7 @@ def generate_relationship(sql_ip, port, user, passwd, db):
 	df_sub_China['country'] = 'China'
 	df_sub_Australia['country'] = 'Australia'
 	df_country = pd.concat([df_sub_China, df_sub_Australia])
+	df_country = df_country.drop_duplicates(['paper_id']) #去除2446篇第一作者来自两个国家的情况，这里将澳大利亚的情况去掉
 
 	#df_paper_inter = pd.merge(df_paper, df_country) #只包括中国和澳大利亚作者
 	df_paper_outer = pd.merge(df_paper, df_country, how = 'outer')#包括所有国家作者，但是大部分国籍为NAN(除中澳外的其他国家)
@@ -132,7 +133,7 @@ if __name__ == '__main__':
 # 	# dst_publicationYear : 引用论文的发表截止年份（从源论文发表的年份直到目的年份） (-1表示不限制)
 # 	# src_country : 源论文集的国家 （'NULL'表示不限制）
 # 	# dst_country : 目的论文集的国家 （'NULL'表示不限制）
-#	dic = {'src_publicationYear' : 2000, 'dst_publicationYear' : -1, 'src_country' : 'NULL', 'dst_country' : 'NULL'}
+	dic = {'src_publicationYear' : 2000, 'dst_publicationYear' : -1, 'src_country' : 'NULL', 'dst_country' : 'NULL'}
 # 	src_publicationYear = 2000
 # 	dst_publicationYear = -1
 # 	src_country = 'NULL'
