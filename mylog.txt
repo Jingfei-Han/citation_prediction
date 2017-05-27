@@ -607,4 +607,15 @@ paper_max_Hindex, paper_country两个字段
 1. 在所有的1,343,165篇文章中， 有37,259篇文章没有作者
 2. 最大H因子为0的论文篇数为186,017篇，最大H因子为60的论文篇数为177篇，最大H因此为0,1,2,3,4的论文数为676,509篇，占51.8%，超过一半
 3. paper的第一作者是中国的论文数量为110,378
-4. paper的第一作者是Australia的论文数量为32,095
+4. paper的第一作者是Australia的论文数量为32,095（发现有2446篇重复，去掉之后剩余29,649篇）
+5. paper中有378,874篇论文在CCF中能检索到
+6. paper中有593,045篇论文在CORE中能检索到
+7. paper中有313,216篇论文可以被CCF和CORE交叉索引
+8. 有2446篇论文的第一作者属于两个国家？比如paper_id = 336868, 第一作者信息如下：
+	'MiAlbum - a system for home photo managemet using the semi-automatic image annotation approach', 
+	'1', 
+	'Liu Wenyin', 
+	'Microsoft Research China, 49 Zhichun Road, Beijing 100080, China;Microsoft Research, Beijing, China;City University of Hong Kong, Kowloon, Hong Kong;Department of Computer Science, City University of Hong Kong Tat Chee Avenue, Hong Kong SAR, PRC;Sch. of Electr., Comput. & Telecommun. Eng., Wollongong Univ., NSW, Australia;IEEE;State Key Lab. for Novel Software Technology, Nanjing University, Nanjing, China and Department of Computer Science, City University of Hong Kong, Hong Kong SAR, PR China;University of Science and Technology of China, School of Computer Science and Technology, Hefei, China and City University of Hong Kong, Department of Computer Science, HKSAR, China and CityUUSTC ...;School of Computer and Information Engineering, Shanghai University of Electronic Power, Shanghai 200090, China and Department of Computer Science and Technology, University of Science and Technol ...;College of Computer Science and Technology, Shanghai University of Electric Power, Shanghai, China'
+
+	虽然通过人工识别可以看出该论文为中国作者， 但是为了避免影响，决定去除所有的2446篇有歧义的论文（但是发现不会去掉所有重复）
+	还是随便去掉Australia的吧。。。
