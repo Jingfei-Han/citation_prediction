@@ -50,7 +50,7 @@ def analyze_one_paper(paper_id, cursor):
 	plt.subplot(1,2,2)
 	plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor)
 
-	plt.show()
+	#plt.show()
 
 def get_publicationyear(sql_year, cursor):
 	#返回当前文章的发表年份
@@ -123,8 +123,9 @@ if __name__ == "__main__":
 	db = MySQLdb.connect(host=sql_ip, user='jingfei', port=port, passwd=passwd, db=db, charset='utf8')
 	cursor = db.cursor()
 
-
 	#设置paper_id
-	#paper_id = 760805 #nbCitation:3873
-	paper_id = 292088 #nbCitation:71
-	analyze_one_paper(paper_id, cursor)
+	paper_id_1 = 760805 #nbCitation:3873
+	paper_id_2 = 292088 #nbCitation:71
+	analyze_one_paper(paper_id_1, cursor)
+	analyze_one_paper(paper_id_2, cursor)
+	plt.show()
