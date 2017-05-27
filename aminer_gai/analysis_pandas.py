@@ -9,17 +9,25 @@ def generate_relationship(sql_ip, port, user, passwd, db):
 
 	conn = MySQLdb.connect(host=sql_ip, user=user, port=port, passwd=passwd, db=db, charset='utf8')
 
-	sql_paper = "SELECT paper_id, paper_title, paper_publicationYear, paper_nbCitation, paper_label FROM paper"
+	sql_paper = "SELECT paper_id, paper_title, paper_publicationYear, paper_nbCitation, paper_label, venue_venue_id FROM paper"
 	sql_a2p = "SELECT * FROM a2p"
 	sql_author = "SELECT * FROM author"
 	sql_relationship = "SELECT relationship_src, relationship_dst FROM relationship"
+
+	sql_venue = "SELECT * FROM venue"
+	sql_dblp2ccf = "SELECT * FROM dblp2ccf"
+	sql_ccf = "SELECT * FROM ccf"
 
 	df_paper = pd.read_sql(sql_paper, conn)
 	df_a2p = pd.read_sql(sql_a2p, conn)
 	df_author = pd.read_sql(sql_author, conn)
 	df_relationship = pd.read_sql(sql_relationship, conn)
 
-	#合并, 内连接
+	df_venue = pd.read_sql(sql_venue, conn)
+	df_dblp2ccf = pd.read_sql(sql_dblp2ccf, conn)
+	df_ccf = pd.read_sql(sql_ccf, conn)
+	#*********************************************此部分得到论文的最大H因子********************************************************
+	#合并, 内连接为了得到每个论文作者的最大H因子
 	df = pd.merge(df_paper, pd.merge(df_author, df_a2p, left_on='author_id', right_on='author_author_id'), left_on='paper_id', right_on='paper_paper_id')
 
 	#查看df的列名
@@ -34,8 +42,18 @@ def generate_relationship(sql_ip, port, user, passwd, db):
 
 	#找到作者最大H因子，写到df_paper中
 	df_Hindex = DataFrame(res_Hindex)
-	df_Hindex['paper_id'] = df_Hindex.index 
-	df_paper = pd.merge(df_paper, df_Hindex, left_on='paper_id', right_on='paper_id') #在paper表上加上Max H因子
+	df_Hindex['paper_id'] = df_Hindex.index
+
+	#*************************************此部分得到论文的J/C、computercategory***************************************************
+	df2_part1 = pd.merge(df_paper, df_venue, left_on='venue_venue_id', right_on='venue_id')
+	df2_part2 = pd.merge(df_ccf, df_dblp2ccf, left_on='CCF_id', right_on='ccf_CCF_id')
+	df2_part2 = df2_part2[df2_part2['dblp_dblp_id']<999999999]
+	df2 = pd.merge(df2_part1, df2_part2, left_on='dblp_dblp_id', right_on='dblp_dblp_id')
+	df2 = df2[['paper_id', 'CCF_type', 'computercategory_computerCategory_id']]
+	df2 = df2.drop_duplicates(['paper_id']) #去掉重复的paper_id数据
+
+	df_paper = pd.merge(df_paper, df_Hindex, left_on='paper_id', right_on='paper_id', how='outer') #在paper表上加上Max H因子
+	df_paper = pd.merge(df_paper, df2, left_on='paper_id', right_on='paper_id', how='outer') #在paper表上加上J/C, computer类别
 
 	#找到每篇论文第一作者的国籍，写入df_paper中
 	df_sub = df[df['a2p_order']==1]
@@ -50,15 +68,15 @@ def generate_relationship(sql_ip, port, user, passwd, db):
 	#df_paper_inter = pd.merge(df_paper, df_country) #只包括中国和澳大利亚作者
 	df_paper_outer = pd.merge(df_paper, df_country, how = 'outer')#包括所有国家作者，但是大部分国籍为NAN(除中澳外的其他国家)
 
-	df_relationship = pd.merge(df_relationship, df_paper_outer[['paper_id','paper_publicationYear','paper_label','author_H_Index', 'country']], left_on='relationship_src', right_on='paper_id')
+	df_relationship = pd.merge(df_relationship, df_paper_outer[['paper_id','paper_publicationYear','paper_label','author_H_Index', 'CCF_type', 'computercategory_computerCategory_id', 'country']], left_on='relationship_src', right_on='paper_id')
 	del df_relationship['paper_id']
 	#换列名
-	df_relationship.columns = ['relationship_src', 'relationship_dst', 'relationship_src_publicationYear', 'relationship_src_label', 'relationship_src_maxHindex', 'relationship_src_country']
+	df_relationship.columns = ['relationship_src', 'relationship_dst', 'relationship_src_publicationYear', 'relationship_src_label', 'relationship_src_maxHindex', 'relationship_src_type', 'relationship_src_computerCategory', 'relationship_src_country']
 
-	df_relationship = pd.merge(df_relationship, df_paper_outer[['paper_id','paper_publicationYear','paper_label','author_H_Index', 'country']], left_on='relationship_dst', right_on='paper_id')
+	df_relationship = pd.merge(df_relationship, df_paper_outer[['paper_id','paper_publicationYear','paper_label','author_H_Index', 'CCF_type', 'computercategory_computerCategory_id', 'country']], left_on='relationship_dst', right_on='paper_id')
 	del df_relationship['paper_id']
-	df_relationship.columns = ['relationship_src', 'relationship_dst', 'relationship_src_publicationYear', 'relationship_src_label', 'relationship_src_maxHindex', 'relationship_src_country', 'relationship_dst_publicationYear', 'relationship_dst_label', 'relationship_dst_maxHindex', 'relationship_dst_country']
-	#此时的df_relationship包含源和目的的发表年份、标签、最大H因子、第一作者所属国家
+	df_relationship.columns = ['relationship_src', 'relationship_dst', 'relationship_src_publicationYear', 'relationship_src_label', 'relationship_src_maxHindex', 'relationship_src_type', 'relationship_src_computerCategory', 'relationship_src_country', 'relationship_dst_publicationYear', 'relationship_dst_label', 'relationship_dst_maxHindex', 'relationship_dst_type', 'relationship_dst_computerCategory', 'relationship_dst_country']
+	#此时的df_relationship包含源和目的的发表年份、标签、最大H因子、type、 CCF类别、第一作者所属国家
 
 	return df_relationship
 
@@ -96,25 +114,25 @@ def get_table(df_relationship, src_publicationYear, dst_publicationYear, src_cou
 	result = grouped.count().unstack().fillna(0) #得到表格结果，列表示源的标签，行表示目的的标签，值表示引用量
 	return result
 
-# if __name__ == '__main__':
-# 	#数据库参数
-# 	#sql_ip = "shhr.online" #数据库地址
-# 	#port = 33755 #数据库端口号
-# 	#sql_ip = "192.168.1.198"
-# 	sql_ip = "127.0.0.1"
-# 	port = 3306
-# 	#user = "jingfei" #用户名
-# 	user = "root"
-# 	passwd = "hanjingfei007"
-# 	db = "aminer_gai"
+if __name__ == '__main__':
+	#数据库参数
+	#sql_ip = "shhr.online" #数据库地址
+	#port = 33755 #数据库端口号
+	#sql_ip = "192.168.1.198"
+	sql_ip = "127.0.0.1"
+	port = 3306
+	#user = "jingfei" #用户名
+	user = "root"
+	passwd = "hanjingfei007"
+	db = "aminer_gai"
 
-# 	df_relationship = generate_relationship(sql_ip, port, user, passwd, db)
+	df_relationship = generate_relationship(sql_ip, port, user, passwd, db)
 # 	# 要求参数
 # 	# src_publicationYear : 源论文集的发表年份 (-1表示不限制)
 # 	# dst_publicationYear : 引用论文的发表截止年份（从源论文发表的年份直到目的年份） (-1表示不限制)
 # 	# src_country : 源论文集的国家 （'NULL'表示不限制）
 # 	# dst_country : 目的论文集的国家 （'NULL'表示不限制）
-#	dic = {'src_publicationYear' : 2000, 'dst_publicationYear' : -1, 'src_country' : 'NULL', 'dst_country' : 'Australia'}
+#	dic = {'src_publicationYear' : 2000, 'dst_publicationYear' : -1, 'src_country' : 'NULL', 'dst_country' : 'NULL'}
 # 	src_publicationYear = 2000
 # 	dst_publicationYear = -1
 # 	src_country = 'NULL'
