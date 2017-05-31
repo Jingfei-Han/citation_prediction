@@ -83,6 +83,10 @@ def generate_relationship(sql_ip, port, user, passwd, db):
 
 	#***************************************************以下分析均基于df_relationship*********************************************************
 
+def get_overlap(df_relationship):
+	df_tmp = df_relationship[(df_relationship['relationship_src_label'].notnull()) & (df_relationship['relationship_dst_label'].notnull())]
+	return df_tmp
+
 def get_table(df_relationship, src_publicationYear, dst_publicationYear, src_country, dst_country):
 	"""
 	params:
@@ -92,7 +96,7 @@ def get_table(df_relationship, src_publicationYear, dst_publicationYear, src_cou
 	dst_country : 目的论文集的国家 （'NULL'表示不限制）
 	"""
 	#只考虑CCF和CORE交叉部分的情况目前，因此先处理df_relationship
-	df_tmp = df_relationship[(df_relationship['relationship_src_label'].notnull()) & (df_relationship['relationship_dst_label'].notnull())]
+	df_tmp = get_overlap(df_relationship)
 	if src_publicationYear != -1:
 		#源的发表年份受限，应按发表年份删选
 		df_tmp = df_tmp[df_tmp['relationship_src_publicationYear'] == src_publicationYear]
@@ -114,6 +118,15 @@ def get_table(df_relationship, src_publicationYear, dst_publicationYear, src_cou
 	grouped = df_tmp.groupby(['relationship_src_label', 'relationship_dst_label'])
 	result = grouped.count().unstack().fillna(0) #得到表格结果，列表示源的标签，行表示目的的标签，值表示引用量
 	return result
+
+def get_table2(df_relationship):
+	#得到2000年、源是computer类别是8（人工智能）、源和目的都是Conference的字表视图
+	df_relationship = get_overlap(df_relationship)
+	#df_relationship[ (df_relationship['relationship_src_publicationYear'] == 2000) & (df_relationship['relationship_src_type'] == 'conference') & (df_relationship['relationship_dst_type'] == 'conference') & (df_relationship['relationship_src_computerCategory'] == 8)]
+	df_relationship_cur = df_relationship[df_relationship['relationship_src_publicationYear'] == 2000]
+	df_relationship_cur = df_relationship_cur[df_relationship_cur['relationship_src_type'] == 'conference']
+	df_relationship_cur = df_relationship_cur[df_relationship_cur['relationship_dst_type'] == 'conference']
+	df_relationship_cur = df_relationship_cur[df_relationship_cur['relationship_src_computerCategory'] == 8]
 
 if __name__ == '__main__':
 	#数据库参数
