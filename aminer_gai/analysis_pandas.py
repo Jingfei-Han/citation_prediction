@@ -2,6 +2,7 @@
 import pandas as pd 
 from pandas import Series, DataFrame
 import MySQLdb
+import numpy as np
 
 
 def generate_relationship(sql_ip, port, user, passwd, db):
@@ -124,19 +125,63 @@ def get_table2(df_relationship):
 	df_relationship = get_overlap(df_relationship)
 	#df_relationship[ (df_relationship['relationship_src_publicationYear'] == 2000) & (df_relationship['relationship_src_type'] == 'conference') & (df_relationship['relationship_dst_type'] == 'conference') & (df_relationship['relationship_src_computerCategory'] == 8)]
 	df_relationship_cur = df_relationship[df_relationship['relationship_src_publicationYear'] == 2000]
+	df_relationship_cur = df_relationship_cur[df_relationship_cur['relationship_src_label'] == 'A,A*']
 	df_relationship_cur = df_relationship_cur[df_relationship_cur['relationship_src_type'] == 'conference']
 	df_relationship_cur = df_relationship_cur[df_relationship_cur['relationship_dst_type'] == 'conference']
 	df_relationship_cur = df_relationship_cur[df_relationship_cur['relationship_src_computerCategory'] == 8]
+
+def Compute_geometric_mean(lis):
+	#计算列表list的几何均值
+	n = len(lis)
+	x = np.asarray(lis)
+	res = np.exp(1.0/n) * (np.log(x+1).sum())#平滑
+	return res
+
+def Compute_arithmetic_mean(lis):
+	#计算列表list的几何均值
+	n = len(lis)
+	#x = np.asarray(lis)
+	res = 1.0/n * sum(lis)
+	return res
+
+def get_paperset_GM(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type, dst_country):
+	#只考虑CCF和CORE交叉部分的情况目前，因此先处理df_relationship
+	#df_tmp = get_overlap(df_relationship)
+	df_tmp = df_relationship
+	if src_publicationYear != -1:
+		#源的发表年份受限，应按发表年份删选
+		df_tmp = df_tmp[df_tmp['relationship_src_publicationYear'] == src_publicationYear]
+	if src_label != -1:
+		#目的截止年份受限
+		df_tmp = df_tmp[df_tmp['relationship_src_label'] == src_label]
+	if src_computerCategory != -1:
+		df_tmp = df_tmp[df_tmp['relationship_src_computerCategory'] == src_computerCategory]
+	if src_type != 'NULL':
+		df_tmp = df_tmp[df_tmp['relationship_src_type'] == src_type]
+	if dst_country != 'NULL':
+		df_tmp = df_tmp[df_tmp['relationship_dst_country'] == dst_country]
+	
+
+	res = df_tmp.groupby(['relationship_src'])['relationship_dst'].count()
+	lis = list(res)
+	if len(lis) == 0:
+		return 0
+	#gm = Compute_geometric_mean(lis)
+	gm = Compute_arithmetic_mean(lis)
+	return gm
+
+
+
 
 if __name__ == '__main__':
 	#数据库参数
 	#sql_ip = "shhr.online" #数据库地址
 	#port = 33755 #数据库端口号
-	#sql_ip = "192.168.1.198"
-	sql_ip = "127.0.0.1"
+	sql_ip = "192.168.1.198"
+	#sql_ip = "127.0.0.1"
 	port = 3306
-	#user = "jingfei" #用户名
-	user = "root"
+	user = "jingfei" #用户名
+	#user = "root"
 	passwd = "hanjingfei007"
 	db = "aminer_gai"
 
@@ -146,10 +191,18 @@ if __name__ == '__main__':
 # 	# dst_publicationYear : 引用论文的发表截止年份（从源论文发表的年份直到目的年份） (-1表示不限制)
 # 	# src_country : 源论文集的国家 （'NULL'表示不限制）
 # 	# dst_country : 目的论文集的国家 （'NULL'表示不限制）
-	dic = {'src_publicationYear' : 2000, 'dst_publicationYear' : -1, 'src_country' : 'NULL', 'dst_country' : 'NULL'}
+#	dic = {'src_publicationYear' : 2000, 'dst_publicationYear' : -1, 'src_country' : 'NULL', 'dst_country' : 'NULL'}
 # 	src_publicationYear = 2000
 # 	dst_publicationYear = -1
 # 	src_country = 'NULL'
 # 	dst_country = 'NULL'
 # 	result = get_table(df_relationship, dic['src_publicationYear'], dic['dst_publicationYear'], dic['src_country'], dic['dst_country'])
 # 	print result
+	
+	label = ['A,A*', 'A,A', 'A,B', 'A,C', 'B,A*', 'B,A', 'B,B', 'B,C', 'C,A*', 'C,A', 'C,B', 'C,C',]
+	# for i in label:
+	# 	res = get_paperset_GM(df_relationship, 2000, i, -1, 'NULL', 'China')
+	# 	print i, ' : ', res
+	for i in label:
+		res = get_paperset_GM(df_relationship, 2000, i, -1, 'NULL', 'NULL')
+		print res

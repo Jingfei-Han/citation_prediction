@@ -4,7 +4,23 @@ import MySQLdb.cursors
 import sys
 import matplotlib.pyplot as plt
 
+def draw_set_paper_plot(cursor):
+	sql_set = "SELECT paper_id FROM paper WHERE paper_publicationYear = '2000' AND paper_nbCitation = '20'"
+	try:
+		cursor.execute(sql_set)
+		res_set = cursor.fetchall()
+	except:
+		sys.exit("HAHA")
 
+	cnt = 0
+	cnt_max = 200
+	for row in res_set:
+		paper_id = int(row[0])
+		analyze_one_paper(paper_id, cursor)
+		if cnt >10:
+			break
+		cnt += 1
+	plt.show()
 
 def analyze_one_paper(paper_id, cursor):
 	#查找该paper的发表年份
@@ -43,11 +59,11 @@ def analyze_one_paper(paper_id, cursor):
 	print "paper_id: ", paper_id, " paper_publicationYear: ", year
 
 	#画图
-	plt.figure(figsize=(38,28))
-	plt.subplot(1,2,1)
-	plot_onepaper_Hindex(sql_max_Hindex, cursor)
+	#plt.figure(figsize=(38,28))
+	# plt.subplot(1,2,1)
+	# plot_onepaper_Hindex(sql_max_Hindex, cursor)
 
-	plt.subplot(1,2,2)
+	# plt.subplot(1,2,2)
 	plot_onepaper_year_nbCitation(sql_year_nbcitation, cursor)
 
 	#plt.show()
@@ -124,8 +140,11 @@ if __name__ == "__main__":
 	cursor = db.cursor()
 
 	#设置paper_id
-	paper_id_1 = 760805 #nbCitation:3873
-	paper_id_2 = 292088 #nbCitation:71
-	analyze_one_paper(paper_id_1, cursor)
-	analyze_one_paper(paper_id_2, cursor)
-	plt.show()
+	# paper_id_1 = 760805 #nbCitation:3873
+	# paper_id_2 = 292088 #nbCitation:71
+	# analyze_one_paper(paper_id_1, cursor)
+	# analyze_one_paper(paper_id_2, cursor)
+	# plt.show()
+
+	draw_set_paper_plot(cursor)
+	#plt.show()
