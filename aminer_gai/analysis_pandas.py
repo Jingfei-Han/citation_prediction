@@ -170,8 +170,35 @@ def get_paperset_GM(df_relationship, src_publicationYear, src_label, src_compute
 	gm = Compute_arithmetic_mean(lis)
 	return gm
 
+def get_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type, dst_country):
+	df_tmp = df_relationship
+	if src_publicationYear != -1:
+		#源的发表年份受限，应按发表年份删选
+		df_tmp = df_tmp[df_tmp['relationship_src_publicationYear'] == src_publicationYear]
+	if src_label != -1:
+		#目的截止年份受限
+		df_tmp = df_tmp[df_tmp['relationship_src_label'] == src_label]
+	if src_computerCategory != -1:
+		df_tmp = df_tmp[df_tmp['relationship_src_computerCategory'] == src_computerCategory]
+	if src_type != 'NULL':
+		df_tmp = df_tmp[df_tmp['relationship_src_type'] == src_type]
+	if dst_country != 'NULL':
+		df_tmp = df_tmp[df_tmp['relationship_dst_country'] == dst_country]
+	
+	Hindex = df_tmp[['relationship_dst_maxHindex']]
+	Hindex.boxplot()
+	plt.ylim(0, 60)
+	plt.title(str(dst_country))
 
-
+def draw_all_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type):
+	title = str(src_publicationYear)+ " "+ str(src_label)+ " "+ str(src_computerCategory)+ " "+ str(src_type)
+	plt.figure(title)
+	subplot(1,3,1)
+	get_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type, 'NULL')
+	subplot(1,3,2)
+	get_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type, 'China')
+	subplot(1,3,3)
+	get_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type, 'Australia')
 
 if __name__ == '__main__':
 	#数据库参数
@@ -199,10 +226,22 @@ if __name__ == '__main__':
 # 	result = get_table(df_relationship, dic['src_publicationYear'], dic['dst_publicationYear'], dic['src_country'], dic['dst_country'])
 # 	print result
 	
-	label = ['A,A*', 'A,A', 'A,B', 'A,C', 'B,A*', 'B,A', 'B,B', 'B,C', 'C,A*', 'C,A', 'C,B', 'C,C',]
+	label = ['A,A*', 'A,A', 'A,B', 'B,A*', 'B,A', 'B,B', 'B,C', 'C,A*', 'C,A', 'C,B', 'C,C',]
 	# for i in label:
 	# 	res = get_paperset_GM(df_relationship, 2000, i, -1, 'NULL', 'China')
 	# 	print i, ' : ', res
+	# for i in label:
+	# 	res = get_paperset_GM(df_relationship, 2000, i, -1, 'NULL', 'NULL')
+	# 	print res
+	draw_all_boxplot(df_relationship, 2000, 'A,A*', -1, 'NULL')
+	draw_all_boxplot(df_relationship, 2000, 'A,A*', 1, 'journal')
+	draw_all_boxplot(df_relationship, 2000, 'A,A*', 1, 'conference')
+
+	draw_all_boxplot(df_relationship, 2000, 'A,A*', -1, 'NULL')
+	draw_all_boxplot(df_relationship, 2000, 'A,B', -1, 'NULL')
+	draw_all_boxplot(df_relationship, 2000, 'C,A*', -1, 'NULL')
+	draw_all_boxplot(df_relationship, 2000, 'C,C', -1, 'NULL')
+
 	for i in label:
-		res = get_paperset_GM(df_relationship, 2000, i, -1, 'NULL', 'NULL')
-		print res
+		draw_all_boxplot(df_relationship, -1, i, -1, 'NULL')
+
