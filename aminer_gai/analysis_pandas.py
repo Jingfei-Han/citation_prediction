@@ -3,6 +3,7 @@ import pandas as pd
 from pandas import Series, DataFrame
 import MySQLdb
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def generate_relationship(sql_ip, port, user, passwd, db):
@@ -200,15 +201,59 @@ def draw_all_boxplot(df_relationship, src_publicationYear, src_label, src_comput
 	subplot(1,3,3)
 	get_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type, 'Australia')
 
+def get_density(df_relationship,  src_label, dst_publicationYear, dst_country, Hindex_lowerbound, Hindex_higherbound):
+	#得出dst_country国家dst_publicationYear年引用src_label的作者最大H因子大于等于下界的论文所占比例
+	df_tmp = df_relationship
+	if dst_publicationYear != -1:
+		#目的的发表年份受限，应按发表年份删选
+		df_tmp = df_tmp[df_tmp['relationship_dst_publicationYear'] == dst_publicationYear]
+	if src_label != -1:
+		df_tmp = df_tmp[df_tmp['relationship_src_label'] == src_label]
+	if dst_country != 'NULL':
+		df_tmp = df_tmp[df_tmp['relationship_dst_country'] == dst_country]	
+	
+	#满足条件的论文总数
+	totalcnt = df_tmp.drop_duplicates(['relationship_dst'])['relationship_dst'].count()
+
+	if Hindex_lowerbound != -1:
+		df_tmp = df_tmp[df_tmp['relationship_dst_maxHindex'] >= Hindex_lowerbound]
+
+	if Hindex_higherbound != -1:
+		df_tmp = df_tmp[df_tmp['relationship_dst_maxHindex'] <= Hindex_higherbound]
+
+	#满足H因子约束的论文总数
+	curcnt = df_tmp.drop_duplicates(['relationship_dst'])['relationship_dst'].count()
+
+	if totalcnt <= 0:
+		print "No paper can satisfy these conditions!"
+		return totalcnt, curcnt, 0
+
+	prop = curcnt * 1.0 / totalcnt
+
+	return totalcnt, curcnt, prop
+
+def draw_density(df_relationship, src_label, dst_country, Hindex_lowerbound, Hindex_higherbound):
+	#画出高水平论文引用src_label的概率随年份变化图。
+	year = range(2000, 2015)
+	reslist_prop = []
+	reslist_totalcnt = []
+	reslist_curcnt = []
+	for dst_publicationYear in year:
+		res = get_density(df_relationship,  src_label, dst_publicationYear, dst_country, Hindex_lowerbound, Hindex_higherbound)
+		reslist_totalcnt.append(res[0])
+		reslist_curcnt.append(res[1])
+		reslist_prop.append(res[2])
+	plt.plot(year, reslist_prop)
+
 if __name__ == '__main__':
 	#数据库参数
 	#sql_ip = "shhr.online" #数据库地址
 	#port = 33755 #数据库端口号
-	sql_ip = "192.168.1.198"
-	#sql_ip = "127.0.0.1"
+	#sql_ip = "192.168.1.198"
+	sql_ip = "127.0.0.1"
 	port = 3306
-	user = "jingfei" #用户名
-	#user = "root"
+	#user = "jingfei" #用户名
+	user = "root"
 	passwd = "hanjingfei007"
 	db = "aminer_gai"
 
