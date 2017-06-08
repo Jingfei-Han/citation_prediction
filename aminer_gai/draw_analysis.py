@@ -61,6 +61,34 @@ def draw_ref_distribution(df_relationship, dst_publicationYear, Hindex_lowerboun
 	#plt.title('Australia')
 	prop_Australia.div(prop_Australia.sum(1).astype(float), axis = 0).plot(kind='bar', ax=axes[2], stacked=True, ylim=[0,1], colormap='gist_rainbow', legend=False, grid=True, title = 'Australia')
 
+def draw_paper_distribution(df_paper, paper_publicationYear, Hindex_lowerbound, Hindex_higherbound):
+	if paper_publicationYear != -1:
+		df_paper = df_paper[df_paper['paper_publicationYear'] == paper_publicationYear]
+	if Hindex_lowerbound != -1:
+		df_paper = df_paper[df_paper['author_H_Index'] >= Hindex_lowerbound]
+	if Hindex_higherbound != -1:
+		df_paper = df_paper[df_paper['author_H_Index'] <= Hindex_higherbound]
+
+	grouped = df_paper.groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+	grouped_China = df_paper[df_paper['country']=='China'].groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+	grouped_Australia = df_paper[df_paper['country']=='Australia'].groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+
+	
+
+	#发表的venue的个数
+	cnt_venue = df_paper.drop_duplicates(['paper_label','CCF_id']).groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+	cnt_venue_China = df_paper[df_paper['country']=='China'].drop_duplicates(['paper_label','CCF_id']).groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+	cnt_venue_Australia = df_paper[df_paper['country']=='Australia'].drop_duplicates(['paper_label','CCF_id']).groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+
+	prop = grouped / cnt_venue
+	prop_China = grouped_China / cnt_venue_China
+	prop_Australia = grouped_Australia / cnt_venue_Australia
+
+	fig, axes = plt.subplots(1,3)
+	prop.plot(kind='bar', ax=axes[0], title='Total')
+	prop_China.plot(kind='bar', ax=axes[1], title='China')
+	prop_Australia.plot(kind='bar', ax=axes[2], title='Australia')
+
 def draw_all_ref(df_relationship):
 	"""
 	我们对于学者水平按照分布进行如下定义：
@@ -84,16 +112,16 @@ if __name__ == '__main__':
 	#数据库参数
 	#sql_ip = "shhr.online" #数据库地址
 	#port = 33755 #数据库端口号
-	#sql_ip = "192.168.1.198"
-	sql_ip = "127.0.0.1"
+	sql_ip = "192.168.1.198"
+	#sql_ip = "127.0.0.1"
 	port = 3306
-	#user = "jingfei" #用户名
-	user = "root"
+	user = "jingfei" #用户名
+	#user = "root"
 	passwd = "hanjingfei007"
 	db = "aminer_gai"
 
 	#conn = MySQLdb.connect(host=sql_ip, user=user, port=port, passwd=passwd, db=db, charset='utf8')
 
-	df_relationship = generate_relationship(sql_ip, port, user, passwd, db)
+	df_paper, df_relationship = generate_relationship(sql_ip, port, user, passwd, db)
 	#draw_ref_distribution(df_relationship)
 	draw_all_ref(df_relationship)
