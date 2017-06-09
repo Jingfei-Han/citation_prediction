@@ -6,28 +6,55 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def get_paper(conn):
+	sql_paper = "SELECT paper_id, paper_title, paper_publicationYear, paper_nbCitation, paper_label, venue_venue_id FROM paper"
+	df_paper = pd.read_sql(sql_paper, conn)
+	return df_paper
+
+def get_a2p(conn):
+	sql_a2p = "SELECT * FROM a2p"
+	df_a2p = pd.read_sql(sql_a2p, conn)
+	return df_a2p
+
+def get_author(conn):
+	sql_author = "SELECT * FROM author"
+	df_author = pd.read_sql(sql_author, conn)
+	return df_author
+
+def get_relationship(conn):
+	sql_relationship = "SELECT relationship_src, relationship_dst FROM relationship"
+	df_relationship = pd.read_sql(sql_relationship, conn)
+	return df_relationship
+
+def get_venue(conn):
+	sql_venue = "SELECT * FROM venue"
+	df_venue = pd.read_sql(sql_venue, conn)
+	return df_venue
+
+def get_dblp2ccf(conn):
+	sql_dblp2ccf = "SELECT * FROM dblp2ccf"
+	df_dblp2ccf = pd.read_sql(sql_dblp2ccf, conn)
+	return df_dblp2ccf
+
+def get_ccf(conn):
+	sql_ccf = "SELECT * FROM ccf"
+	df_ccf = pd.read_sql(sql_ccf, conn)
+	return df_ccf
+
 def generate_relationship(sql_ip, port, user, passwd, db):
 	#根据数据库信息， 返回df_relationship，其中包含源和目的的发表年份、标签、最大H因子、第一作者所属国家
 
 	conn = MySQLdb.connect(host=sql_ip, user=user, port=port, passwd=passwd, db=db, charset='utf8')
 
-	sql_paper = "SELECT paper_id, paper_title, paper_publicationYear, paper_nbCitation, paper_label, venue_venue_id FROM paper"
-	sql_a2p = "SELECT * FROM a2p"
-	sql_author = "SELECT * FROM author"
-	sql_relationship = "SELECT relationship_src, relationship_dst FROM relationship"
-
-	sql_venue = "SELECT * FROM venue"
-	sql_dblp2ccf = "SELECT * FROM dblp2ccf"
-	sql_ccf = "SELECT * FROM ccf"
-
-	df_paper = pd.read_sql(sql_paper, conn)
-	df_a2p = pd.read_sql(sql_a2p, conn)
-	df_author = pd.read_sql(sql_author, conn)
-	df_relationship = pd.read_sql(sql_relationship, conn)
-
-	df_venue = pd.read_sql(sql_venue, conn)
-	df_dblp2ccf = pd.read_sql(sql_dblp2ccf, conn)
-	df_ccf = pd.read_sql(sql_ccf, conn)
+	df_paper = get_paper(conn)
+	df_a2p = get_a2p(conn)
+	df_author = get_author(conn)
+	df_relationship = get_relationship(conn)
+	df_venue = get_venue(conn)
+	df_dblp2ccf = get_dblp2ccf(conn)
+	df_ccf = get_ccf(conn)
+	
+	
 	#*********************************************此部分得到论文的最大H因子********************************************************
 	#合并, 内连接为了得到每个论文作者的最大H因子
 	df = pd.merge(df_paper, pd.merge(df_author, df_a2p, left_on='author_id', right_on='author_author_id'), left_on='paper_id', right_on='paper_paper_id')
