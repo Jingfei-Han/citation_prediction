@@ -168,6 +168,7 @@ def top_allyear(df_paper, df_relationship):
 	for paper_publicationYear in range(2000,2006):
 		df_tmp = topreasearch_situation(df_paper, df_relationship, paper_publicationYear)
 		df_set = pd.merge(df_set, df_tmp, how='outer')
+	
 
 
 
