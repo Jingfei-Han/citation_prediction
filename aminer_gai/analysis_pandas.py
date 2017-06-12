@@ -221,11 +221,11 @@ def get_boxplot(df_relationship, src_publicationYear, src_label, src_computerCat
 def draw_all_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type):
 	title = str(src_publicationYear)+ " "+ str(src_label)+ " "+ str(src_computerCategory)+ " "+ str(src_type)
 	plt.figure(title)
-	subplot(1,3,1)
+	#subplot(1,3,1)
 	get_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type, 'NULL')
-	subplot(1,3,2)
+	#subplot(1,3,2)
 	get_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type, 'China')
-	subplot(1,3,3)
+	#subplot(1,3,3)
 	get_boxplot(df_relationship, src_publicationYear, src_label, src_computerCategory, src_type, 'Australia')
 
 def get_density(df_relationship,  src_label, dst_publicationYear, dst_country, Hindex_lowerbound, Hindex_higherbound):
