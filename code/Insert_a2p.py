@@ -4,10 +4,10 @@ import MySQLdb
 import MySQLdb.cursors
 
 
-db = MySQLdb.connect(host="192.168.1.198", user="jingfei", passwd = "hanjingfei007", db="citation", charset="utf8")
+db = MySQLdb.connect(host="127.0.0.1", user="root", passwd = "hanjingfei007", db="aminer", charset="utf8")
 cursor = db.cursor()
 
-f = open(r'/home/jingfei/AMiner/AMiner-Author2Paper.txt', 'r')
+f = open(r'D:/Citation_prediction/AMiner/AMiner-Author2Paper.txt', 'r')
 
 while True:
 	line = f.readline()
@@ -23,7 +23,7 @@ while True:
 		cursor.execute(sql)
 		db.commit()
 	except:
-		#print "Not exist in author or paper!"
+		print "Not exist in author or paper!"
 		pass
 	if (int(dic[0]) % 10000 == 0):
 		print (dic[0] + " is successfully!")

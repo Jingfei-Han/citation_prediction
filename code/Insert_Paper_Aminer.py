@@ -4,7 +4,7 @@ import sys
 import re
 
 
-db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='aminer', charset='utf8')
+db = MySQLdb.connect(host='127.0.0.1', user='root', passwd='hanjingfei007', db='aminer', charset='utf8')
 cursor = db.cursor()
 
 f = open(r'D:/Citation_prediction/AMiner/AMiner-Paper.txt', 'r')
@@ -17,6 +17,7 @@ dic = {
 	'venue_name' : ''
 }
 cur_index = 1
+cnt_aff = 1
 while True:
 	
 	line = f.readline()
@@ -27,15 +28,29 @@ while True:
 
 			#if dic['paper_title'] == dic['venue_name']: #ERROR DATA, delete it.
 			#	continue
+			sql_select1 = "SELECT venue_id FROM venue WHERE venue_name='%s'" %(dic['venue_name'])
+			try:
+				cursor.execute(sql_select1)
+				id = cursor.fetchone()[0]
+			except:
+				sql1 = "INSERT INTO venue(venue_id, venue_name) VALUES('%d', '%s')" % (cnt_aff, dic['venue_name'])
+				try:
+					cursor.execute(sql1)
+					db.commit()
+					id = cnt_aff
+					cnt_aff += 1
+				except:
+					sys.exit("ERROR: INSERT INTO the TABLE venue failed!")
 
-			sql2 = "INSERT INTO paper(paper_id, paper_title, paper_publicationYear, paper_abstract, paper_venuename) \
-					VALUES('%d', '%s', '%d', '%s', '%s')" %(dic['paper_id'], dic['paper_title'], dic['paper_publicationYear'], dic['paper_abstract'], dic['venue_name'])
+
+			sql2 = "INSERT INTO paper(paper_id, paper_title, paper_publicationYear, paper_abstract, venue_venue_id) \
+					VALUES('%d', '%s', '%d', '%s', '%d')" %(dic['paper_id'], dic['paper_title'], dic['paper_publicationYear'], dic['paper_abstract'], int(id))
 			try:
 				cursor.execute(sql2)
 				db.commit()
 			except:
-				if cur_index%5000 == 0:
-					print "Current %d record exist in the TABLE paper." %cur_index
+				#if cur_index%5000 == 0:
+				print "Current %d record exist in the TABLE paper." %cur_index
 
 			dic = {
 				'paper_id' : 0,
@@ -61,8 +76,8 @@ while True:
 				dic['paper_publicationYear'] = int(convert)
 		elif line[1] == 'c':
 			dic['venue_name'] = line.replace('#c', '').strip().replace('\'', '\\\'')
-			if dic['venue_name'] == '':
-				continue
+			# if dic['venue_name'] == '':
+			# 	continue
 		elif line[1] == '!':
 			dic['paper_abstract'] = line.replace('#!', '').strip().replace('\'', '\\\'')
 

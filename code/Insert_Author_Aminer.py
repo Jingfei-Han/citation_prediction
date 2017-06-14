@@ -5,7 +5,7 @@ import MySQLdb.cursors
 import sys
 
 
-db = MySQLdb.connect(host='192.168.1.198', user='jingfei', passwd='hanjingfei007', db='aminer', charset='utf8')
+db = MySQLdb.connect(host='127.0.0.1', user='root', passwd='hanjingfei007', db='aminer', charset='utf8')
 cursor = db.cursor()
 
 f = open(r'D:/Citation_prediction/AMiner/AMiner-Author.txt', 'r')
@@ -15,6 +15,7 @@ dic = {
 	'author_id' : '0',
 	'author_name' : '0',
 	'author_NbTotPubPaper' : '0',
+	'author_NbCitation' : '0',
 	'author_H_Index' : '0',
 	'author_tag' : '',
 	'author_affiliation_name' : ''
@@ -26,8 +27,8 @@ while True:
 	if line:
 		if line == '\n': #Insert data into the table
 
-			sql2 = "INSERT INTO author(author_id, author_name, author_NbTotPubPaper, author_H_Index, author_tag, author_affiliation_name) \
-					VALUES('%d', '%s', '%d', '%d', '%s', '%s')" %(dic['author_id'], dic['author_name'], dic['author_NbTotPubPaper'], dic['author_H_Index'], dic['author_tag'], dic['author_affiliation_name'])
+			sql2 = "INSERT INTO author(author_id, author_name, author_NbTotPubPaper, author_NbCitation, author_H_Index, author_tag, author_affiliation_name) \
+					VALUES('%d', '%s', '%d', '%d', '%d', '%s', '%s')" %(dic['author_id'], dic['author_name'], dic['author_NbTotPubPaper'], dic['author_NbCitation'] , dic['author_H_Index'], dic['author_tag'], dic['author_affiliation_name'])
 			try:
 				cursor.execute(sql2)
 				db.commit()
@@ -53,9 +54,20 @@ while True:
 		elif line[1] == 'a':
 			dic['author_affiliation_name'] = line.replace('#a', '').strip().replace('\'', '\\\'')
 		elif line[1:3] == 'pc':
-			dic['author_NbTotPubPaper'] = int(line.replace('#pc', '').strip())
+			try:
+				dic['author_NbTotPubPaper'] = int(line.replace('#pc', '').strip())
+			except:
+				dic['author_NbTotPubPaper'] = 0
+		elif line[1:3] == 'cn':
+			try:
+				dic['author_NbCitation'] = int(line.replace('#cn', '').strip())
+			except:
+				dic['author_NbCitation'] = 0
 		elif line[1] == 'h':
-			dic['author_H_Index'] = int(line.replace('#hi', '').strip())
+			try:
+				dic['author_H_Index'] = int(line.replace('#hi', '').strip())
+			except:
+				dic['author_H_Index'] = 0
 		elif line[1] == 't':
 			dic['author_tag'] = line.replace('#t', '').strip().replace('\'', '\\\'')
 		
