@@ -7,7 +7,7 @@ import re
 db = MySQLdb.connect(host='127.0.0.1', user='root', passwd='hanjingfei007', db='aminer', charset='utf8')
 cursor = db.cursor()
 
-f = open(r'D:/Citation_prediction/AMiner/AMiner-Paper.txt', 'r')
+f = open(r'D:/Citation_prediction/AMiner/AMiner-Paper-BUG.txt', 'r')
 
 
 
@@ -58,8 +58,8 @@ while True:
 			# 		sys.exit("ERROR: INSERT INTO the TABLE venue failed!")
 
 
-			sql2 = "INSERT INTO paper(paper_id, paper_title, paper_publicationYear, paper_abstract, paper_venuename) \
-					VALUES('%d', '%s', '%d', '%s', '%s')" %(dic['paper_id'], dic['paper_title'], dic['paper_publicationYear'], dic['paper_abstract'], dic['venue_name'])
+			sql2 = 'INSERT INTO paper(paper_id, paper_title, paper_publicationYear, paper_abstract, paper_venuename) \
+					VALUES("%d", "%s", "%d", "%s", "%s")' %(dic['paper_id'], dic['paper_title'], dic['paper_publicationYear'], dic['paper_abstract'], dic['venue_name'])
 			try:
 				cursor.execute(sql2)
 				db.commit()
