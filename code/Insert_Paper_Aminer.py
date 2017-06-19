@@ -4,10 +4,10 @@ import sys
 import re
 
 
-db = MySQLdb.connect(host='127.0.0.1', user='root', passwd='hanjingfei007', db='aminer', charset='utf8')
+db = MySQLdb.connect(host='shhr.online', port = 36313, user='root', passwd='root', db='aminer', charset='utf8')
 cursor = db.cursor()
 
-f = open(r'D:/Citation_prediction/AMiner/AMiner-Paper-BUG.txt', 'r')
+f = open(r'/home/jingfei/github/Data/AMiner/AMiner-Paper.txt', 'r')
 
 
 
