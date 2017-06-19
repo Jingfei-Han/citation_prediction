@@ -46,15 +46,18 @@ while True:
 			# 	except:
 			# 		#没有插入成功就不用管， 直接去掉就行
 			# 		pass
-
 			params = [(i, relationship_dst) for i in citation_list]
+			if len(params) == 0:
+				continue
+			else:
+				print "haha"
 			sql1 = "INSERT INTO relationship(relationship_src, relationship_dst)\
 						VALUES('%d', '%d')"
 			try:
 				cursor.executemany(sql1, params)
 				db.commit()
 			except:
-				print "%d Batch failed！" %cur_index
+				print "%d Batch failed!" %cur_index
 				for relationship_src in citation_list:
 					sql1_tmp = "INSERT INTO relationship(relationship_src, relationship_dst)\
 							VALUES('%d', '%d')" %(relationship_src, relationship_dst)
