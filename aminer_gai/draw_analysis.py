@@ -62,6 +62,8 @@ def draw_ref_distribution(df_relationship, dst_publicationYear, Hindex_lowerboun
 	prop_China.plot(kind='bar', ax=axes[1], stacked=True, colormap='gist_rainbow', legend=False, title = 'China')
 	prop_Australia.plot(kind='bar', ax=axes[2], stacked=True, colormap='gist_rainbow', legend=False, title = 'Australia')
 
+"""
+#感觉这个版本有问题， 应该按照df_a2p来判断每个作者写的论文
 def draw_paper_distribution(df_paper, paper_publicationYear, Hindex_lowerbound, Hindex_higherbound):
 	if paper_publicationYear != -1:
 		df_paper = df_paper[df_paper['paper_publicationYear'] == paper_publicationYear]
@@ -77,9 +79,11 @@ def draw_paper_distribution(df_paper, paper_publicationYear, Hindex_lowerbound, 
 	
 
 	#发表的venue的个数
-	cnt_venue = df_paper.drop_duplicates(['paper_label','CCF_id']).groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
-	cnt_venue_China = df_paper[df_paper['country']=='China'].drop_duplicates(['paper_label','CCF_id']).groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
-	cnt_venue_Australia = df_paper[df_paper['country']=='Australia'].drop_duplicates(['paper_label','CCF_id']).groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+	# cnt_venue = df_paper.drop_duplicates(['paper_label','CCF_id']).groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+	# cnt_venue_China = df_paper[df_paper['country']=='China'].drop_duplicates(['paper_label','CCF_id']).groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+	# cnt_venue_Australia = df_paper[df_paper['country']=='Australia'].drop_duplicates(['paper_label','CCF_id']).groupby(['paper_label']).size().reindex(['A,A*','A,A','A,B','B,A*','B,A','B,B','B,C','C,A*','C,A','C,B','C,C'])
+
+	#论文作者的个数
 
 	prop = grouped / cnt_venue
 	prop_China = grouped_China / cnt_venue_China
@@ -89,7 +93,25 @@ def draw_paper_distribution(df_paper, paper_publicationYear, Hindex_lowerbound, 
 	prop.plot(kind='bar', ax=axes[0], title='Total')
 	prop_China.plot(kind='bar', ax=axes[1], title='China')
 	prop_Australia.plot(kind='bar', ax=axes[2], title='Australia')
+"""
 
+def draw_paper_distribution(df_paper, df_author, df_a2p, paper_publicationYear, Hindex_lowerbound, Hindex_higherbound):
+
+	df_merge = pd.merge(df_paper, pd.merge(df_author, df_a2p, left_on = 'author_id', right_on = 'author_author_id'), left_on='paper_id', right_on='paper_paper_id')
+	df_tmp = df_merge[['author_id', 'a2p_order', 'paper_id', 'paper_publicationYear', 'paper_label', 'author_H_Index', 'country']]
+
+	if paper_publicationYear != -1:
+		df_paper = df_paper[df_paper['paper_publicationYear'] == paper_publicationYear]
+	if Hindex_lowerbound != -1:
+		df_author = df_author[df_author['author_H_Index'] >= Hindex_lowerbound]
+	if Hindex_higherbound != -1:
+		df_author = df_author[df_author['author_H_Index'] <= Hindex_higherbound]
+
+
+
+
+
+	
 def draw_all_ref(df_relationship):
 	"""
 	我们对于学者水平按照分布进行如下定义：

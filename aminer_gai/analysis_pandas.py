@@ -41,6 +41,23 @@ def get_ccf(conn):
 	df_ccf = pd.read_sql(sql_ccf, conn)
 	return df_ccf
 
+def filter_author(sql_ip, port, user, passwd, db):
+	conn = MySQLdb.connect(host=sql_ip, user=user, port=port, passwd=passwd, db=db, charset='utf8')
+	df_a2p = get_a2p(conn)
+	df_author = get_author(conn)
+	df_tmp = pd.merge(df_author, df_a2p.drop_duplicates(['author_author_id']), left_on = 'author_id', right_on = 'author_author_id')
+	df_tmp2 = df_tmp[['author_id', 'author_name', 'author_H_Index', 'author_tag', 'author_affiliation_name']]
+
+	df_sub_China = df_tmp2[df_tmp2['author_affiliation_name'].str.contains('China')].copy()
+	df_sub_Australia = df_tmp2[df_tmp2['author_affiliation_name'].str.contains('Australia')].copy()
+
+	df_sub_China['country'] = 'China'
+	df_sub_Australia['country'] = 'Australia'
+	df_country = pd.concat([df_sub_China, df_sub_Australia])
+	df_country = df_country.drop_duplicates(['author_id']) #去除2446篇第一作者来自两个国家的情况，这里将澳大利亚的情况去掉
+	df_tmp3 = pd.merge(df_tmp2, df_country, how = 'outer')
+	return df_tmp3
+
 def generate_relationship(sql_ip, port, user, passwd, db):
 	#根据数据库信息， 返回df_relationship，其中包含源和目的的发表年份、标签、最大H因子、第一作者所属国家
 
@@ -284,36 +301,20 @@ if __name__ == '__main__':
 	passwd = "hanjingfei007"
 	db = "aminer_gai"
 
-	df_relationship = generate_relationship(sql_ip, port, user, passwd, db)
-# 	# 要求参数
-# 	# src_publicationYear : 源论文集的发表年份 (-1表示不限制)
-# 	# dst_publicationYear : 引用论文的发表截止年份（从源论文发表的年份直到目的年份） (-1表示不限制)
-# 	# src_country : 源论文集的国家 （'NULL'表示不限制）
-# 	# dst_country : 目的论文集的国家 （'NULL'表示不限制）
-#	dic = {'src_publicationYear' : 2000, 'dst_publicationYear' : -1, 'src_country' : 'NULL', 'dst_country' : 'NULL'}
-# 	src_publicationYear = 2000
-# 	dst_publicationYear = -1
-# 	src_country = 'NULL'
-# 	dst_country = 'NULL'
-# 	result = get_table(df_relationship, dic['src_publicationYear'], dic['dst_publicationYear'], dic['src_country'], dic['dst_country'])
-# 	print result
-	
-	label = ['A,A*', 'A,A', 'A,B', 'B,A*', 'B,A', 'B,B', 'B,C', 'C,A*', 'C,A', 'C,B', 'C,C',]
-	# for i in label:
-	# 	res = get_paperset_GM(df_relationship, 2000, i, -1, 'NULL', 'China')
-	# 	print i, ' : ', res
-	# for i in label:
-	# 	res = get_paperset_GM(df_relationship, 2000, i, -1, 'NULL', 'NULL')
-	# 	print res
-	draw_all_boxplot(df_relationship, 2000, 'A,A*', -1, 'NULL')
-	draw_all_boxplot(df_relationship, 2000, 'A,A*', 1, 'journal')
-	draw_all_boxplot(df_relationship, 2000, 'A,A*', 1, 'conference')
+	# df_paper, df_relationship = generate_relationship(sql_ip, port, user, passwd, db)
+	df_author = filter_author(sql_ip, port, user, passwd, db)
 
-	draw_all_boxplot(df_relationship, 2000, 'A,A*', -1, 'NULL')
-	draw_all_boxplot(df_relationship, 2000, 'A,B', -1, 'NULL')
-	draw_all_boxplot(df_relationship, 2000, 'C,A*', -1, 'NULL')
-	draw_all_boxplot(df_relationship, 2000, 'C,C', -1, 'NULL')
+	# label = ['A,A*', 'A,A', 'A,B', 'B,A*', 'B,A', 'B,B', 'B,C', 'C,A*', 'C,A', 'C,B', 'C,C',]
 
-	for i in label:
-		draw_all_boxplot(df_relationship, -1, i, -1, 'NULL')
+	# draw_all_boxplot(df_relationship, 2000, 'A,A*', -1, 'NULL')
+	# draw_all_boxplot(df_relationship, 2000, 'A,A*', 1, 'journal')
+	# draw_all_boxplot(df_relationship, 2000, 'A,A*', 1, 'conference')
+
+	# draw_all_boxplot(df_relationship, 2000, 'A,A*', -1, 'NULL')
+	# draw_all_boxplot(df_relationship, 2000, 'A,B', -1, 'NULL')
+	# draw_all_boxplot(df_relationship, 2000, 'C,A*', -1, 'NULL')
+	# draw_all_boxplot(df_relationship, 2000, 'C,C', -1, 'NULL')
+
+	# for i in label:
+	# 	draw_all_boxplot(df_relationship, -1, i, -1, 'NULL')
 
