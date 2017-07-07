@@ -845,3 +845,62 @@ Distinctive Image Features from Scale-Invariant Keypoints， 当时的引用量�
 将sql语句换了下单双引号就可以了，如下：
 sql2 = 'INSERT INTO paper(paper_id, paper_title, paper_publicationYear, paper_abstract, paper_venuename) \
 					VALUES("%d", "%s", "%d", "%s", "%s")' %(dic['paper_id'], dic['paper_title'], dic['paper_publicationYear'], dic['paper_abstract'], dic['venue_name'])
+
+
+----------------------------------------------------------------2017.07.04--------------------------------------------------------------
+开始MAG数据的分析，但是数据量过大，总共97G的数据。各项数据如下：
+80K ./Conferences.txt
+972K    ./Journals.txt
+6.5M    ./FieldOfStudyHierarchy.txt
+2.7G    ./Authors.txt
+12K ./license.txt
+336K    ./2016KDDCupSelectedPapers.txt
+4.0K    ./readme.txt
+9.4G    ./PaperReferences.txt
+28K ./2016KDDCupSelectedAffiliations.txt
+28G ./Papers.txt
+1.5M    ./FieldsOfStudy.txt
+9.9M    ./ConferenceInstances.txt
+752K    ./Affiliations.txt
+18G ./PaperAuthorAffiliations.txt
+36G ./PaperUrls.txt
+5.0M    ./grid.csv
+5.0G    ./PaperKeywords.txt
+97G .
+
+
+36901188    PaperUrls.txt
+28605800    Papers.txt
+18219588    PaperAuthorAffiliations.txt
+9809540 PaperReferences.txt
+5236048 PaperKeywords.txt
+2798300 Authors.txt
+10108   ConferenceInstances.txt
+6624    FieldOfStudyHierarchy.txt
+5060    grid.csv
+1476    FieldsOfStudy.txt
+972 Journals.txt
+752 Affiliations.txt
+336 2016KDDCupSelectedPapers.txt
+80  Conferences.txt
+28  2016KDDCupSelectedAffiliations.txt
+12  license.txt
+4   readme.txt
+
+这里PaperUrls表用不到。论文和作者数据也只需要计算机方面的论文即可，关键问题是怎么构造这样的表。现在来看只能通过迭代的方法。
+reader = pd.read_table(..., iterator=True)
+df_paper = reader.get_chunk(10000) #这里10000表示获取10000条数据。
+
+数据规模：
+论文：126,909,021（亿级）
+作者：114,698,044 (亿级)
+机构：19,843 (万级)
+期刊：23,404 (万级)
+会议：1,283 （千级）
+会议实例： 50,202 (万级)
+研究领域：53,834 (万级)
+
+计算机领域文章大概是1700万左右
+按照D-Lib Magazine的分析，论文中有96,850,699篇论文没有参考文献，89,647,949篇论文没有引用。 80,166,717篇论文既没有参考文献又没有引用。
+
+
